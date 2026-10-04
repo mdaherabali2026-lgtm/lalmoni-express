@@ -7,7 +7,47 @@
   <meta name="theme-color" content="#d7193f">
   <title>লালমনি এক্সপ্রেস | আপনার এলাকার ডিজিটাল নেটওয়ার্ক</title>
   <link rel="icon" href="assets/images/favicon.png">
+  
+  <!-- Google Fonts: Hind Siliguri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    /* মোবাইলে লেখার মার্জিন ও হিরো সেকশনের স্পেসিং ফিক্স */
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .hero {
+      padding-bottom: 50px !important;
+    }
+    .download-row {
+      margin-bottom: 12px !important;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-copy small {
+      display: block !important;
+      margin-top: 14px !important;
+      margin-bottom: 24px !important;
+      color: rgba(255, 255, 255, 0.85) !important;
+      font-size: 13px !important;
+      line-height: 1.5 !important;
+      clear: both !important;
+    }
+    @media (max-width: 768px) {
+      .hero {
+        padding-bottom: 60px !important;
+      }
+      .hero-copy small {
+        margin-top: 16px !important;
+        margin-bottom: 28px !important;
+      }
+    }
+  </style>
 </head>
 <body>
 <header class="site-header">
@@ -19,7 +59,7 @@
     <nav class="nav-links">
       <a class="active" href="#home">হোম</a>
       <a href="#features">সেবাসমূহ</a>
-      <a href="#marketplace">কেন আমাদের</a>
+      <a href="#marketplace">মার্কেটপ্লেস</a>
       <a href="#benefits">সুবিধা</a>
       <a href="#contact">যোগাযোগ</a>
     </nav>
@@ -35,12 +75,17 @@
       <span class="eyebrow">লালমনিরহাটের জন্য বিশেষ অ্যাপ</span>
       <h1>লালমনিরহাটের সকল <span>সেবা ও তথ্য</span> এখন এক ক্লিকেই!</h1>
       <p>বাস-ট্রেনের সময়সূচি, জরুরি সেবা, রক্তের সন্ধান কিংবা <b>স্থানীয় কেনাবেচা</b>—আপনার দৈনন্দিন জীবনের সব সমাধান নিয়ে এসেছে লালমনি এক্সপ্রেস।</p>
+      
+      <!-- ডাউনলোড বাটন সমূহ -->
       <div class="download-row">
         <a class="play-btn" href="#download"><img src="assets/images/google-play.svg" alt="Google Play থেকে ডাউনলোড"></a>
         <a class="apk-btn" href="#download">⬇ সরাসরি APK ডাউনলোড</a>
       </div>
+      
+      <!-- প্লে স্টোর নির্দেশিকা লেখা -->
       <small>Google Play থেকে ডাউনলোড করুন</small>
     </div>
+
     <div class="hero-product">
       <div class="speech">আপনার এলাকার<br><b>নিজস্ব<br>মার্কেটপ্লেস</b></div>
       <img class="phone" src="assets/images/app-screen.png" alt="লালমনি এক্সপ্রেস অ্যাপের স্ক্রিন">
@@ -102,7 +147,7 @@
 <footer id="contact" class="footer">
   <div class="container footer-grid">
     <div><img src="assets/images/logo.png" class="footer-logo" alt="লালমনি এক্সপ্রেস"><p>সহজ বেচাকেনা, দ্রুত সেবা</p></div>
-    <div class="footer-links"><a href="#">গোপনীয়তা নীতি</a><a href="#">ব্যবহারের শর্তাবলী</a><a href="#">যোগাযোগ</a></div>
+    <div class="footer-links"><a href="privacy-policy.html">গোপনীয়তা নীতি</a><a href="#">ব্যবহারের শর্তাবলী</a><a href="#contact">যোগাযোগ</a></div>
     <div><p>যেকোনো জিজ্ঞাসা বা সহায়তায় ইমেইল করুন:</p><a href="mailto:support@yourdomain.com">support@yourdomain.com</a></div>
   </div>
   <div class="container copyright">© ২০২৬ লালমনি এক্সপ্রেস (Lalmoni Express)। সর্বস্বত্ব সংরক্ষিত।</div>
