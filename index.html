@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="লালমনি এক্সপ্রেস — লালমনিরহাটের স্থানীয় মার্কেটপ্লেস, সেবা ও তথ্য এক জায়গায়।">
+  <meta name="description" content="লালমনি এক্সপ্রেস — ক্রয়-বিক্রয় করতে ফ্রি পোস্ট করুন আপনার এলাকার নিজস্ব অ্যাপসে!">
   <meta name="theme-color" content="#d7193f">
-  <title>লালমনি এক্সপ্রেস | আপনার এলাকার ডিজিটাল নেটওয়ার্ক</title>
+  <title>লালমনি এক্সপ্রেস | আপনার এলাকার নিজস্ব অ্যাপ</title>
   <link rel="icon" href="assets/images/favicon.png">
   
   <!-- Google Fonts: Hind Siliguri -->
@@ -16,15 +16,16 @@
   <link rel="stylesheet" href="assets/css/style.css">
 
   <style>
-    /* মোবাইলে লেখার মার্জিন ও হিরো সেকশনের স্পেসিং ফিক্স */
+    /* মোবাইলে মার্জিন, প্যাডিং ও ব্যাজ ডিজাইন ফিক্স */
     body {
       font-family: 'Hind Siliguri', sans-serif;
     }
     .hero {
-      padding-bottom: 50px !important;
+      padding-bottom: 55px !important;
     }
     .download-row {
-      margin-bottom: 12px !important;
+      margin-top: 15px !important;
+      margin-bottom: 10px !important;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -38,13 +39,47 @@
       line-height: 1.5 !important;
       clear: both !important;
     }
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 12px 0;
+    }
+    .service-tag {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .special-note {
+      font-size: 13.5px;
+      color: #fef08a;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      display: inline-block;
+      line-height: 1.5;
+    }
     @media (max-width: 768px) {
       .hero {
-        padding-bottom: 60px !important;
+        padding-bottom: 65px !important;
       }
       .hero-copy small {
         margin-top: 16px !important;
         margin-bottom: 28px !important;
+      }
+      .service-tag {
+        font-size: 12px;
+        padding: 4px 10px;
       }
     }
   </style>
@@ -72,9 +107,28 @@
   <div class="hero-overlay"></div>
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">লালমনিরহাটের জন্য বিশেষ অ্যাপ</span>
-      <h1>লালমনিরহাটের সকল <span>সেবা ও তথ্য</span> এখন এক ক্লিকেই!</h1>
-      <p>বাস-ট্রেনের সময়সূচি, জরুরি সেবা, রক্তের সন্ধান কিংবা <b>স্থানীয় কেনাবেচা</b>—আপনার দৈনন্দিন জীবনের সব সমাধান নিয়ে এসেছে লালমনি এক্সপ্রেস।</p>
+      <span class="eyebrow">লালমনিরহাটের নিজস্ব অ্যাপ</span>
+      
+      <!-- আপনার দেওয়া মূল হেডলাইন -->
+      <h1>ক্রয়-বিক্রয় করতে <span>ফ্রি পোস্ট করুন</span> আপনার এলাকার নিজস্ব অ্যাপসে! তাছাড়া অন্যান্য সুপার সার্ভিস তো থাকছেই!</h1>
+      
+      <!-- আপনার দেওয়া সাব-হেডলাইন -->
+      <p>আপনার ব্যবহৃত পণ্য, মোবাইল, ফসল কিংবা গৃহস্থালি জিনিসপত্র সহজে ও নিরাপদে ক্রয়-বিক্রয় করুন স্থানীয় মানুষের সাথে। ঘরে বসেই ফ্রিতে বিজ্ঞাপন দিন। আর একই সাথে পেয়ে যান লালমনিরহাটের বাস-ট্রেনের সঠিক সময়সূচি, রক্তদাতা ও জরুরি হেল্পলাইনের প্রয়োজনীয় সকল সেবা এবং আরো অন্যান্য সুপার সব সার্ভিস!</p>
+      
+      <!-- সেবা সমূহের ব্যাজ/চিপস -->
+      <div class="service-tags">
+        <span class="service-tag">🚨 জরুরী সেবা</span>
+        <span class="service-tag">🩺 ডক্টর ও হাসপাতাল</span>
+        <span class="service-tag">🚗 যানবাহন ও চালক</span>
+        <span class="service-tag">🔧 মেকানিক ও ইলেকট্রিশিয়ান</span>
+        <span class="service-tag">🌾 কৃষি ও বাজার</span>
+        <span class="service-tag">📚 শিক্ষা ও সংবাদ</span>
+      </div>
+
+      <!-- আপডেটেড সার্ভিসের বিশেষ সুবিধা -->
+      <div class="special-note">
+        ✨ <b>বিশেষ সুবিধা:</b> আপনাদের চাহিদা অনুযায়ী প্রতিনিয়ত যোগ করা হবে নিত্যনতুন আপডেটেড সার্ভিস!
+      </div>
       
       <!-- ডাউনলোড বাটন সমূহ -->
       <div class="download-row">
