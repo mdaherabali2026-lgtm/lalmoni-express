@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 
   <style>
-    /* মোবাইলে মার্জিন, প্যাডিং ও ব্যাজ ডিজাইন ফিক্স */
+    /* মোবাইলে মার্জিন, প্যাডিং, ব্যাজ ও ফুটার লোগো ফিক্স */
     body {
       font-family: 'Hind Siliguri', sans-serif;
     }
@@ -69,6 +69,17 @@
       display: inline-block;
       line-height: 1.5;
     }
+    
+    /* ফুটারে আলাদা লোগো সঠিকভাবে প্রদর্শনের স্টাইল */
+    .custom-footer-logo {
+      max-height: 52px;
+      width: auto;
+      display: block;
+      margin: 0 auto 12px auto;
+      filter: none !important; /* সিএসএস ফিল্টার থাকলে তা বাতিল করবে */
+      object-fit: contain;
+    }
+
     @media (max-width: 768px) {
       .hero {
         padding-bottom: 65px !important;
@@ -80,6 +91,9 @@
       .service-tag {
         font-size: 12px;
         padding: 4px 10px;
+      }
+      .custom-footer-logo {
+        max-height: 44px;
       }
     }
   </style>
@@ -109,10 +123,10 @@
     <div class="hero-copy">
       <span class="eyebrow">লালমনিরহাটের নিজস্ব অ্যাপ</span>
       
-      <!-- আপনার দেওয়া মূল হেডলাইন -->
+      <!-- মূল হেডলাইন -->
       <h1>ক্রয়-বিক্রয় করতে <span>ফ্রি পোস্ট করুন</span> আপনার এলাকার নিজস্ব অ্যাপসে! তাছাড়া অন্যান্য সুপার সার্ভিস তো থাকছেই!</h1>
       
-      <!-- আপনার দেওয়া সাব-হেডলাইন -->
+      <!-- সাব-হেডলাইন -->
       <p>আপনার ব্যবহৃত পণ্য, মোবাইল, ফসল কিংবা গৃহস্থালি জিনিসপত্র সহজে ও নিরাপদে ক্রয়-বিক্রয় করুন স্থানীয় মানুষের সাথে। ঘরে বসেই ফ্রিতে বিজ্ঞাপন দিন। আর একই সাথে পেয়ে যান লালমনিরহাটের বাস-ট্রেনের সঠিক সময়সূচি, রক্তদাতা ও জরুরি হেল্পলাইনের প্রয়োজনীয় সকল সেবা এবং আরো অন্যান্য সুপার সব সার্ভিস!</p>
       
       <!-- সেবা সমূহের ব্যাজ/চিপস -->
@@ -200,9 +214,20 @@
 
 <footer id="contact" class="footer">
   <div class="container footer-grid">
-    <div><img src="assets/images/logo.png" class="footer-logo" alt="লালমনি এক্সপ্রেস"><p>সহজ বেচাকেনা, দ্রুত সেবা</p></div>
-    <div class="footer-links"><a href="privacy-policy.html">গোপনীয়তা নীতি</a><a href="#">ব্যবহারের শর্তাবলী</a><a href="#contact">যোগাযোগ</a></div>
-    <div><p>যেকোনো জিজ্ঞাসা বা সহায়তায় ইমেইল করুন:</p><a href="mailto:support@yourdomain.com">support@yourdomain.com</a></div>
+    <div>
+      <!-- ফুটারে আলাদা নতুন লোগো -->
+      <img src="assets/images/footer-logo.png" class="custom-footer-logo" alt="লালমনি এক্সপ্রেস">
+      <p>সহজ বেচাকেনা, দ্রুত সেবা</p>
+    </div>
+    <div class="footer-links">
+      <a href="privacy-policy.html">গোপনীয়তা নীতি</a>
+      <a href="#">ব্যবহারের শর্তাবলী</a>
+      <a href="#contact">যোগাযোগ</a>
+    </div>
+    <div>
+      <p>যেকোনো জিজ্ঞাসা বা সহায়তায় ইমেইল করুন:</p>
+      <a href="mailto:support@lalmoniexpress.com">support@lalmoniexpress.com</a>
+    </div>
   </div>
   <div class="container copyright">© ২০২৬ লালমনি এক্সপ্রেস (Lalmoni Express)। সর্বস্বত্ব সংরক্ষিত।</div>
 </footer>
