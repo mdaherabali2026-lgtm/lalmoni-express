@@ -3,59 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disclaimer - লালমনি এক্সপ্রেস (Lalmoni Express)</title>
+    <title>সরকারি তথ্যের দায়মুক্তি (Disclaimer) - লালমনি এক্সপ্রেস</title>
     <style>
-        :root { --primary: #8B0000; --primary-light: #FFF5F5; --text: #2D3748; --muted: #4A5568; --bg: #F7FAFC; --card: #FFFFFF; --border: #E2E8F0; }
+        :root {
+            --primary: #990000;
+            --primary-dark: #660000;
+            --accent: #D97706;
+            --bg: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --text-title: #0F172A;
+            --text-body: #334155;
+            --border: #E2E8F0;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.7; padding: 24px 16px; }
-        .container { max-width: 840px; margin: 0 auto; }
-        header { text-align: center; background: linear-gradient(135deg, #8B0000, #5c0000); color: #fff; padding: 32px 20px; border-radius: 14px; margin-bottom: 24px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px 20px; margin-bottom: 20px; }
-        h2 { color: var(--primary); font-size: 19px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; margin-bottom: 14px; }
-        p, li { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
-        ul { padding-left: 20px; margin-bottom: 12px; }
-        .badge { display: inline-block; background: #FEF3C7; color: #92400E; font-size: 12px; font-weight: bold; padding: 4px 8px; border-radius: 6px; margin-bottom: 12px; }
-        .en-box { background: #F8FAFC; border-left: 4px solid var(--primary); padding: 14px; border-radius: 0 8px 8px 0; margin: 12px 0 20px 0; font-size: 13.5px; }
-        .source-box { background: #EDF2F7; padding: 14px; border-radius: 8px; font-size: 13px; margin-top: 10px; }
-        .source-box a { color: #2B6CB0; text-decoration: none; word-break: break-all; }
-        footer { text-align: center; padding: 20px; font-size: 12.5px; color: #718096; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-body);
+            line-height: 1.75;
+            padding: 20px 14px;
+        }
+        .container { max-width: 820px; margin: 0 auto; }
+        
+        /* আধুনিক প্রিমিয়াম হেডার */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 20px;
+            padding: 32px 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(153, 0, 0, 0.3);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        header h1 {
+            color: #FFFFFF;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .header-meta {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF !important;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* কার্ড স্টাইল */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 26px 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #FEF3C7;
+            color: #92400E;
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #FDE68A;
+            margin-bottom: 18px;
+        }
+        h2 {
+            color: var(--primary);
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        p { font-size: 15px; margin-bottom: 12px; }
+        
+        /* ভাষাভিত্তিক বক্স */
+        .bn-text {
+            background: #FAFAFA;
+            border-left: 4px solid var(--primary);
+            padding: 14px 16px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 14px;
+        }
+        .en-box {
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .en-box strong { color: var(--primary); }
+
+        /* সোর্স টেবিল ও লিংক */
+        .source-box {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .source-box ul { list-style: none; }
+        .source-box li {
+            padding: 8px 0;
+            border-bottom: 1px solid #EDF2F7;
+            font-size: 14px;
+        }
+        .source-box li:last-child { border-bottom: none; }
+        .source-box a {
+            color: #0284C7;
+            font-weight: 600;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .source-box a:hover { text-decoration: underline; }
+
+        footer {
+            text-align: center;
+            padding: 24px 10px;
+            font-size: 13px;
+            color: #64748B;
+        }
     </style>
 </head>
 <body>
+
 <div class="container">
     <header>
-        <h1>সরকারি তথ্যের দায়মুক্তি (Disclaimer)</h1>
-        <p>লালমনি এক্সপ্রেস (Lalmoni Express) | Last Updated: October 2026</p>
+        <h1>সরকারি তথ্যের দায়মুক্তি<br><span style="font-size: 21px; font-weight: 600;">(Government Disclaimer)</span></h1>
+        <div class="header-meta">
+            লালমনি এক্সপ্রেস (Lalmoni Express) • আপডেট: অক্টোবর ২০২৬
+        </div>
     </header>
 
     <div class="card">
-        <span class="badge">Google Play Government Apps Policy Compliant</span>
-        
-        <h2>১. নন-অ্যাফিলিয়েশন ঘোষণা (Non-Affiliation Notice)</h2>
-        <p><strong>[বাংলা]:</strong> 'লালমনি এক্সপ্রেস' কোনো সরকারি অ্যাপ্লিকেশন নয় এবং এটি বাংলাদেশ সরকার বা কোনো সরকারি সংস্থার প্রতিনিধিত্ব করে না। এটি লালমনিরহাট জেলার সাধারণ নাগরিকদের সহায়তার উদ্দেশ্যে নির্মিত একটি বেসরকারি নাগরিক সেবা উদ্যোগ।</p>
-        <div class="en-box">
-            <strong>[English]:</strong> "Lalmoni Express" is NOT an official government application and does NOT represent the Government of Bangladesh or any official entity. It is an independent private initiative designed to facilitate local communication and citizen resources in Lalmonirhat.
+        <div class="badge">
+            🏛️ Google Play Government Apps Policy Compliant
         </div>
 
-        <h2>২. তথ্যের সরকারি উৎসসমূহ (Sources of Government Information)</h2>
-        <p><strong>[বাংলা]:</strong> অ্যাপে প্রদর্শিত জরুরি সেবা, থানা ও হাসপাতালের যোগাযোগের নম্বরসমূহ বিভিন্ন উন্মুক্ত সরকারি ওয়েবসাইট থেকে সংগ্রহ করা হয়েছে। মূল সরকারি পোর্টালসমূহ:</p>
-        <div class="source-box">
-            <ul>
-                <li>বাংলাদেশ জাতীয় তথ্য বাতায়ন: <a href="https://bangladesh.gov.bd" target="_blank" rel="noopener">https://bangladesh.gov.bd</a></li>
-                <li>লালমনিরহাট জেলা বাতায়ন: <a href="https://lalmonirhat.gov.bd" target="_blank" rel="noopener">https://lalmonirhat.gov.bd</a></li>
-                <li>জাতীয় জরুরি সেবা (৯৯৯): <a href="https://nhd.gov.bd" target="_blank" rel="noopener">https://nhd.gov.bd</a></li>
-                <li>বাংলাদেশ আবহাওয়া অধিদপ্তর: <a href="https://bmd.gov.bd" target="_blank" rel="noopener">https://bmd.gov.bd</a></li>
-            </ul>
+        <h2>১. নন-অ্যাফিলিয়েশন ঘোষণা (Non-Affiliation Notice)</h2>
+        <div class="bn-text">
+            <strong>[বাংলা]:</strong> 'লালমনি এক্সপ্রেস' কোনো সরকারি অ্যাপ্লিকেশন নয় এবং এটি বাংলাদেশ সরকার কিংবা কোনো সরকারি সংস্থার প্রতিনিধিত্ব করে না। এটি লালমনিরহাট জেলার সাধারণ নাগরিকদের সুবিধার্থে ও জরুরি সেবার সহায়তায় নির্মিত একটি সম্পূর্ণ স্বাধীন ও বেসরকারি নাগরিক সেবা উদ্যোগ।
         </div>
         <div class="en-box">
-            <strong>[English]:</strong> Public emergency numbers and service contacts displayed in the app are compiled from officially published open portals (bangladesh.gov.bd, lalmonirhat.gov.bd, nhd.gov.bd). We do not guarantee real-time updates and advise users to verify critical emergency numbers via primary state portals.
+            <strong>[English]:</strong> "Lalmoni Express" is <strong>NOT</strong> an official government application and does <strong>NOT</strong> represent the Government of Bangladesh or any official entity. It is an independent private community initiative built to assist the citizens of Lalmonirhat with local directory and emergency information.
+        </div>
+
+        <h2>২. তথ্যের সরকারি উৎসসমূহ (Official Government Sources)</h2>
+        <p>অ্যাপে প্রদর্শিত জরুরি সেবা, থানা ও হাসপাতালের তথ্যসমূহ নিচে প্রদত্ত উন্মুক্ত সরকারি পোর্টাল থেকে সংগৃহীত:</p>
+        
+        <div class="source-box">
+            <ul>
+                <li>🌐 বাংলাদেশ জাতীয় তথ্য বাতায়ন: <a href="https://bangladesh.gov.bd" target="_blank" rel="noopener">https://bangladesh.gov.bd</a></li>
+                <li>🏛️ লালমনিরহাট জেলা বাতায়ন: <a href="https://lalmonirhat.gov.bd" target="_blank" rel="noopener">https://lalmonirhat.gov.bd</a></li>
+                <li>🚨 জাতীয় জরুরি সেবা (৯৯৯): <a href="https://nhd.gov.bd" target="_blank" rel="noopener">https://nhd.gov.bd</a></li>
+                <li>🚒 ফায়ার সার্ভিস ও সিভিল ডিফেন্স: <a href="https://fireservice.gov.bd" target="_blank" rel="noopener">https://fireservice.gov.bd</a></li>
+                <li>☀️ বাংলাদেশ আবহাওয়া অধিদপ্তর: <a href="https://bmd.gov.bd" target="_blank" rel="noopener">https://bmd.gov.bd</a></li>
+            </ul>
+        </div>
+        
+        <div class="en-box">
+            <strong>[English Source Notice]:</strong> Public emergency contacts and information displayed in the app are compiled from the verified public government portals listed above. Users are always encouraged to verify emergency information through official government channels.
         </div>
     </div>
 
     <footer>
-        <p>Contact / Support: sirazulvai2263@gmail.com</p>
-        <p>© 2026 Lalmoni Express. All rights reserved.</p>
+        <p>সাপোর্ট ও যোগাযোগ: <strong>sirazulvai2263@gmail.com</strong></p>
+        <p>© ২০২৬ লালমনি এক্সপ্রেস (Lalmoni Express) | সর্বস্বত্ব সংরক্ষিত</p>
     </footer>
 </div>
+
 </body>
 </html>
