@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ব্যানার মেকার - নিরাপদ অ্যাডমিন প্যানেল</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+    
+    <!-- Header -->
+    <div class="bg-indigo-600 px-6 py-5 text-white flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold">সহজ ব্যানার অ্যাডমিন</h1>
+        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস সিকিউরিটি ও গুগল অথেন্টিকেশন দ্বারা সুরক্ষিত</p>
+      </div>
+      <div id="authStatusBadge">
+        <span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">লগইন চেক হচ্ছে...</span>
+      </div>
+    </div>
+
+    <!-- Auth Lock Screen (লগইন না থাকলে দেখাবে) -->
+    <div id="loginSection" class="p-8 text-center space-y-4">
+      <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
+      <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <button id="googleLoginBtn" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-2 transition">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
+        গুগল দিয়ে লগইন করুন
+      </button>
+      <div id="loginError" class="text-red-500 text-sm hidden font-medium"></div>
+    </div>
+
+    <!-- Main Dashboard Form (লগইন থাকলে আনলক হবে) -->
+    <div id="dashboardSection" class="hidden">
+      <!-- Admin User Bar -->
+      <div class="bg-slate-50 border-b px-6 py-3 flex justify-between items-center text-sm">
+        <div class="text-slate-600">লগইন আছেন: <strong id="adminEmailDisplay" class="text-slate-900"></strong></div>
+        <button id="logoutBtn" class="text-red-600 hover:underline font-semibold text-xs">লগআউট</button>
+      </div>
+
+      <form id="templateForm" class="p-6 md:p-8 space-y-6">
+
+        <!-- ব্যানার নাম ও ক্যাটাগরি -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">ব্যানারের নাম (Title)</label>
+            <input type="text" id="title" required placeholder="যেমন: বন্ধন বিবাহ স্মরণিকা" 
+                   class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">ক্যাটাগরি আইডি (Category ID)</label>
+            <select id="categoryId" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+              <option value="wedding">বিবাহ / Wedding</option>
+              <option value="political">রাজনৈতিক / Political</option>
+              <option value="business">ব্যবসা ও দোকান / Business</option>
+              <option value="islamic">ওয়াজ ও দোয়া / Islamic</option>
+              <option value="general">সাধারণ ব্যানার / General</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ইমেজ লিঙ্কসমূহ -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">প্রিভিউ ইমেজ লিঙ্ক (Preview URL)</label>
+            <input type="url" id="previewUrl" required placeholder="হোমস্ক্রিনের ছোট ছবির লিঙ্ক" 
+                   class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">হাই-রেজোলিউশন মূল ইমেজ লিঙ্ক (Full Image URL)</label>
+            <input type="url" id="fullImageUrl" required placeholder="এডিটরের মূল ব্যাকগ্রাউন্ড লিঙ্ক" 
+                   class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+          </div>
+        </div>
+
+        <!-- ফটো স্লট চেকবক্স -->
+        <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-xl">
+          <input type="checkbox" id="hasPhotoSlot" class="w-5 h-5 text-indigo-600 rounded">
+          <label for="hasPhotoSlot" class="text-sm font-medium text-slate-700 cursor-pointer">
+            এই ব্যানারে ব্যবহারকারীর নিজস্ব ছবি যোগ করার ফ্রেম/স্লট আছে কি?
+          </label>
+        </div>
+
+        <!-- ডায়নামিক ইনপুট ফিল্ড সেকশন -->
+        <div class="border-t pt-5">
+          <div class="flex justify-between items-center mb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-800">এডিটরে কী কী লেখার ঘর থাকবে?</h2>
+              <p class="text-xs text-slate-500">ইউজার অ্যাপে যে তথ্যগুলো লিখে ব্যানার বানাবে</p>
+            </div>
+            <button type="button" id="addFieldBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 transition">
+              + ফিল্ড যোগ করুন
+            </button>
+          </div>
+
+          <div id="fieldsContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- সাবমিট স্ট্যাটাস ও বাটন -->
+        <div class="border-t pt-5">
+          <div id="statusMessage" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
+
+          <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
+            ক্লাউডে ব্যানার আপলোড করুন
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+    // আপনার ফায়ারবেস কনফিগারেশন
+    const firebaseConfig = {
+      apiKey: "AIzaSyAnXmXTjiDuofkRuVaYXjvO38Yoff8qp81",
+      authDomain: "gen-lang-client-0426695413.firebaseapp.com",
+      projectId: "gen-lang-client-0426695413",
+      storageBucket: "gen-lang-client-0426695413.firebasestorage.app",
+      messagingSenderId: "722683854375",
+      appId: "1:722683854375:web:118bcb6f95f64ae9938102"
+    };
+
+    // ⚠️ আপনার অনুমোদিত অ্যাডমিন জিমেইল এখানে দিন
+    const AUTHORIZED_ADMIN_EMAIL = "YOUR_ADMIN_EMAIL@gmail.com";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    const loginSection = document.getElementById("loginSection");
+    const dashboardSection = document.getElementById("dashboardSection");
+    const authStatusBadge = document.getElementById("authStatusBadge");
+    const adminEmailDisplay = document.getElementById("adminEmailDisplay");
+    const googleLoginBtn = document.getElementById("googleLoginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginError = document.getElementById("loginError");
+
+    const fieldsContainer = document.getElementById("fieldsContainer");
+    const addFieldBtn = document.getElementById("addFieldBtn");
+    const templateForm = document.getElementById("templateForm");
+    const statusMessage = document.getElementById("statusMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // অথেন্টিকেশন স্টেট চেক
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.email === AUTHORIZED_ADMIN_EMAIL) {
+          loginSection.classList.add("hidden");
+          dashboardSection.classList.remove("hidden");
+          adminEmailDisplay.innerText = user.email;
+          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
+        } else {
+          loginSection.classList.remove("hidden");
+          dashboardSection.classList.add("hidden");
+          loginError.innerText = "অননুমোদিত ইমেইল! আপনি এই অ্যাডমিন প্যানেলের অ্যাডমিন নন।";
+          loginError.classList.remove("hidden");
+          signOut(auth);
+        }
+      } else {
+        loginSection.classList.remove("hidden");
+        dashboardSection.classList.add("hidden");
+        authStatusBadge.innerHTML = `<span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>`;
+      }
+    });
+
+    // গুগল সাইন ইন
+    googleLoginBtn.addEventListener("click", async () => {
+      loginError.classList.add("hidden");
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        loginError.innerText = "লগইন ব্যর্থ হয়েছে: " + err.message;
+        loginError.classList.remove("hidden");
+      }
+    });
+
+    // লগআউট
+    logoutBtn.addEventListener("click", () => signOut(auth));
+
+    // ফিল্ড যোগ করার ফাংশন
+    function addFieldRow(label = "", placeholder = "", inputType = "Text") {
+      const row = document.createElement("div");
+      row.className = "flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200 field-row";
+      row.innerHTML = `
+        <input type="text" placeholder="লেবেল (যেমন: বরের নাম)" value="${label}" required class="field-label flex-1 px-3 py-1.5 border rounded-lg text-sm outline-none">
+        <input type="text" placeholder="প্লেসহোল্ডার" value="${placeholder}" class="field-placeholder flex-1 px-3 py-1.5 border rounded-lg text-sm outline-none">
+        <select class="field-type px-2 py-1.5 border rounded-lg text-sm outline-none bg-white">
+          <option value="Text" ${inputType === 'Text' ? 'selected' : ''}>Text</option>
+          <option value="Number" ${inputType === 'Number' ? 'selected' : ''}>Number</option>
+          <option value="Date" ${inputType === 'Date' ? 'selected' : ''}>Date</option>
+        </select>
+        <button type="button" class="remove-btn bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg text-sm font-bold">×</button>
+      `;
+      row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
+      fieldsContainer.appendChild(row);
+    }
+
+    // শুরুতে দুটি ডিফল্ট ফিল্ড
+    addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান");
+    addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
+    addFieldBtn.addEventListener("click", () => addFieldRow());
+
+    // সাবমিশন
+    templateForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = "আপলোড হচ্ছে...";
+
+      try {
+        const rows = document.querySelectorAll(".field-row");
+        const inputFields = [];
+
+        rows.forEach((row, index) => {
+          inputFields.push({
+            id: `field_${index + 1}`,
+            label: row.querySelector(".field-label").value.trim(),
+            placeholder: row.querySelector(".field-placeholder").value.trim() || row.querySelector(".field-label").value.trim(),
+            inputType: row.querySelector(".field-type").value
+          });
+        });
+
+        const templateData = {
+          title: document.getElementById("title").value.trim(),
+          categoryId: document.getElementById("categoryId").value,
+          previewUrl: document.getElementById("previewUrl").value.trim(),
+          fullImageUrl: document.getElementById("fullImageUrl").value.trim(),
+          hasPhotoSlot: document.getElementById("hasPhotoSlot").checked,
+          inputFields: inputFields,
+          usedCount: 0,
+          createdAt: serverTimestamp()
+        };
+
+        await addDoc(collection(db, "templates"), templateData);
+
+        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
+        statusMessage.innerText = "সফলভাবে আপলোড সম্পন্ন হয়েছে!";
+        templateForm.reset();
+        fieldsContainer.innerHTML = "";
+        addFieldRow();
+      } catch (error) {
+        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
+        statusMessage.innerText = "সমস্যা হয়েছে: " + error.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ক্লাউডে ব্যানার আপলোড করুন";
+      }
+    });
+  </script>
+</body>
+</html>
