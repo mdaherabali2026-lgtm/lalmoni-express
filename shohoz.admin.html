@@ -119,7 +119,6 @@
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
     const PROJECT_ID = "gen-lang-client-0426695413";
-    const DATABASE_ID = "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -223,9 +222,10 @@
       return result.data.url;
     }
 
-    // ফায়ারস্টোরে REST API দিয়ে ডাটা পুশ করা (কোনো লাইব্রেরি লোডিং ছাড়াই)
+    // ফায়ারস্টোরে অফিশিয়াল REST API দিয়ে ডাটা পুশ করা
     async function saveToFirestoreRest(templateData, token) {
-      const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
+      // ক্লাউডের প্রধান ডাটাবেজের সঠিক পাথ হচ্ছে (default)
+      const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/templates`;
 
       const formattedFields = templateData.inputFields.map(f => ({
         mapValue: {
