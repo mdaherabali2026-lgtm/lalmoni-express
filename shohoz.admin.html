@@ -123,9 +123,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { initializeFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-    // ImgBB API Key
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
 
     const firebaseConfig = {
@@ -139,7 +138,12 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    
+    // মোবাইল ব্রাউজারে আটকে থাকা রোধ করতে লং-পোলিং ফোর্স অ্যাক্টিভেশন
+    const db = initializeFirestore(app, {
+      experimentalForceLongPolling: true
+    });
+    
     const provider = new GoogleAuthProvider();
 
     const ALLOWED_ADMINS = [
@@ -214,7 +218,6 @@
     addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
     addFieldBtn.addEventListener("click", () => addFieldRow());
 
-    // ImgBB ফাইল আপলোড ফাংশন
     async function uploadToImgBB(file) {
       const formData = new FormData();
       formData.append("image", file);
@@ -241,11 +244,11 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
-        // ১. ImgBB-তে ছবি আপলোড
-        submitBtn.innerText = "⏳ প্রিভিউ ছবি ImgBB-তে আপলোড হচ্ছে...";
+        // ১. ছবি আপলোড
+        submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
-        submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড ImgBB-তে আপলোড হচ্ছে...";
+        submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড আপলোড হচ্ছে...";
         const fullImageUrl = await uploadToImgBB(fullFile);
 
         // ২. ফিল্ড সংগ্রহ
@@ -277,7 +280,7 @@
         await addDoc(collection(db, "templates"), templateData);
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
-        statusMessage.innerText = "🎉 ছবিগুলো ImgBB-তে আপলোড হয়ে ফায়ারবেসে ব্যানার সফলভাবে তৈরি হয়েছে!";
+        statusMessage.innerText = "🎉 ব্যানার সফলভাবে তৈরি ও ফায়ারবেসে সেভ হয়েছে!";
         templateForm.reset();
         fieldsContainer.innerHTML = "";
         addFieldRow();
