@@ -137,6 +137,11 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // অনুমোদিত অ্যাডমিন তালিকা
+    const ALLOWED_ADMINS = [
+      "sirazulvai2263@gmail.com"
+    ];
+
     const loginSection = document.getElementById("loginSection");
     const dashboardSection = document.getElementById("dashboardSection");
     const authStatusBadge = document.getElementById("authStatusBadge");
@@ -151,13 +156,21 @@
     const statusMessage = document.getElementById("statusMessage");
     const submitBtn = document.getElementById("submitBtn");
 
-    // অথেন্টিকেশন স্টেট চেক
-    onAuthStateChanged(auth, (user) => {
+    // অথেন্টিকেশন স্টেট চেক (অননুমোদিত জিমেইল তৎক্ষণাৎ ব্লক হবে)
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        loginSection.classList.add("hidden");
-        dashboardSection.classList.remove("hidden");
-        adminEmailDisplay.innerText = user.email;
-        authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
+        if (ALLOWED_ADMINS.includes(user.email)) {
+          loginSection.classList.add("hidden");
+          dashboardSection.classList.remove("hidden");
+          adminEmailDisplay.innerText = user.email;
+          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
+        } else {
+          loginSection.classList.remove("hidden");
+          dashboardSection.classList.add("hidden");
+          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") কোনো অনুমোদিত অ্যাডমিন অ্যাকাউন্ট নয়!";
+          loginError.classList.remove("hidden");
+          await signOut(auth);
+        }
       } else {
         loginSection.classList.remove("hidden");
         dashboardSection.classList.add("hidden");
@@ -198,7 +211,6 @@
     addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
     addFieldBtn.addEventListener("click", () => addFieldRow());
 
-    // ব্যানার সাবমিট লজিক (মূল ক্লাউড রুলস এখানে যাচাই করবে আপনি আসল অ্যাডমিন কি না)
     templateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       submitBtn.disabled = true;
@@ -229,7 +241,6 @@
           createdAt: serverTimestamp()
         };
 
-        // ডাটাবেজে ব্যানার যোগ করা
         await addDoc(collection(db, "templates"), templateData);
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
@@ -240,7 +251,7 @@
       } catch (error) {
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
         if (error.code === 'permission-denied') {
-          statusMessage.innerText = "❌ অ্যাক্সেস ডিনাইড: ফায়ারবেস ডাটাবেজের admins কালেকশনে আপনার ইমেইলটি না থাকায় আপলোড বাতিল করা হয়েছে।";
+          statusMessage.innerText = "❌ অ্যাক্সেস ডিনাইড: ফায়ারবেস ডাটাবেজের admins কালেকশনে অনুমোদন না থাকায় আপলোড বাতিল করা হয়েছে।";
         } else {
           statusMessage.innerText = "সমস্যা হয়েছে: " + error.message;
         }
