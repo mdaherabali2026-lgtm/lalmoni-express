@@ -126,6 +126,8 @@
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
     const PROJECT_ID = "gen-lang-client-0426695413";
+    // আপনার ফায়ারস্টোর ডাটাবেজের সঠিক নাম
+    const DATABASE_ID = "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -242,7 +244,7 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
-        // ১. ImgBB আপলোড
+        // ১. ImgBB-তে ছবি আপলোড
         submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
@@ -267,9 +269,9 @@
           });
         });
 
-        // ৩. সরাসরি ফায়ারস্টোর REST API দিয়ে পাঠানো (মোবাইল নেটওয়ার্কে শতভাগ নিশ্চিত কাজ করবে)
+        // ৩. আপনার নির্দিষ্ট কাস্টম ফায়ারস্টোর ডাটাবেজে ডাটা সংরক্ষণ
         const idToken = await currentUser.getIdToken();
-        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/templates`;
+        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
 
         const payload = {
           fields: {
