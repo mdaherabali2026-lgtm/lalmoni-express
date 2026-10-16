@@ -21,7 +21,7 @@
         <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস ডাটাবেজ দ্বারা যাচাইকৃত ও সুরক্ষিত</p>
       </div>
       <div id="authStatusBadge">
-        <span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">লগইন চেক হচ্ছে...</span>
+        <span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
     <div id="loginSection" class="p-8 text-center space-y-4">
       <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
       <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার ফায়ারবেস অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
       <button id="googleLoginBtn" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-2 transition">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         গুগল দিয়ে লগইন করুন
@@ -121,7 +121,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { initializeFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -134,12 +134,7 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    
-    // মোবাইল নেটওয়ার্ক ও ফায়ারওয়াল ফ্রেন্ডলি Long Polling কানেকশন
-    const db = initializeFirestore(app, {
-      experimentalAutoDetectLongPolling: true
-    });
-
+    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
     const loginSection = document.getElementById("loginSection");
@@ -156,31 +151,13 @@
     const statusMessage = document.getElementById("statusMessage");
     const submitBtn = document.getElementById("submitBtn");
 
-    // অথেন্টিকেশন স্টেট চেক (সরাসরি ফায়ারস্টোরের admins কালেকশন থেকে ভেরিফাই)
-    onAuthStateChanged(auth, async (user) => {
+    // অথেন্টিকেশন স্টেট চেক
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        authStatusBadge.innerHTML = `<span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">অনুমতি যাচাই হচ্ছে...</span>`;
-        try {
-          const adminDocRef = doc(db, "admins", user.email);
-          const adminSnap = await getDoc(adminDocRef);
-
-          if (adminSnap.exists() && adminSnap.data().role === "admin") {
-            loginSection.classList.add("hidden");
-            dashboardSection.classList.remove("hidden");
-            adminEmailDisplay.innerText = user.email;
-            authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
-          } else {
-            loginSection.classList.remove("hidden");
-            dashboardSection.classList.add("hidden");
-            loginError.innerText = "অ্যাক্সেস ডিনাইড: এই ইমেইলটি ফায়ারবেস অ্যাডমিন তালিকায় অনুমোদিত নয়।";
-            loginError.classList.remove("hidden");
-            await signOut(auth);
-          }
-        } catch (err) {
-          loginError.innerText = "ভেরিফিকেশন এরর: " + err.message;
-          loginError.classList.remove("hidden");
-          await signOut(auth);
-        }
+        loginSection.classList.add("hidden");
+        dashboardSection.classList.remove("hidden");
+        adminEmailDisplay.innerText = user.email;
+        authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
       } else {
         loginSection.classList.remove("hidden");
         dashboardSection.classList.add("hidden");
@@ -221,10 +198,12 @@
     addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
     addFieldBtn.addEventListener("click", () => addFieldRow());
 
+    // ব্যানার সাবমিট লজিক (মূল ক্লাউড রুলস এখানে যাচাই করবে আপনি আসল অ্যাডমিন কি না)
     templateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       submitBtn.disabled = true;
       submitBtn.innerText = "আপলোড হচ্ছে...";
+      statusMessage.className = "hidden";
 
       try {
         const rows = document.querySelectorAll(".field-row");
@@ -250,16 +229,21 @@
           createdAt: serverTimestamp()
         };
 
+        // ডাটাবেজে ব্যানার যোগ করা
         await addDoc(collection(db, "templates"), templateData);
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
-        statusMessage.innerText = "সফলভাবে আপলোড সম্পন্ন হয়েছে!";
+        statusMessage.innerText = "🎉 সফলভাবে ব্যানার ফায়ারবেস ক্লাউডে আপলোড হয়েছে!";
         templateForm.reset();
         fieldsContainer.innerHTML = "";
         addFieldRow();
       } catch (error) {
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
-        statusMessage.innerText = "সমস্যা হয়েছে: " + error.message;
+        if (error.code === 'permission-denied') {
+          statusMessage.innerText = "❌ অ্যাক্সেস ডিনাইড: ফায়ারবেস ডাটাবেজের admins কালেকশনে আপনার ইমেইলটি না থাকায় আপলোড বাতিল করা হয়েছে।";
+        } else {
+          statusMessage.innerText = "সমস্যা হয়েছে: " + error.message;
+        }
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = "ক্লাউডে ব্যানার আপলোড করুন";
