@@ -18,18 +18,18 @@
     <div class="bg-indigo-600 px-6 py-5 text-white flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold">সহজ ব্যানার অ্যাডমিন</h1>
-        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস সিকিউরিটি ও গুগল অথেন্টিকেশন দ্বারা সুরক্ষিত</p>
+        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস ডাটাবেজ দ্বারা যাচাইকৃত ও সুরক্ষিত</p>
       </div>
       <div id="authStatusBadge">
         <span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">লগইন চেক হচ্ছে...</span>
       </div>
     </div>
 
-    <!-- Auth Lock Screen (লগইন না থাকলে দেখাবে) -->
+    <!-- Auth Lock Screen -->
     <div id="loginSection" class="p-8 text-center space-y-4">
       <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
       <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার ফায়ারবেস অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
       <button id="googleLoginBtn" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-2 transition">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         গুগল দিয়ে লগইন করুন
@@ -37,7 +37,7 @@
       <div id="loginError" class="text-red-500 text-sm hidden font-medium"></div>
     </div>
 
-    <!-- Main Dashboard Form (লগইন থাকলে আনলক হবে) -->
+    <!-- Main Dashboard Form -->
     <div id="dashboardSection" class="hidden">
       <!-- Admin User Bar -->
       <div class="bg-slate-50 border-b px-6 py-3 flex justify-between items-center text-sm">
@@ -121,9 +121,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
-    // আপনার ফায়ারবেস কনফিগারেশন
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
       authDomain: "gen-lang-client-0426695413.firebaseapp.com",
@@ -132,10 +131,6 @@
       messagingSenderId: "722683054375",
       appId: "1:722683054375:web:110bcb6f95f64ae9938102"
     };
-
-
-    // ⚠️ আপনার অনুমোদিত অ্যাডমিন জিমেইল এখানে দিন
-    const AUTHORIZED_ADMIN_EMAIL = "sirazulvai2263@gmail.com";
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -156,20 +151,30 @@
     const statusMessage = document.getElementById("statusMessage");
     const submitBtn = document.getElementById("submitBtn");
 
-    // অথেন্টিকেশন স্টেট চেক
-    onAuthStateChanged(auth, (user) => {
+    // অথেন্টিকেশন স্টেট চেক (সরাসরি admins কালেকশন থেকে ভেরিফাই হবে)
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (user.email === AUTHORIZED_ADMIN_EMAIL) {
-          loginSection.classList.add("hidden");
-          dashboardSection.classList.remove("hidden");
-          adminEmailDisplay.innerText = user.email;
-          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
-        } else {
-          loginSection.classList.remove("hidden");
-          dashboardSection.classList.add("hidden");
-          loginError.innerText = "অননুমোদিত ইমেইল! আপনি এই অ্যাডমিন প্যানেলের অ্যাডমিন নন।";
+        authStatusBadge.innerHTML = `<span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">অনুমতি যাচাই হচ্ছে...</span>`;
+        try {
+          const adminDocRef = doc(db, "admins", user.email);
+          const adminSnap = await getDoc(adminDocRef);
+
+          if (adminSnap.exists() && adminSnap.data().role === "admin") {
+            loginSection.classList.add("hidden");
+            dashboardSection.classList.remove("hidden");
+            adminEmailDisplay.innerText = user.email;
+            authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
+          } else {
+            loginSection.classList.remove("hidden");
+            dashboardSection.classList.add("hidden");
+            loginError.innerText = "অ্যাক্সেস ডিনাইড: এই ইমেইলটি ফায়ারবেস অ্যাডমিন তালিকায় অনুমোদিত নয়।";
+            loginError.classList.remove("hidden");
+            await signOut(auth);
+          }
+        } catch (err) {
+          loginError.innerText = "ভেরিফিকেশন এরর: " + err.message;
           loginError.classList.remove("hidden");
-          signOut(auth);
+          await signOut(auth);
         }
       } else {
         loginSection.classList.remove("hidden");
@@ -178,7 +183,6 @@
       }
     });
 
-    // গুগল সাইন ইন
     googleLoginBtn.addEventListener("click", async () => {
       loginError.classList.add("hidden");
       try {
@@ -189,10 +193,8 @@
       }
     });
 
-    // লগআউট
     logoutBtn.addEventListener("click", () => signOut(auth));
 
-    // ফিল্ড যোগ করার ফাংশন
     function addFieldRow(label = "", placeholder = "", inputType = "Text") {
       const row = document.createElement("div");
       row.className = "flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200 field-row";
@@ -210,12 +212,10 @@
       fieldsContainer.appendChild(row);
     }
 
-    // শুরুতে দুটি ডিফল্ট ফিল্ড
     addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান");
     addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
     addFieldBtn.addEventListener("click", () => addFieldRow());
 
-    // সাবমিশন
     templateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       submitBtn.disabled = true;
