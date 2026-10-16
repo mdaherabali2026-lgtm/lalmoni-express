@@ -123,7 +123,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { initializeFirestore, memoryLocalCache, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
 
@@ -139,11 +139,8 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // মেমরি ক্যাশ ও লং পোলিং মোড সক্রিয় করে ডাটাবেজ হ্যান্ডলার চালু
-    const db = initializeFirestore(app, {
-      localCache: memoryLocalCache(),
-      experimentalAutoDetectLongPolling: true
-    }, "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774");
+    // ফায়ারস্টোর অফিসিয়াল কাস্টম ডাটাবেজ ইনিশিয়ালাইজেশন
+    const db = getFirestore(app, "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774");
 
     const provider = new GoogleAuthProvider();
 
@@ -245,12 +242,14 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
+        // ১. ছবি আপলোড
         submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
         submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড আপলোড হচ্ছে...";
         const fullImageUrl = await uploadToImgBB(fullFile);
 
+        // ২. ফিল্ড সংগ্রহ
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
         const rows = document.querySelectorAll(".field-row");
         const inputFields = [];
@@ -275,8 +274,13 @@
           createdAt: serverTimestamp()
         };
 
-        // নির্দিষ্ট ডাটাবেজ ইনস্ট্যান্সে সরাসরি সেভ
-        await addDoc(collection(db, "templates"), templateData);
+        // ৩. ফায়ারস্টোর সেভ (১০ সেকেন্ডের টাইমআউট সহ, যাতে ব্রাউজার অনন্তকাল হ্যাং না থাকে)
+        const savePromise = addDoc(collection(db, "templates"), templateData);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("ফায়ারবেস ক্লাউড থেকে রেসপন্স আসতে অতিরিক্ত সময় নিচ্ছে। আপনার ফায়ারবেস Security Rules বা নেটওয়ার্ক চেক করুন।")), 10000)
+        );
+
+        await Promise.race([savePromise, timeoutPromise]);
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
         statusMessage.innerText = "🎉 ব্যানার সফলভাবে তৈরি ও ফায়ারবেসে সেভ হয়েছে!";
