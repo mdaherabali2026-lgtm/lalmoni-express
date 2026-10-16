@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ব্যানার মেকার - অ্যাডমিন প্যানেল</title>
+  <title>ব্যানার মেকার - নিরাপদ অ্যাডমিন প্যানেল</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -18,7 +18,7 @@
     <div class="bg-indigo-600 px-6 py-5 text-white flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold">সহজ ব্যানার অ্যাডমিন</h1>
-        <p class="text-xs text-indigo-100 mt-1">সরাসরি ক্লাউড REST কানেকশন</p>
+        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস ও ImgBB ক্লাউড দ্বারা পরিচালিত</p>
       </div>
       <div id="authStatusBadge">
         <span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>
@@ -29,7 +29,7 @@
     <div id="loginSection" class="p-8 text-center space-y-4">
       <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
       <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড করতে অনুমোদিত গুগল অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
       <button id="googleLoginBtn" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-2 transition">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         গুগল দিয়ে লগইন করুন
@@ -67,13 +67,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-3 bg-slate-50 border rounded-xl">
             <label class="block text-sm font-semibold text-slate-700 mb-1">🖼️ প্রিভিউ ইমেজ ফাইল (Preview Image)</label>
-            <p class="text-xs text-slate-500 mb-2">হোমস্ক্রিনের ছোট ছবি</p>
+            <p class="text-xs text-slate-500 mb-2">হোমস্ক্রিনে দেখানোর ছোট সাইজের ছবি</p>
             <input type="file" id="previewFileInput" accept="image/*" required
                    class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
           </div>
           <div class="p-3 bg-slate-50 border rounded-xl">
             <label class="block text-sm font-semibold text-slate-700 mb-1">🎨 মূল ইমেজ ফাইল (Full Background)</label>
-            <p class="text-xs text-slate-500 mb-2">এডিটরের মূল ব্যাকগ্রাউন্ড</p>
+            <p class="text-xs text-slate-500 mb-2">অ্যাপের এডিটরে কাজ করার মূল ব্যানার</p>
             <input type="file" id="fullFileInput" accept="image/*" required
                    class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
           </div>
@@ -119,6 +119,7 @@
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
     const PROJECT_ID = "gen-lang-client-0426695413";
+    const DATABASE_ID = "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -162,7 +163,7 @@
         } else {
           loginSection.classList.remove("hidden");
           dashboardSection.classList.add("hidden");
-          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") অ্যাডমিন নয়!";
+          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") কোনো অনুমোদিত অ্যাডমিন অ্যাকাউন্ট নয়!";
           loginError.classList.remove("hidden");
           await signOut(auth);
         }
@@ -222,10 +223,9 @@
       return result.data.url;
     }
 
-    // ফায়ারস্টোরে অফিশিয়াল REST API দিয়ে ডাটা পুশ করা
-    async function saveToFirestoreRest(templateData, token) {
-      // ক্লাউডের প্রধান ডাটাবেজের সঠিক পাথ হচ্ছে (default)
-      const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/templates`;
+    // ফায়ারস্টোর ডাটাবেজ রাউটিং হ্যান্ডলার (কাস্টম ডাটাবেজ সরাসরি সনাক্তকরণ)
+    async function saveTemplateData(templateData, token) {
+      const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
 
       const formattedFields = templateData.inputFields.map(f => ({
         mapValue: {
@@ -281,14 +281,14 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
-        // ১. ছবি আপলোড
+        // ১. ImgBB-তে ছবি আপলোড
         submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
         submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড আপলোড হচ্ছে...";
         const fullImageUrl = await uploadToImgBB(fullFile);
 
-        // ২. ফিল্ড প্রসেসিং
+        // ২. ফিল্ড সংগ্রহ
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
         const rows = document.querySelectorAll(".field-row");
         const inputFields = [];
@@ -311,9 +311,9 @@
           inputFields: inputFields
         };
 
-        // ৩. সরাসরি ক্লাউডে পাঠানো
+        // ৩. টোকেন নিয়ে ফায়ারবেসে পুশ
         const token = await currentUser.getIdToken(true);
-        await saveToFirestoreRest(templateData, token);
+        await saveTemplateData(templateData, token);
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
         statusMessage.innerText = "🎉 ব্যানার সফলভাবে তৈরি ও ফায়ারবেসে সেভ হয়েছে!";
