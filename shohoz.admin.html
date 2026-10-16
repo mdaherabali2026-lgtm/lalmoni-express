@@ -121,7 +121,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+    import { initializeFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -134,7 +134,12 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    
+    // মোবাইল নেটওয়ার্ক ও ফায়ারওয়াল ফ্রেন্ডলি Long Polling কানেকশন
+    const db = initializeFirestore(app, {
+      experimentalAutoDetectLongPolling: true
+    });
+
     const provider = new GoogleAuthProvider();
 
     const loginSection = document.getElementById("loginSection");
@@ -151,7 +156,7 @@
     const statusMessage = document.getElementById("statusMessage");
     const submitBtn = document.getElementById("submitBtn");
 
-    // অথেন্টিকেশন স্টেট চেক (সরাসরি admins কালেকশন থেকে ভেরিফাই হবে)
+    // অথেন্টিকেশন স্টেট চেক (সরাসরি ফায়ারস্টোরের admins কালেকশন থেকে ভেরিফাই)
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         authStatusBadge.innerHTML = `<span class="bg-indigo-800 text-xs px-3 py-1.5 rounded-full border border-indigo-400">অনুমতি যাচাই হচ্ছে...</span>`;
@@ -167,7 +172,7 @@
           } else {
             loginSection.classList.remove("hidden");
             dashboardSection.classList.add("hidden");
-            loginError.innerText = "অ্যাক্সেস ডিনাইড: এই ইমেইলটি ফায়ারবেস অ্যাডমিন তালিকায় অনুমোদিত নয়।";
+            loginError.innerText = "অ্যাক্সেস ডিনাইড: এই ইমেইলটি ফায়ারবেস অ্যাডমিন তালিকায় অনুমোদিত নয়।";
             loginError.classList.remove("hidden");
             await signOut(auth);
           }
