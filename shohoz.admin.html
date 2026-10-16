@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <!-- সরাসরি ফাইল আপলোড (ImgBB ইন্টিগ্রেশন) -->
+        <!-- সরাসরি ফাইল আপলোড (ImgBB) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-3 bg-slate-50 border rounded-xl">
             <label class="block text-sm font-semibold text-slate-700 mb-1">🖼️ প্রিভিউ ইমেজ ফাইল (Preview Image)</label>
@@ -119,31 +119,25 @@
 
   </div>
 
-  <!-- Firebase Modular SDK -->
+  <!-- Firebase Auth & REST Delivery -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { initializeFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
+    const PROJECT_ID = "gen-lang-client-0426695413";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
-      authDomain: "gen-lang-client-0426695413.firebaseapp.com",
-      projectId: "gen-lang-client-0426695413",
-      storageBucket: "gen-lang-client-0426695413.firebasestorage.app",
+      authDomain: `${PROJECT_ID}.firebaseapp.com`,
+      projectId: PROJECT_ID,
+      storageBucket: `${PROJECT_ID}.firebasestorage.app`,
       messagingSenderId: "722683054375",
       appId: "1:722683054375:web:110bcb6f95f64ae9938102"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    
-    // মোবাইল ব্রাউজারে আটকে থাকা রোধ করতে লং-পোলিং ফোর্স অ্যাক্টিভেশন
-    const db = initializeFirestore(app, {
-      experimentalForceLongPolling: true
-    });
-    
     const provider = new GoogleAuthProvider();
 
     const ALLOWED_ADMINS = [
@@ -164,7 +158,10 @@
     const statusMessage = document.getElementById("statusMessage");
     const submitBtn = document.getElementById("submitBtn");
 
+    let currentUser = null;
+
     onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
       if (user) {
         if (ALLOWED_ADMINS.includes(user.email)) {
           loginSection.classList.add("hidden");
@@ -236,6 +233,7 @@
 
     templateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (!currentUser) return;
 
       submitBtn.disabled = true;
       statusMessage.className = "hidden";
@@ -244,7 +242,7 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
-        // ১. ছবি আপলোড
+        // ১. ImgBB আপলোড
         submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
@@ -254,30 +252,55 @@
         // ২. ফিল্ড সংগ্রহ
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
         const rows = document.querySelectorAll(".field-row");
-        const inputFields = [];
+        const inputFieldsValues = [];
 
         rows.forEach((row, index) => {
-          inputFields.push({
-            id: `field_${index + 1}`,
-            label: row.querySelector(".field-label").value.trim(),
-            placeholder: row.querySelector(".field-placeholder").value.trim() || row.querySelector(".field-label").value.trim(),
-            inputType: row.querySelector(".field-type").value
+          inputFieldsValues.push({
+            mapValue: {
+              fields: {
+                id: { stringValue: `field_${index + 1}` },
+                label: { stringValue: row.querySelector(".field-label").value.trim() },
+                placeholder: { stringValue: row.querySelector(".field-placeholder").value.trim() || row.querySelector(".field-label").value.trim() },
+                inputType: { stringValue: row.querySelector(".field-type").value }
+              }
+            }
           });
         });
 
-        // ৩. ফায়ারস্টোর ডাটাবেজে সংরক্ষণ
-        const templateData = {
-          title: document.getElementById("title").value.trim(),
-          categoryId: document.getElementById("categoryId").value,
-          previewUrl: previewUrl,
-          fullImageUrl: fullImageUrl,
-          hasPhotoSlot: document.getElementById("hasPhotoSlot").checked,
-          inputFields: inputFields,
-          usedCount: 0,
-          createdAt: serverTimestamp()
+        // ৩. সরাসরি ফায়ারস্টোর REST API দিয়ে পাঠানো (মোবাইল নেটওয়ার্কে শতভাগ নিশ্চিত কাজ করবে)
+        const idToken = await currentUser.getIdToken();
+        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/templates`;
+
+        const payload = {
+          fields: {
+            title: { stringValue: document.getElementById("title").value.trim() },
+            categoryId: { stringValue: document.getElementById("categoryId").value },
+            previewUrl: { stringValue: previewUrl },
+            fullImageUrl: { stringValue: fullImageUrl },
+            hasPhotoSlot: { booleanValue: document.getElementById("hasPhotoSlot").checked },
+            usedCount: { integerValue: "0" },
+            inputFields: {
+              arrayValue: {
+                values: inputFieldsValues
+              }
+            },
+            createdAt: { timestampValue: new Date().toISOString() }
+          }
         };
 
-        await addDoc(collection(db, "templates"), templateData);
+        const response = await fetch(firestoreUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${idToken}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.error?.message || "ফায়ারবেসে সংরক্ষণ করা সম্ভব হয়নি।");
+        }
 
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
         statusMessage.innerText = "🎉 ব্যানার সফলভাবে তৈরি ও ফায়ারবেসে সেভ হয়েছে!";
