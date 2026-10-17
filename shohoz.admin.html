@@ -15,6 +15,8 @@
       position: absolute;
       transform: translate(-50%, -50%);
       cursor: move;
+      white-space: nowrap;
+      line-height: 1.1;
     }
     .draggable-item.active {
       outline: 2px dashed #4f46e5;
@@ -114,7 +116,7 @@
         <button id="desktopLogoutBtn" class="text-rose-600 hover:underline font-bold">লগআউট</button>
       </div>
 
-      <!-- ================= ট্যাব ১: ব্যানার আপলোড ও ভিউজুয়াল ক্যানভাস এডিটর ================= -->
+      <!-- ================= ট্যাব ১: ব্যানার আপলোড ও ভিউজুয়াল ক্যানভাস এডিটর ================= -->
       <section id="tab-upload" class="tab-content">
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden max-w-4xl mx-auto">
           <div class="bg-slate-50 border-b px-6 py-4 flex justify-between items-center">
@@ -191,11 +193,11 @@
               <div class="relative w-full max-w-lg mx-auto bg-slate-900 border-2 border-indigo-400 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center min-h-[300px]" id="canvasContainer">
                 <img id="canvasBackgroundImg" src="https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন" class="w-full h-auto object-contain pointer-events-none block">
                 <div id="draggableOverlay" class="absolute inset-0 w-full h-full pointer-events-auto">
-                  <!-- ড্র্যাগেবল টেক্সট বক্সগুলো জাভাস্ক্রিপ্ট দিয়ে এখানে যুক্ত হবে -->
+                  <!-- ড্র্যাগেবল টেক্সট বক্সগুলো এখানে যুক্ত হবে -->
                 </div>
               </div>
 
-              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার -->
+              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার (স্লাইডার সর্বনিম্ন ৫ পিক্সেল) -->
               <div id="activeBoxToolbar" class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl max-w-lg mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
                 <span class="font-bold text-indigo-700" id="selectedFieldName">কোনো টেক্সট সিলেক্ট নেই</span>
                 <div class="flex items-center gap-2">
@@ -204,7 +206,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <label class="font-medium text-slate-600">সাইজ:</label>
-                  <input type="range" id="activeFontSizeSlider" min="12" max="64" value="24" class="w-24">
+                  <input type="range" id="activeFontSizeSlider" min="5" max="64" value="24" class="w-24">
                   <span id="activeFontSizeDisplay" class="font-bold text-slate-800">24px</span>
                 </div>
               </div>
@@ -568,11 +570,11 @@
       createCanvasDraggable(cfg);
     }
 
-    // ক্যানভাসে ড্র্যাগেবল বক্স তৈরি (মোবাইল টাচ-সাপোর্টসহ)
+    // ক্যানভাসে ড্র্যাগেবল বক্স তৈরি (মোবাইল টাচ-সাপোর্টসহ এবং কম্প্যাক্ট প্যাডিং)
     function createCanvasDraggable(cfg) {
       const box = document.createElement("div");
       box.id = "drag_" + cfg.id;
-      box.className = "draggable-item bg-black/60 backdrop-blur-sm border border-white/60 px-2.5 py-1 rounded-lg text-center font-bold shadow-lg transition-transform";
+      box.className = "draggable-item bg-black/70 backdrop-blur-sm border border-white/60 px-1.5 py-0.5 rounded text-center font-bold shadow transition-transform";
       box.style.left = `${cfg.x}%`;
       box.style.top = `${cfg.y}%`;
       box.style.color = cfg.textColor;
@@ -1112,6 +1114,7 @@
       usersListBody.innerHTML = "";
       try {
         const token = await currentUser.getIdToken(true);
+
         const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents:runQuery`;
         const res = await fetch(url, {
           method: "POST",
