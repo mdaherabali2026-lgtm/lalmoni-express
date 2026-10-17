@@ -18,7 +18,7 @@
     <div class="bg-indigo-600 px-6 py-5 text-white flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold">সহজ ব্যানার অ্যাডমিন</h1>
-        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস ও ImgBB ক্লাউড দ্বারা পরিচালিত</p>
+        <p class="text-xs text-indigo-100 mt-1">ফায়ারবেস ও ImgBB ক্লাউড প্যানেল</p>
       </div>
       <div id="authStatusBadge">
         <span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>
@@ -39,6 +39,7 @@
 
     <!-- Main Dashboard Form -->
     <div id="dashboardSection" class="hidden">
+      <!-- Admin User Bar -->
       <div class="bg-slate-50 border-b px-6 py-3 flex justify-between items-center text-sm">
         <div class="text-slate-600">লগইন আছেন: <strong id="adminEmailDisplay" class="text-slate-900"></strong></div>
         <button id="logoutBtn" class="text-red-600 hover:underline font-semibold text-xs">লগআউট</button>
@@ -46,6 +47,7 @@
 
       <form id="templateForm" class="p-6 md:p-8 space-y-6">
 
+        <!-- ব্যানার নাম ও ক্যাটাগরি -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1">ব্যানারের নাম (Title)</label>
@@ -64,6 +66,7 @@
           </div>
         </div>
 
+        <!-- সরাসরি ফাইল আপলোড (ImgBB) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="p-3 bg-slate-50 border rounded-xl">
             <label class="block text-sm font-semibold text-slate-700 mb-1">🖼️ প্রিভিউ ইমেজ ফাইল (Preview Image)</label>
@@ -79,6 +82,7 @@
           </div>
         </div>
 
+        <!-- ফটো স্লট চেকবক্স -->
         <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-xl">
           <input type="checkbox" id="hasPhotoSlot" class="w-5 h-5 text-indigo-600 rounded">
           <label for="hasPhotoSlot" class="text-sm font-medium text-slate-700 cursor-pointer">
@@ -86,6 +90,7 @@
           </label>
         </div>
 
+        <!-- ডায়নামিক ইনপুট ফিল্ড সেকশন -->
         <div class="border-t pt-5">
           <div class="flex justify-between items-center mb-3">
             <div>
@@ -100,6 +105,7 @@
           <div id="fieldsContainer" class="space-y-3"></div>
         </div>
 
+        <!-- সাবমিট স্ট্যাটাস ও বাটন -->
         <div class="border-t pt-5">
           <div id="statusMessage" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
 
@@ -119,7 +125,9 @@
 
     const IMGBB_API_KEY = "a82f5dffaae109bb764a2746a75a3c4b";
     const PROJECT_ID = "gen-lang-client-0426695413";
-    const DATABASE_ID = "ai-studio-android-bannerma-f2849996-4c44-4dfa-9743-1ccca6f16774";
+    
+    // আপনার ফায়ারবেস কনসোলের সঠিক ডাটাবেজ নাম
+    const DATABASE_ID = "ai-studio-android-bannerma-f2849996-4b44-4c8a-97d3-1ccdabf16774";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAnXHXTjiDuqfkRuVaVXjvO3GYbff0qp8I",
@@ -223,7 +231,6 @@
       return result.data.url;
     }
 
-    // ফায়ারস্টোর ডাটাবেজ রাউটিং হ্যান্ডলার (কাস্টম ডাটাবেজ সরাসরি সনাক্তকরণ)
     async function saveTemplateData(templateData, token) {
       const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
 
@@ -281,7 +288,7 @@
         const previewFile = document.getElementById("previewFileInput").files[0];
         const fullFile = document.getElementById("fullFileInput").files[0];
 
-        // ১. ImgBB-তে ছবি আপলোড
+        // ১. ছবি আপলোড
         submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
         const previewUrl = await uploadToImgBB(previewFile);
 
