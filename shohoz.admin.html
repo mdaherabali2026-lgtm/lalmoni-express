@@ -186,7 +186,7 @@
             <div class="border-t pt-5 space-y-3">
               <div>
                 <h3 class="text-base font-bold text-slate-800">২. ভিউজুয়াল ক্যানভাস (আঙুল দিয়ে টেনে লেখা বসান)</h3>
-                <p class="text-xs text-slate-500">বক্সগুলোকে টেনে ব্যানারের সঠিক জায়গায় বসিয়ে দিন। যে বক্সে ট্যাপ করবেন তার ফন্ট সাইজ ও রঙ নিচে থেকে বদলাতে পারবেন।</p>
+                <p class="text-xs text-slate-500">বক্সগুলোকে টেনে অথবা নিচের অ্যারো প্যাড দিয়ে নিখুঁতভাবে বসান।</p>
               </div>
 
               <!-- ক্যানভাস বক্স -->
@@ -197,18 +197,44 @@
                 </div>
               </div>
 
-              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার (স্লাইডার সর্বনিম্ন ৫ পিক্সেল) -->
-              <div id="activeBoxToolbar" class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl max-w-lg mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
-                <span class="font-bold text-indigo-700" id="selectedFieldName">কোনো টেক্সট সিলেক্ট নেই</span>
-                <div class="flex items-center gap-2">
-                  <label class="font-medium text-slate-600">কালার:</label>
-                  <input type="color" id="activeColorPicker" value="#ffffff" class="w-7 h-7 rounded border cursor-pointer">
+              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার এবং পজিশন অ্যারো প্যাড -->
+              <div id="activeBoxToolbar" class="bg-white border-2 border-indigo-100 p-4 rounded-2xl max-w-lg mx-auto shadow-sm space-y-3">
+                
+                <div class="flex items-center justify-between border-b pb-2">
+                  <span class="font-bold text-indigo-700 text-sm" id="selectedFieldName">কোনো টেক্সট সিলেক্ট নেই</span>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                      <label class="text-xs font-medium text-slate-600">কালার:</label>
+                      <input type="color" id="activeColorPicker" value="#ffffff" class="w-6 h-6 rounded border cursor-pointer">
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <label class="text-xs font-medium text-slate-600">সাইজ:</label>
+                      <input type="range" id="activeFontSizeSlider" min="5" max="64" value="24" class="w-20">
+                      <span id="activeFontSizeDisplay" class="font-bold text-slate-800 text-xs">24px</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <label class="font-medium text-slate-600">সাইজ:</label>
-                  <input type="range" id="activeFontSizeSlider" min="5" max="64" value="24" class="w-24">
-                  <span id="activeFontSizeDisplay" class="font-bold text-slate-800">24px</span>
+
+                <!-- ৪-মুখী পজিশনিং প্যাড (D-Pad Controller) -->
+                <div id="positionPadContainer" class="hidden pt-1">
+                  <div class="text-[11px] text-slate-500 text-center mb-2 font-medium">🎯 নিখুঁতভাবে ডানে-বামে সরাতে তীর চিহ্নে ট্যাপ করুন:</div>
+                  <div class="flex justify-center items-center">
+                    <div class="grid grid-cols-3 gap-1.5 w-36">
+                      <div></div>
+                      <button type="button" id="btnMoveUp" class="h-9 bg-slate-100 active:bg-indigo-600 active:text-white rounded-lg flex items-center justify-center text-base font-bold shadow-sm border border-slate-200">⬆️</button>
+                      <div></div>
+
+                      <button type="button" id="btnMoveLeft" class="h-9 bg-slate-100 active:bg-indigo-600 active:text-white rounded-lg flex items-center justify-center text-base font-bold shadow-sm border border-slate-200">⬅️</button>
+                      <div class="h-9 flex items-center justify-center text-[10px] text-slate-400 font-bold bg-slate-50 rounded-lg border border-dashed border-slate-200">MOVE</div>
+                      <button type="button" id="btnMoveRight" class="h-9 bg-slate-100 active:bg-indigo-600 active:text-white rounded-lg flex items-center justify-center text-base font-bold shadow-sm border border-slate-200">➡️</button>
+
+                      <div></div>
+                      <button type="button" id="btnMoveDown" class="h-9 bg-slate-100 active:bg-indigo-600 active:text-white rounded-lg flex items-center justify-center text-base font-bold shadow-sm border border-slate-200">⬇️</button>
+                      <div></div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
 
@@ -519,10 +545,16 @@
     const activeFontSizeSlider = document.getElementById("activeFontSizeSlider");
     const activeFontSizeDisplay = document.getElementById("activeFontSizeDisplay");
 
+    // প্যাড এলিমেন্টস
+    const positionPadContainer = document.getElementById("positionPadContainer");
+    const btnMoveUp = document.getElementById("btnMoveUp");
+    const btnMoveDown = document.getElementById("btnMoveDown");
+    const btnMoveLeft = document.getElementById("btnMoveLeft");
+    const btnMoveRight = document.getElementById("btnMoveRight");
+
     let fieldConfigs = []; // { id, label, placeholder, x, y, fontSize, textColor }
     let activeFieldId = null;
 
-    // লোকাল ফাইল সিলেক্ট করলেই ক্যানভাসে ছবি দেখানো
     fullFileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -531,7 +563,6 @@
       }
     });
 
-    // ফিল্ড যোগ করার ফাংশন
     function addFieldRow(label = "", placeholder = "", x = 50, y = 50, fontSize = 24, textColor = "#ffffff") {
       const fieldId = "field_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
       const row = document.createElement("div");
@@ -570,7 +601,6 @@
       createCanvasDraggable(cfg);
     }
 
-    // ক্যানভাসে ড্র্যাগেবল বক্স তৈরি (মোবাইল টাচ-সাপোর্টসহ এবং কম্প্যাক্ট প্যাডিং)
     function createCanvasDraggable(cfg) {
       const box = document.createElement("div");
       box.id = "drag_" + cfg.id;
@@ -581,7 +611,6 @@
       box.style.fontSize = `${cfg.fontSize}px`;
       box.innerText = cfg.label || "লেখা";
 
-      // বক্স নির্বাচন ও সক্রিয় করা
       box.addEventListener("pointerdown", (e) => {
         selectField(cfg.id);
         startDragging(e, box, cfg);
@@ -601,6 +630,7 @@
       if (activeFieldId === id) {
         activeFieldId = null;
         selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
+        positionPadContainer.classList.add("hidden");
       }
     }
 
@@ -616,10 +646,11 @@
         activeColorPicker.value = cfg.textColor;
         activeFontSizeSlider.value = cfg.fontSize;
         activeFontSizeDisplay.innerText = `${cfg.fontSize}px`;
+        positionPadContainer.classList.remove("hidden"); // অবজেক্ট সিলেক্ট করলে প্যাড ওপেন হবে
       }
     }
 
-    // মোবাইল এবং ডেক্সটপ উভয়তেই স্মুথ টাচ ড্র্যাগ অ্যান্ড ড্রপ লজিক
+    // ড্র্যাগ লজিক
     function startDragging(e, box, cfg) {
       e.preventDefault();
       const rect = draggableOverlay.getBoundingClientRect();
@@ -631,9 +662,8 @@
         let posX = ((clientX - rect.left) / rect.width) * 100;
         let posY = ((clientY - rect.top) / rect.height) * 100;
 
-        // ০ থেকে ১০০% এর ভেতরে সীমাবদ্ধ রাখা
-        posX = Math.max(3, Math.min(97, posX));
-        posY = Math.max(3, Math.min(97, posY));
+        posX = Math.max(2, Math.min(98, posX));
+        posY = Math.max(2, Math.min(98, posY));
 
         cfg.x = parseFloat(posX.toFixed(2));
         cfg.y = parseFloat(posY.toFixed(2));
@@ -651,7 +681,31 @@
       window.addEventListener("pointerup", onPointerUp);
     }
 
-    // টুলবার কন্ট্রোলস (কালার ও সাইজ পরিবর্তন)
+    // ==================================================
+    // নজ / অ্যারো প্যাড (D-Pad) দিয়ে সূক্ষ্ম নড়াচড়ার লজিক
+    // ==================================================
+    function nudgeActiveItem(dx, dy) {
+      if (!activeFieldId) return;
+      const cfg = fieldConfigs.find(c => c.id === activeFieldId);
+      if (!cfg) return;
+
+      const box = document.getElementById("drag_" + cfg.id);
+      if (!box) return;
+
+      cfg.x = parseFloat(Math.max(1, Math.min(99, cfg.x + dx)).toFixed(2));
+      cfg.y = parseFloat(Math.max(1, Math.min(99, cfg.y + dy)).toFixed(2));
+
+      box.style.left = `${cfg.x}%`;
+      box.style.top = `${cfg.y}%`;
+    }
+
+    // প্রতি ক্লিকে ০.৪% করে সূক্ষ্ম মুভ হবে
+    btnMoveUp.addEventListener("click", () => nudgeActiveItem(0, -0.4));
+    btnMoveDown.addEventListener("click", () => nudgeActiveItem(0, 0.4));
+    btnMoveLeft.addEventListener("click", () => nudgeActiveItem(-0.4, 0));
+    btnMoveRight.addEventListener("click", () => nudgeActiveItem(0.4, 0));
+
+    // টুলবার কন্ট্রোলস
     activeColorPicker.addEventListener("input", (e) => {
       if (!activeFieldId) return;
       const cfg = fieldConfigs.find(c => c.id === activeFieldId);
@@ -702,7 +756,6 @@
 
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
 
-        // ফিল্ড ও পজিশন ডেটা প্রস্তুতকরণ
         const formattedFields = fieldConfigs.map((f, index) => ({
           mapValue: {
             fields: {
@@ -773,6 +826,7 @@
       fieldConfigs = [];
       activeFieldId = null;
       selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
+      positionPadContainer.classList.add("hidden");
       canvasBackgroundImg.src = "https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন";
       addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান", 50, 40, 26, "#ffffff");
       addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার", 50, 52, 26, "#ffffff");
@@ -871,10 +925,8 @@
       submitBtn.innerText = "পরিবর্তন সংরক্ষণ করুন (Update)";
       cancelEditBtn.classList.remove("hidden");
 
-      // ক্যানভাসে মূল ছবি সেট করা
       canvasBackgroundImg.src = item.fullImageUrl || item.previewUrl;
 
-      // ফিল্ড ও ক্যানভাস রেন্ডার
       fieldsContainer.innerHTML = "";
       draggableOverlay.innerHTML = "";
       fieldConfigs = [];
