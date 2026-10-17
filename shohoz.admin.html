@@ -39,7 +39,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">ImgBB সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">Fine D-Pad সক্রিয়</span>
     </div>
 
     <!-- ম্যানেজমেন্ট ট্যাব বার -->
@@ -255,7 +255,7 @@
   </main>
 
   <script>
-    // আপনার নতুন ImgBB API Key
+    // আপনার ImgBB API Key
     const IMGBB_API_KEY = "f58e7082c01a1f0e687721ebbbcff6da";
 
     const firebaseConfig = {
@@ -510,6 +510,7 @@
       }
     });
 
+    // D-Pad সূক্ষ্ম মুভমেন্ট ক্যালকুলেশন
     function moveSelected(dx, dy) {
       if (!selectedItem) return;
       if (selectedItem.type === 'photo') {
@@ -525,10 +526,11 @@
       renderCanvasLayers();
     }
 
-    document.getElementById("moveUp").addEventListener("click", () => moveSelected(0, -0.8));
-    document.getElementById("moveDown").addEventListener("click", () => moveSelected(0, 0.8));
-    document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.8, 0));
-    document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.8, 0));
+    // প্রতি ক্লিকে ০.২% সূক্ষ্ম মুভমেন্ট
+    document.getElementById("moveUp").addEventListener("click", () => moveSelected(0, -0.2));
+    document.getElementById("moveDown").addEventListener("click", () => moveSelected(0, 0.2));
+    document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.2, 0));
+    document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.2, 0));
 
     // ================= টেমপ্লেট সেভ (প্রিভিউ + অরিজিনাল সহ) =================
     document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
