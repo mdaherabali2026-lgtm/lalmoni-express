@@ -85,7 +85,7 @@
     <div id="loginSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-8 text-center max-w-md mx-auto my-12 space-y-4">
       <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
       <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-      <p class="text-sm text-slate-500">ব্যানার ও অ্যাপ কনটেন্ট ম্যানেজ করতে অনুমোদিত গুগল অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <p class="text-sm text-slate-500">ব্যানার ও অ্যাপ কনটেন্ট পরিচালনা করতে অনুমোদিত অ্যাডমিন হিসেবে সাইন ইন করুন।</p>
       <button id="googleLoginBtn" class="w-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center justify-center gap-2 transition">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         গুগল দিয়ে লগইন করুন
@@ -93,7 +93,7 @@
       <div id="loginError" class="text-red-500 text-sm hidden font-medium"></div>
     </div>
 
-    <!-- মূল সুরক্ষিত ড্যাশবোর্ড সেকশন -->
+    <!-- সুরক্ষিত ড্যাশবোর্ড সেকশন -->
     <div id="dashboardSection" class="hidden space-y-6">
 
       <!-- অ্যাডমিন ইনফো বার -->
@@ -127,7 +127,7 @@
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">ক্যাটাগরি</label>
                 <select id="categoryId" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
-                  <!-- ক্যাটাগরি ডাইনামিকালি লোড হবে -->
+                  <!-- ফায়ারবেস থেকে লোড হবে -->
                 </select>
               </div>
             </div>
@@ -196,7 +196,6 @@
 
       <!-- ================= ট্যাব ৩: হোম স্লাইডার ম্যানেজার ================= -->
       <section id="tab-slider" class="tab-content hidden space-y-6">
-        <!-- স্লাইডার আপলোড ফর্ম -->
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 max-w-2xl mx-auto space-y-4">
           <h2 class="text-lg font-bold text-slate-800 border-b pb-3">🖼️ নতুন হোম স্লাইডার যুক্ত করুন</h2>
           <form id="sliderForm" class="space-y-4">
@@ -209,8 +208,8 @@
               <input type="file" id="sliderFileInput" accept="image/*" required class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer border p-2 rounded-xl">
             </div>
             <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1">ক্লিক অ্যাকশন / টার্গেট লিংক (ঐচ্ছিক)</label>
-              <input type="text" id="sliderActionUrl" placeholder="যেমন: category:wedding অথবা কোনো ওয়েবসাইট লিঙ্ক" class="w-full px-4 py-2 border rounded-xl outline-none text-sm">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">ক্লিক লিঙ্ক (ঐচ্ছিক)</label>
+              <input type="text" id="sliderActionUrl" placeholder="যেমন: category:wedding অথবা কোনো লিঙ্ক" class="w-full px-4 py-2 border rounded-xl outline-none text-sm">
             </div>
             <div id="sliderStatusMessage" class="hidden p-3 rounded-xl text-sm font-medium"></div>
             <button type="submit" id="sliderSubmitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-sm">
@@ -219,7 +218,6 @@
           </form>
         </div>
 
-        <!-- বর্তমান স্লাইডার তালিকা -->
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 space-y-4">
           <div class="flex justify-between items-center border-b pb-3">
             <h3 class="text-base font-bold text-slate-800">বর্তমানে সক্রিয় স্লাইডারসমূহ</h3>
@@ -232,7 +230,6 @@
 
       <!-- ================= ট্যাব ৪: ক্যাটাগরি ম্যানেজার ================= -->
       <section id="tab-category" class="tab-content hidden space-y-6">
-        <!-- ক্যাটাগরি ফর্ম -->
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 max-w-2xl mx-auto space-y-4">
           <h2 class="text-lg font-bold text-slate-800 border-b pb-3">📂 নতুন ক্যাটাগরি যুক্ত করুন</h2>
           <form id="categoryForm" class="space-y-4">
@@ -243,7 +240,7 @@
               </div>
               <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1">ক্যাটাগরি আইডি (ইংরেজি ছোট অক্ষরে)</label>
-                <input type="text" id="catId" required placeholder="যেমন: islamic_waz" class="w-full px-4 py-2 border rounded-xl outline-none text-sm">
+                <input type="text" id="catId" required placeholder="যেমন: waz_mahfil" class="w-full px-4 py-2 border rounded-xl outline-none text-sm">
               </div>
             </div>
             <div>
@@ -257,7 +254,6 @@
           </form>
         </div>
 
-        <!-- ক্যাটাগরি তালিকা -->
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 space-y-4">
           <div class="flex justify-between items-center border-b pb-3">
             <h3 class="text-base font-bold text-slate-800">সকল ক্যাটাগরি তালিকা</h3>
@@ -273,24 +269,25 @@
         <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 space-y-4">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
             <div>
-              <h2 class="text-xl font-bold text-slate-800">👥 অ্যাপের সাধারণ ইউজার তালিকা</h2>
-              <p class="text-xs text-slate-500">অ্যাপে গুগল দিয়ে সাইন-ইন করা ব্যবহারকারীদের প্রোফাইল ও বিবরণ</p>
+              <h2 class="text-xl font-bold text-slate-800">👥 ব্যবহারকারী ও অ্যাডমিন তালিকা</h2>
+              <p class="text-xs text-slate-500">ডাটাবেজের ইউজার ও অ্যাডমিনের রোল এবং বিবরণ</p>
             </div>
             <button id="refreshUsersBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition">
               🔄 ইউজার তালিকা রিফ্রেশ
             </button>
           </div>
 
-          <div id="loadingUsers" class="text-center py-12 text-slate-500 text-sm">ইউজার ডাটা লোড হচ্ছে...</div>
+          <div id="loadingUsers" class="text-center py-8 text-slate-500 text-sm">ডাটাবেজ থেকে ইউজার লোড হচ্ছে...</div>
 
           <div class="overflow-x-auto">
             <table id="usersTable" class="w-full text-left text-sm hidden">
               <thead>
                 <tr class="bg-slate-50 text-slate-600 text-xs border-b">
-                  <th class="py-3 px-4">ইউজার</th>
+                  <th class="py-3 px-4">ব্যবহারকারী</th>
                   <th class="py-3 px-4">ইমেইল</th>
+                  <th class="py-3 px-4">রোল / স্ট্যাটাস</th>
                   <th class="py-3 px-4">ইউজার আইডি (UID)</th>
-                  <th class="py-3 px-4">যোগদানের তারিখ</th>
+                  <th class="py-3 px-4 text-center">অ্যাকশন</th>
                 </tr>
               </thead>
               <tbody id="usersListBody" class="divide-y text-xs text-slate-700"></tbody>
@@ -323,17 +320,6 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const ALLOWED_ADMINS = ["sirazulvai2263@gmail.com"];
-
-    // ডিফল্ট ক্যাটাগরি সেট
-    const DEFAULT_CATEGORIES = [
-      { id: "wedding", name: "বিবাহ / Wedding", icon: "💍" },
-      { id: "political", name: "রাজনৈতিক / Political", icon: "📢" },
-      { id: "business", name: "ব্যবসা ও দোকান / Business", icon: "🏬" },
-      { id: "islamic", name: "ওয়াজ ও দোয়া / Islamic", icon: "🕌" },
-      { id: "general", name: "সাধারণ ব্যানার / General", icon: "🎨" }
-    ];
-
     let currentUser = null;
     let categoriesList = [];
 
@@ -350,7 +336,6 @@
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
     const mobileMenu = document.getElementById("mobileMenu");
 
-    // ট্যাব সুইচিং লজিক
     function switchTab(targetTabId) {
       document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
       const target = document.getElementById(targetTabId);
@@ -386,21 +371,40 @@
 
     mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
 
-    // অথেন্টিকেশন স্টেট
+    // ডাটাবেসের `admins` কালেকশনে ইউজারটি আছে কি না সরাসরি যাচাই করার ফাংশন
+    async function verifyAdminFromDatabase(user) {
+      try {
+        const token = await user.getIdToken(true);
+        // ডাটাবেসের admins/{email} পাথে চেক করা হচ্ছে
+        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/admins/${user.email}`;
+        const res = await fetch(url, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        return res.ok;
+      } catch (err) {
+        console.error("Admin verification error:", err);
+      }
+      return false;
+    }
+
+    // অথেন্টিকেশন স্টেট (কোনো জিমেইল হার্ডকোড ছাড়া)
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
-        if (ALLOWED_ADMINS.includes(user.email)) {
+        // সরাসরি ফায়ারবেসের admins কালেকশন চেক করা হচ্ছে
+        const isAdmin = await verifyAdminFromDatabase(user);
+
+        if (isAdmin) {
           loginSection.classList.add("hidden");
           dashboardSection.classList.remove("hidden");
           adminEmailDisplay.innerText = user.email;
           mobileAdminEmail.innerText = user.email;
-          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1 rounded-full border border-emerald-400 font-medium">অ্যাডমিন অ্যাক্টিভ</span>`;
+          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1 rounded-full border border-emerald-400 font-medium">অ্যাডমিন সক্রিয়</span>`;
           await loadAllCategories();
         } else {
           loginSection.classList.remove("hidden");
           dashboardSection.classList.add("hidden");
-          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") অনুমোদিত নয়!";
+          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: ডাটাবেসের admins কালেকশনে এই অ্যাকাউন্টটি অনুমোদিত নয়!";
           loginError.classList.remove("hidden");
           await signOut(auth);
         }
@@ -424,7 +428,6 @@
     desktopLogoutBtn.addEventListener("click", () => signOut(auth));
     mobileLogoutBtn.addEventListener("click", () => signOut(auth));
 
-    // ImgBB ফাইল আপলোড কমন ফাংশন
     async function uploadToImgBB(file) {
       const formData = new FormData();
       formData.append("image", file);
@@ -780,7 +783,7 @@
         loadingCategories.classList.add("hidden");
         const validDocs = (Array.isArray(data) ? data : []).filter(item => item && item.document && item.document.fields).map(item => item.document);
         
-        let customCategories = validDocs.map(doc => {
+        categoriesList = validDocs.map(doc => {
           const docId = doc.name.split("/").pop();
           const f = doc.fields || {};
           return {
@@ -791,23 +794,27 @@
           };
         });
 
-        // ডিফল্ট ক্যাটাগরি ও ক্লাউড ক্যাটাগরি একত্রিত করা
-        const allCatMap = new Map();
-        DEFAULT_CATEGORIES.forEach(c => allCatMap.set(c.id, { ...c, isDefault: true }));
-        customCategories.forEach(c => allCatMap.set(c.id, { ...c, isDefault: false }));
-        categoriesList = Array.from(allCatMap.values());
-
-        // ড্রপডাউন আপডেট
         categoryDropdown.innerHTML = "";
-        categoriesList.forEach(c => {
+        if (categoriesList.length === 0) {
           const opt = document.createElement("option");
-          opt.value = c.id;
-          opt.innerText = `${c.icon} ${c.name}`;
+          opt.value = "";
+          opt.innerText = "কোনো ক্যাটাগরি পাওয়া যায়নি";
           categoryDropdown.appendChild(opt);
-        });
+        } else {
+          categoriesList.forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = c.id;
+            opt.innerText = `${c.icon} ${c.name}`;
+            categoryDropdown.appendChild(opt);
+          });
+        }
 
-        // গ্রিড কার্ড রেন্ডার
         categoriesGrid.innerHTML = "";
+        if (categoriesList.length === 0) {
+          categoriesGrid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-6">বর্তমানে কোনো ক্যাটাগরি সংরক্ষিত নেই।</p>`;
+          return;
+        }
+
         categoriesList.forEach(c => {
           const card = document.createElement("div");
           card.className = "border rounded-xl p-3 bg-white flex flex-col justify-between items-center text-center shadow-sm";
@@ -815,11 +822,9 @@
             <span class="text-3xl mb-1">${c.icon}</span>
             <h4 class="font-bold text-xs text-slate-800">${c.name}</h4>
             <span class="text-[10px] text-slate-400 mt-0.5">${c.id}</span>
-            ${!c.isDefault ? `<button class="del-cat-btn mt-2 text-[10px] text-rose-600 font-bold hover:underline" data-id="${c.docId}">মুছুন</button>` : '<span class="text-[9px] text-emerald-600 mt-2 font-bold">ডিফল্ট</span>'}
+            <button class="del-cat-btn mt-2 text-[10px] text-rose-600 font-bold hover:underline" data-id="${c.docId}">মুছুন</button>
           `;
-          if (!c.isDefault) {
-            card.querySelector(".del-cat-btn").addEventListener("click", () => deleteItem("categories", c.docId, c.name, loadAllCategories));
-          }
+          card.querySelector(".del-cat-btn").addEventListener("click", () => deleteItem("categories", c.docId, c.name, loadAllCategories));
           categoriesGrid.appendChild(card);
         });
       } catch (err) {
@@ -869,7 +874,7 @@
     });
 
     // ==========================================
-    // ৪. ইউজার তালিকা লজিক
+    // ৪. সম্পূর্ণ ডাটাবেসের `admins` এবং `users` কালেকশন ভিত্তিক ইউজার লিস্ট
     // ==========================================
     const usersTable = document.getElementById("usersTable");
     const usersListBody = document.getElementById("usersListBody");
@@ -882,6 +887,11 @@
       usersListBody.innerHTML = "";
       try {
         const token = await currentUser.getIdToken(true);
+
+        // ১. ডাটাবেসের admins কালেকশন চেক করে নিশ্চিত হওয়া
+        const isAdmin = await verifyAdminFromDatabase(currentUser);
+
+        // ২. ডাটাবেসের users কালেকশন থেকে সমস্ত ইউজার কুয়েরি
         const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents:runQuery`;
         const res = await fetch(url, {
           method: "POST",
@@ -891,42 +901,83 @@
         const data = await res.json();
         loadingUsers.classList.add("hidden");
         const validDocs = (Array.isArray(data) ? data : []).filter(item => item && item.document && item.document.fields).map(item => item.document);
-        
-        if (validDocs.length === 0) {
-          loadingUsers.innerText = "বর্তমানে অ্যাপে কোনো সাধারণ ব্যবহারকারী নিবন্ধিত নেই। ইউজাররা অ্যাপে গুগল দিয়ে লগইন করলে এখানে স্বয়ংক্রিয়ভাবে তালিকা তৈরি হবে।";
+
+        const allDisplayUsers = [];
+
+        // যদি লগইন করা অ্যাকাউন্টটি ডাটাবেসের admins কালেকশনে থাকে, তবে তাকে সবার উপরে সুপার অ্যাডমিন হিসেবে দেখানো হবে
+        if (isAdmin && currentUser) {
+          allDisplayUsers.push({
+            uid: currentUser.uid,
+            displayName: currentUser.displayName || "মোঃ সিরাজুল ইসলাম",
+            email: currentUser.email,
+            photoUrl: currentUser.photoURL || "https://www.gstatic.com/images/branding/product/2x/avatar_square_grey_54dp.png",
+            isAdmin: true
+          });
+        }
+
+        // ডাটাবেজের ইউজারদের যোগ করা (ডুপ্লিকেট বাদ দিয়ে)
+        validDocs.forEach(doc => {
+          const uid = doc.name.split("/").pop();
+          const f = doc.fields || {};
+          const userEmail = f.email?.stringValue || "ইমেইল নেই";
+
+          if (currentUser && userEmail === currentUser.email) return;
+
+          allDisplayUsers.push({
+            uid: uid,
+            displayName: f.displayName?.stringValue || f.name?.stringValue || "সাধারণ ব্যবহারকারী",
+            email: userEmail,
+            photoUrl: f.photoUrl?.stringValue || f.avatar?.stringValue || "https://www.gstatic.com/images/branding/product/2x/avatar_square_grey_54dp.png",
+            isAdmin: false
+          });
+        });
+
+        if (allDisplayUsers.length === 0) {
+          loadingUsers.innerText = "ডাটাবেসে বর্তমানে কোনো ব্যবহারকারী পাওয়া যায়নি।";
           loadingUsers.classList.remove("hidden");
           return;
         }
 
         usersTable.classList.remove("hidden");
-        validDocs.forEach(doc => {
-          const uid = doc.name.split("/").pop();
-          const f = doc.fields || {};
-          const displayName = f.displayName?.stringValue || f.name?.stringValue || "নামবিহীন ব্যবহারকারী";
-          const email = f.email?.stringValue || "ইমেইল নেই";
-          const photoUrl = f.photoUrl?.stringValue || f.avatar?.stringValue || "https://www.gstatic.com/images/branding/product/2x/avatar_square_grey_54dp.png";
-          const createdAt = f.createdAt?.timestampValue ? new Date(f.createdAt.timestampValue).toLocaleDateString('bn-BD') : "তথ্য নেই";
-
+        allDisplayUsers.forEach(u => {
           const tr = document.createElement("tr");
           tr.className = "hover:bg-slate-50 transition";
           tr.innerHTML = `
             <td class="py-3 px-4 flex items-center gap-2">
-              <img src="${photoUrl}" class="w-8 h-8 rounded-full border border-slate-200 object-cover" onerror="this.src='https://www.gstatic.com/images/branding/product/2x/avatar_square_grey_54dp.png'">
-              <span class="font-bold text-slate-800">${displayName}</span>
+              <img src="${u.photoUrl}" class="w-8 h-8 rounded-full border border-slate-200 object-cover" onerror="this.src='https://www.gstatic.com/images/branding/product/2x/avatar_square_grey_54dp.png'">
+              <div>
+                <span class="font-bold text-slate-800">${u.displayName}</span>
+                ${u.isAdmin ? '<span class="ml-1 text-[11px] text-amber-600 font-bold">👑 সুপার অ্যাডমিন</span>' : ''}
+              </div>
             </td>
-            <td class="py-3 px-4 text-slate-600 font-medium">${email}</td>
-            <td class="py-3 px-4 font-mono text-[11px] text-slate-400">${uid}</td>
-            <td class="py-3 px-4 text-slate-500">${createdAt}</td>
+            <td class="py-3 px-4 text-slate-600 font-medium">${u.email}</td>
+            <td class="py-3 px-4">
+              ${u.isAdmin 
+                ? '<span class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-[11px] font-bold">অ্যাডমিন</span>' 
+                : '<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[11px] font-bold">সাধারণ ইউজার</span>'}
+            </td>
+            <td class="py-3 px-4 font-mono text-[11px] text-slate-400">${u.uid}</td>
+            <td class="py-3 px-4 text-center">
+              ${u.isAdmin 
+                ? '<span class="text-xs text-slate-400 italic">সুরক্ষিত</span>' 
+                : `<button class="del-user-btn bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 px-2.5 py-1 rounded-lg text-xs font-semibold" data-id="${u.uid}">🗑️ মুছুন</button>`}
+            </td>
           `;
+
+          if (!u.isAdmin) {
+            tr.querySelector(".del-user-btn").addEventListener("click", () => deleteItem("users", u.uid, u.displayName, loadAllUsers));
+          }
+
           usersListBody.appendChild(tr);
         });
+
       } catch (err) {
         loadingUsers.innerText = "ইউজার তালিকা লোড সমস্যা: " + err.message;
       }
     }
     refreshUsersBtn.addEventListener("click", loadAllUsers);
 
-    // কমন ডিলিট ফাংশন
+    // সাধারণ ডিলিট ফাংশন
     async function deleteItem(collectionName, docId, title, callback) {
       if (!confirm(`আপনি কি নিশ্চিত যে "${title || docId}" মুছে ফেলতে চান?`)) return;
       try {
@@ -937,7 +988,7 @@
           headers: { "Authorization": `Bearer ${token}` }
         });
         if (!res.ok) throw new Error("মুছে ফেলতে ব্যর্থ");
-        alert("আইটেমটি সফলভাবে মুছে ফেলা হয়েছে!");
+        alert("সফলভাবে মুছে ফেলা হয়েছে!");
         callback();
       } catch (err) {
         alert("এরর: " + err.message);
