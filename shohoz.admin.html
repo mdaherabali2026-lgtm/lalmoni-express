@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-  <title>ব্যানার মেকার প্রো</title>
+  <title>ব্যানার মেকার - অ্যাডমিন সিএমএস</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   
@@ -17,172 +17,144 @@
       -webkit-tap-highlight-color: transparent;
     }
     .press-effect {
-      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s;
+      transition: transform 0.1s ease, opacity 0.1s ease;
     }
     .press-effect:active {
-      transform: scale(0.95);
-      opacity: 0.85;
+      transform: scale(0.92);
+      opacity: 0.8;
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    .page-view {
-      transition: opacity 0.25s ease-in-out, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .page-hidden {
-      display: none;
-      opacity: 0;
-      transform: translateY(12px);
-    }
   </style>
 </head>
-<body class="bg-[#F8F9FA] text-slate-800 antialiased pb-24">
+<body class="bg-slate-100 text-slate-800 antialiased pb-20">
 
-  <!-- মোবাইল হেডার -->
-  <header class="bg-[#B91C1C] text-white sticky top-0 z-40 shadow-md">
-    <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button class="p-1.5 press-effect rounded-lg hover:bg-white/10">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🚩</span>
-          <h1 class="text-lg font-bold tracking-tight">ব্যানার মেকার প্রো</h1>
-        </div>
+  <!-- টপবার -->
+  <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🛠️</span>
+        <h1 class="text-base font-bold tracking-tight">ব্যানার মেকার - অ্যাডমিন প্যানেল</h1>
       </div>
-      <div class="flex items-center gap-1.5">
-        <button class="p-2 press-effect rounded-full hover:bg-white/10">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
-        </button>
-        <div class="relative">
-          <button class="p-2 press-effect rounded-full hover:bg-white/10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          </button>
-          <span class="absolute top-1.5 right-1.5 bg-white text-[#B91C1C] text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#B91C1C] shadow-sm">3</span>
-        </div>
-      </div>
+      <span class="text-xs bg-emerald-600 px-2 py-0.5 rounded-full font-medium">নতুন ডাটাবেজ কানেক্টেড</span>
     </div>
   </header>
 
-  <div class="max-w-md mx-auto">
+  <main class="max-w-2xl mx-auto px-4 pt-4 space-y-6">
 
-    <!-- হোম পেজ ভিউ -->
-    <main id="homePage" class="page-view px-4 pt-4 space-y-6">
+    <!-- সেকশন ১: ব্যানার আপলোড ও মৌলিক তথ্য -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 border-b pb-2">
+        <span>📌</span> টেমপ্লেটের সাধারণ তথ্য
+      </h2>
 
-      <!-- স্লাইডার -->
-      <section class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-900 aspect-[16/9]">
-        <div class="w-full h-full relative">
-          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-80">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
-            <span class="text-xs bg-red-600 font-bold px-2 py-0.5 rounded-full w-max mb-1">অফার</span>
-            <h3 class="text-base font-bold">বিশ্ব শান্তি ও সম্প্রীতি দিবস</h3>
-            <p class="text-xs text-slate-200">হিংসা নয়, মানবতার জয় হোক...</p>
-          </div>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-semibold text-slate-600">টেমপ্লেটের নাম / শিরোনাম</label>
+          <input type="text" id="tplTitle" placeholder="উদা: বিবাহ স্মরণিকা প্রিমিয়াম" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
         </div>
-      </section>
 
-      <!-- ক্যাটাগরি -->
-      <section class="space-y-3">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-slate-900">ব্যানার ক্যাটাগরি</h2>
-          <button class="text-xs font-semibold text-[#B91C1C] press-effect">সব দেখুন &rsaquo;</button>
+        <div>
+          <label class="text-xs font-semibold text-slate-600">ক্যাটাগরি</label>
+          <input type="text" id="tplCategory" placeholder="উদা: বিয়ে" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
         </div>
-        <div id="categoryContainer" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-          <div class="text-xs text-slate-400 py-3">ক্যাটাগরি লোড হচ্ছে...</div>
-        </div>
-      </section>
 
-      <!-- জনপ্রিয় টেমপ্লেট গ্রিড -->
-      <section class="space-y-3">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
-          <button class="text-xs font-semibold text-[#B91C1C] press-effect">আরও দেখুন &rsaquo;</button>
+        <div>
+          <label class="text-xs font-semibold text-slate-600">ব্যানার ফ্রেম ইমেজ URL (স্বচ্ছ PNG)</label>
+          <input type="url" id="tplImageUrl" placeholder="https://..." class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
+          <p class="text-[10px] text-slate-400 mt-0.5">স্বচ্ছ কাটআউট যুক্ত ব্যানার ফ্রেমের ডিরেক্ট ইমেজ লিঙ্ক দিন।</p>
         </div>
-        <div id="templateGrid" class="grid grid-cols-2 gap-3.5">
-          <div class="col-span-2 text-center py-10 text-xs text-slate-400">টেমপ্লেট লোড হচ্ছে...</div>
-        </div>
-      </section>
 
-    </main>
-
-    <!-- পূর্ণাঙ্গ এডিটর স্ক্রিন ভিউ -->
-    <div id="editorPage" class="page-view page-hidden px-4 pt-3 space-y-4">
-      
-      <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-        <button id="closeEditorBtn" class="p-1.5 press-effect rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <div class="text-center">
-          <h2 id="editorTitle" class="text-sm font-bold text-slate-800 leading-tight">ব্যানার এডিটর</h2>
-          <span class="text-[10px] text-emerald-600 font-semibold flex items-center justify-center gap-1">● লাইভ প্রিভিউ</span>
-        </div>
-        <button id="downloadBannerBtn" class="bg-[#B91C1C] text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-md flex items-center gap-1.5 press-effect">
-          <span>ডাউনলোড</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        </button>
-      </div>
-
-      <!-- ব্যানার ক্যানভাস -->
-      <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-white aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
-        <!-- লেয়ার ১: ব্যবহারকারীর ছবি -->
-        <div id="userPhotoSlot" class="absolute overflow-hidden z-10 hidden" style="transform: translate(-50%, -50%);">
-          <img id="userRenderedImg" class="w-full h-full object-cover">
-        </div>
-        <!-- লেয়ার ২: মূল টেমপ্লেট ফ্রেম -->
-        <img id="templateFrameImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-20">
-        <!-- লেয়ার ৩: টেক্সট ওভারলে -->
-        <div id="textOverlayContainer" class="absolute inset-0 w-full h-full pointer-events-none z-30"></div>
-      </div>
-
-      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
-        <!-- ফটো আপলোড স্লট -->
-        <div id="photoInputSection" class="hidden p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl flex items-center justify-between">
+        <!-- ফটো স্লট টগল -->
+        <div class="pt-2 border-t flex items-center justify-between">
           <div>
-            <div class="text-xs font-bold text-amber-900">📷 নিজের ছবি যুক্ত করুন</div>
-            <div class="text-[10px] text-amber-700">স্বচ্ছ ফ্রেমের নিচে ছবি সেট হবে</div>
+            <div class="text-xs font-bold text-slate-700">ফটো স্লট সক্রিয় করবেন?</div>
+            <div class="text-[10px] text-slate-500">ইউজার নিজের ছবি আপলোড করে ফ্রেমের নিচে বসাতে পারবে</div>
           </div>
-          <label class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer press-effect shadow-sm">
-            ছবি বাছুন
-            <input type="file" id="userPhotoInput" accept="image/*" class="hidden">
-          </label>
-        </div>
-
-        <!-- টেক্সট ফিল্ডসমূহ -->
-        <div class="space-y-3">
-          <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span>✍️</span> ব্যানারের তথ্য পরিবর্তন করুন
-          </div>
-          <div id="dynamicInputFields" class="space-y-2.5"></div>
+          <input type="checkbox" id="hasPhotoSlot" class="w-4 h-4 accent-slate-900 cursor-pointer">
         </div>
       </div>
-
     </div>
 
-  </div>
+    <!-- সেকশন ২: ভিজ্যুয়াল লাইভ ক্যানভাস এডিটর -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <span>🎯</span> লাইভ ভিজ্যুয়াল ক্যানভাস
+        </h2>
+        <span class="text-[11px] text-slate-500">এলিমেন্ট সিলেক্ট করে D-Pad দিয়ে নাড়ান</span>
+      </div>
 
-  <!-- বটম ন্যাভিগেশন -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200/80 px-6 py-2 z-40">
-    <div class="max-w-md mx-auto flex justify-between items-center text-[11px] font-semibold text-slate-500">
-      <button class="flex flex-col items-center gap-1 text-[#B91C1C] press-effect" onclick="showHome()">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
-        <span>হোম</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 press-effect hover:text-slate-800">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-        <span>আমার তৈরি</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 press-effect hover:text-slate-800">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-        <span>সংরক্ষিত</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 press-effect hover:text-slate-800">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span>প্রোফাইল</span>
+      <!-- ক্যানভাস বক্স -->
+      <div class="relative w-full rounded-2xl overflow-hidden shadow-inner border border-slate-300 bg-slate-50 aspect-[3/4] flex items-center justify-center select-none" id="adminCanvas">
+        <!-- ফ্রেম ইমেজ -->
+        <img id="adminCanvasImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" alt="Frame">
+
+        <!-- ফটো স্লট বক্স -->
+        <div id="canvasPhotoSlot" class="absolute border-2 border-dashed border-amber-500 bg-amber-200/40 rounded-xl flex items-center justify-center text-[10px] font-bold text-amber-900 cursor-pointer hidden z-20" style="transform: translate(-50%, -50%);">
+          ফটো স্লট
+        </div>
+
+        <!-- টেক্সট বক্স লেয়ারগুলো এখানে যোগ হবে -->
+        <div id="canvasTextLayers" class="absolute inset-0 w-full h-full z-30 pointer-events-none"></div>
+      </div>
+
+      <!-- D-Pad ও ফাইন পজিশন কন্ট্রোলার -->
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
+        <span class="text-xs font-bold text-slate-700" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
+        
+        <div class="grid grid-cols-3 gap-1.5 w-36">
+          <div></div>
+          <button id="moveUp" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▲</button>
+          <div></div>
+          
+          <button id="moveLeft" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">◀</button>
+          <div class="flex items-center justify-center text-[10px] text-slate-400 font-bold">D-Pad</div>
+          <button id="moveRight" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▶</button>
+          
+          <div></div>
+          <button id="moveDown" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▼</button>
+          <div></div>
+        </div>
+
+        <!-- ফন্ট সাইজ ও কালার সিলেক্টর (সিলেক্টেড এলিমেন্টের জন্য) -->
+        <div id="elementControls" class="w-full flex items-center justify-between gap-3 pt-2 border-t mt-1 hidden">
+          <div class="flex-1">
+            <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
+            <input type="range" id="fontSizeSlider" min="5" max="60" value="20" class="w-full accent-slate-800">
+          </div>
+          <div>
+            <label class="text-[10px] font-semibold text-slate-500">কালার</label>
+            <input type="color" id="elementColorPicker" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer block border">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- সেকশন ৩: টেক্সট ইনপুট ফিল্ড ম্যানেজমেন্ট -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <span>✍️</span> ডায়নামিক টেক্সট ফিল্ডসমূহ
+        </h2>
+        <button id="addTextFieldBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl press-effect flex items-center gap-1">
+          <span>+ নতুন ফিল্ড</span>
+        </button>
+      </div>
+
+      <div id="fieldsList" class="space-y-3">
+        <!-- ডায়নামিক ফিল্ড কার্ড এখানে যুক্ত হবে -->
+      </div>
+    </div>
+
+    <!-- সেকশন ৪: সংরক্ষণ বাটন -->
+    <div class="pt-2">
+      <button id="saveTemplateBtn" class="w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 shadow-lg press-effect">
+        <span>💾 টেমপ্লেটটি নতুন ফায়ারবেসে সংরক্ষণ করুন</span>
       </button>
     </div>
-  </nav>
 
-  <canvas id="exportCanvas" class="hidden"></canvas>
+  </main>
 
   <script>
     // নতুন ফায়ারবেস কনফিগারেশন
@@ -200,242 +172,263 @@
     }
     const db = firebase.firestore();
 
-    let activeTemplate = null;
-    let userUploadedImageObj = null;
-    let textState = {};
+    // অ্যাপ স্টেট
+    let textFields = [
+      { id: "groom_name", label: "বরের নাম", placeholder: "মোঃ সিরাজুল ইসলাম", x: 26, y: 62, fontSize: 16, textColor: "#000000" },
+      { id: "groom_father", label: "বরের পিতার নাম", placeholder: "মোঃ রফিকুল ইসলাম", x: 26, y: 65, fontSize: 13, textColor: "#000000" },
+      { id: "groom_mother", label: "বরের মাতার নাম", placeholder: "মোছাঃ ফাতেমা বেগম", x: 26, y: 68, fontSize: 13, textColor: "#000000" },
+      { id: "bride_name", label: "কনের নাম", placeholder: "মোছাঃ ফাতেমা খাতুন", x: 67, y: 62, fontSize: 16, textColor: "#000000" },
+      { id: "bride_father", label: "কনের পিতার নাম", placeholder: "মোঃ করিম শেখ", x: 67, y: 65, fontSize: 13, textColor: "#000000" },
+      { id: "bride_mother", label: "কনের মাতার নাম", placeholder: "মোছাঃ রহিমা বেগম", x: 67, y: 68, fontSize: 13, textColor: "#000000" },
+      { id: "event_date", label: "তারিখ", placeholder: "২৬ নভেম্বর, ২০২৬", x: 50, y: 77, fontSize: 15, textColor: "#000000" },
+      { id: "event_place", label: "স্থান", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000" }
+    ];
 
-    window.showHome = function() {
-      document.getElementById("editorPage").classList.add("page-hidden");
-      document.getElementById("homePage").classList.remove("page-hidden");
+    let photoSlotData = {
+      x: 50,
+      y: 36,
+      size: 45
     };
 
-    function openEditor(template) {
-      activeTemplate = template;
-      textState = {};
+    let selectedItem = null; // { type: 'text'|'photo', id: ... }
 
-      document.getElementById("editorTitle").innerText = template.title || "ব্যানার এডিটর";
-      document.getElementById("templateFrameImg").src = template.fullImageUrl || template.previewUrl;
+    // ফ্রেম ইমেজ লোডার
+    const tplImageInput = document.getElementById("tplImageUrl");
+    const canvasImg = document.getElementById("adminCanvasImg");
+    tplImageInput.addEventListener("input", (e) => {
+      canvasImg.src = e.target.value;
+    });
 
-      const photoSlot = document.getElementById("userPhotoSlot");
-      const photoInputSection = document.getElementById("photoInputSection");
-      if (template.hasPhotoSlot) {
-        photoInputSection.classList.remove("hidden");
-        photoSlot.style.left = `${template.photoSlotX || 50}%`;
-        photoSlot.style.top = `${template.photoSlotY || 35}%`;
-        photoSlot.style.width = `${template.photoSlotSize || 45}%`;
-        photoSlot.style.height = `${template.photoSlotSize || 45}%`;
-        photoSlot.classList.remove("hidden");
+    // ফটো স্লট চেক
+    const hasPhotoCheckbox = document.getElementById("hasPhotoSlot");
+    const canvasPhotoSlot = document.getElementById("canvasPhotoSlot");
+    hasPhotoCheckbox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        canvasPhotoSlot.classList.remove("hidden");
+        selectElement('photo', 'photo_slot');
       } else {
-        photoInputSection.classList.add("hidden");
-        photoSlot.classList.add("hidden");
-      }
-
-      const inputContainer = document.getElementById("dynamicInputFields");
-      const overlayContainer = document.getElementById("textOverlayContainer");
-      inputContainer.innerHTML = "";
-      overlayContainer.innerHTML = "";
-
-      if (template.inputFields && Array.isArray(template.inputFields)) {
-        template.inputFields.forEach(f => {
-          textState[f.id] = f.placeholder || f.label;
-
-          const fieldRow = document.createElement("div");
-          fieldRow.className = "flex flex-col gap-1";
-          fieldRow.innerHTML = `
-            <label class="text-[11px] font-semibold text-slate-500">${f.label}</label>
-            <input type="text" data-id="${f.id}" value="${textState[f.id]}" 
-                   class="w-full text-xs px-3 py-2 border rounded-xl focus:ring-2 focus:ring-[#B91C1C] outline-none bg-slate-50 text-slate-800">
-          `;
-          const inputElem = fieldRow.querySelector("input");
-          inputElem.addEventListener("input", (e) => {
-            textState[f.id] = e.target.value;
-            const el = document.getElementById(`overlay_${f.id}`);
-            if (el) el.innerText = e.target.value;
-          });
-          inputContainer.appendChild(fieldRow);
-
-          const overlaySpan = document.createElement("span");
-          overlaySpan.id = `overlay_${f.id}`;
-          overlaySpan.className = "absolute font-bold pointer-events-none transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap";
-          overlaySpan.style.left = `${f.x}%`;
-          overlaySpan.style.top = `${f.y}%`;
-          overlaySpan.style.color = f.textColor || "#000000";
-          overlaySpan.style.fontSize = `${Math.max(8, (f.fontSize || 20) * 0.45)}px`;
-          overlaySpan.innerText = textState[f.id];
-          overlayContainer.appendChild(overlaySpan);
-        });
-      }
-
-      document.getElementById("homePage").classList.add("page-hidden");
-      document.getElementById("editorPage").classList.remove("page-hidden");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    document.getElementById("closeEditorBtn").addEventListener("click", showHome);
-
-    document.getElementById("userPhotoInput").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          const img = new Image();
-          img.onload = () => {
-            userUploadedImageObj = img;
-            document.getElementById("userRenderedImg").src = evt.target.result;
-          };
-          img.src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
+        canvasPhotoSlot.classList.add("hidden");
+        if (selectedItem?.type === 'photo') unselectElement();
       }
     });
 
-    async function loadDataFromFirestore() {
-      try {
-        // ক্যাটাগরি লোড
-        const catSnapshot = await db.collection("categories").get();
-        const catContainer = document.getElementById("categoryContainer");
-        catContainer.innerHTML = "";
+    canvasPhotoSlot.addEventListener("click", () => {
+      selectElement('photo', 'photo_slot');
+    });
 
-        const colors = [
-          'bg-pink-100 text-pink-700',
-          'bg-amber-100 text-amber-700',
-          'bg-sky-100 text-sky-700',
-          'bg-purple-100 text-purple-700',
-          'bg-emerald-100 text-emerald-700'
-        ];
+    function renderCanvasLayers() {
+      // ফটো স্লট পজিশন
+      canvasPhotoSlot.style.left = `${photoSlotData.x}%`;
+      canvasPhotoSlot.style.top = `${photoSlotData.y}%`;
+      canvasPhotoSlot.style.width = `${photoSlotData.size}%`;
+      canvasPhotoSlot.style.height = `${photoSlotData.size}%`;
 
-        let catIdx = 0;
-        catSnapshot.forEach(doc => {
-          const data = doc.data();
-          const name = data.name || "ক্যাটাগরি";
-          const icon = data.icon || "🏷️";
-          const colorClass = colors[catIdx % colors.length];
-          catIdx++;
+      // টেক্সট ওভারলে
+      const container = document.getElementById("canvasTextLayers");
+      container.innerHTML = "";
 
-          const item = document.createElement("div");
-          item.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
-          item.innerHTML = `
-            <div class="w-14 h-14 rounded-2xl ${colorClass} flex items-center justify-center text-2xl shadow-sm">
-              ${icon}
-            </div>
-            <span class="text-xs font-semibold text-slate-700">${name}</span>
-          `;
-          catContainer.appendChild(item);
-        });
+      textFields.forEach(f => {
+        const span = document.createElement("div");
+        span.id = `canvas_node_${f.id}`;
+        span.className = "absolute transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold";
+        span.style.left = `${f.x}%`;
+        span.style.top = `${f.y}%`;
+        span.style.fontSize = `${Math.max(6, f.fontSize * 0.45)}px`;
+        span.style.color = f.textColor;
+        span.innerText = f.placeholder || f.label;
 
-        // টেমপ্লেট লোড
-        const tempSnapshot = await db.collection("templates").get();
-        const templateGrid = document.getElementById("templateGrid");
-        templateGrid.innerHTML = "";
-
-        if (tempSnapshot.empty) {
-          templateGrid.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-slate-400">কোনো টেমপ্লেট যুক্ত করা হয়নি। অ্যাডমিন প্যানেল থেকে টেমপ্লেট যোগ করুন।</div>`;
-          return;
+        if (selectedItem?.id === f.id) {
+          span.classList.add("border-red-500", "bg-red-50/80");
+        } else {
+          span.classList.add("border-transparent", "hover:border-slate-400");
         }
 
-        tempSnapshot.forEach(doc => {
-          const data = doc.data();
-          const item = {
-            id: doc.id,
-            title: data.title || "ব্যানার",
-            previewUrl: data.previewUrl || "",
-            fullImageUrl: data.fullImageUrl || data.previewUrl,
-            hasPhotoSlot: data.hasPhotoSlot || false,
-            photoSlotX: data.photoSlotX !== undefined ? data.photoSlotX : 50,
-            photoSlotY: data.photoSlotY !== undefined ? data.photoSlotY : 35,
-            photoSlotSize: data.photoSlotSize || 45,
-            inputFields: data.inputFields || []
-          };
-
-          const card = document.createElement("div");
-          card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 flex flex-col justify-between";
-          card.innerHTML = `
-            <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden">
-              <img src="${item.previewUrl}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
-                👁️ ৭ বার ব্যবহৃত
-              </span>
-            </div>
-            <div class="p-3 space-y-2">
-              <h3 class="text-xs font-bold text-slate-800 truncate">${item.title}</h3>
-              <button class="create-btn w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm press-effect">
-                <span>✏️ Create</span>
-              </button>
-            </div>
-          `;
-          card.querySelector(".create-btn").addEventListener("click", () => openEditor(item));
-          templateGrid.appendChild(card);
+        span.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectElement('text', f.id);
         });
-      } catch (err) {
-        console.error("Firestore loading error:", err);
-        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড ত্রুটি: ${err.message}</div>`;
-      }
+
+        container.appendChild(span);
+      });
     }
 
-    // এইচডি ব্যানার ডাউনলোড
-    document.getElementById("downloadBannerBtn").addEventListener("click", async () => {
-      const btn = document.getElementById("downloadBannerBtn");
-      btn.innerText = "রেন্ডার হচ্ছে...";
+    function renderFieldsList() {
+      const list = document.getElementById("fieldsList");
+      list.innerHTML = "";
+
+      textFields.forEach((f, idx) => {
+        const item = document.createElement("div");
+        item.className = `p-3 rounded-xl border flex flex-col gap-2 ${selectedItem?.id === f.id ? 'border-red-500 bg-red-50/40' : 'border-slate-200 bg-slate-50'}`;
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <input type="text" value="${f.label}" class="font-bold text-xs bg-transparent border-b outline-none border-slate-300 w-1/2" oninput="updateFieldLabel('${f.id}', this.value)">
+            <button onclick="removeField('${f.id}')" class="text-xs text-red-600 font-bold hover:underline">ডিলিট</button>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" value="${f.placeholder}" placeholder="ডিফল্ট টেক্সট" class="text-[11px] px-2 py-1 bg-white border rounded-lg outline-none" oninput="updateFieldPlaceholder('${f.id}', this.value)">
+            <button onclick="selectElement('text', '${f.id}')" class="text-[11px] bg-slate-800 text-white rounded-lg font-bold press-effect">পজিশন এডিট করুন</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    window.updateFieldLabel = function(id, val) {
+      const f = textFields.find(t => t.id === id);
+      if (f) f.label = val;
+    };
+
+    window.updateFieldPlaceholder = function(id, val) {
+      const f = textFields.find(t => t.id === id);
+      if (f) {
+        f.placeholder = val;
+        renderCanvasLayers();
+      }
+    };
+
+    window.removeField = function(id) {
+      textFields = textFields.filter(t => t.id !== id);
+      if (selectedItem?.id === id) unselectElement();
+      renderFieldsList();
+      renderCanvasLayers();
+    };
+
+    document.getElementById("addTextFieldBtn").addEventListener("click", () => {
+      const newId = `field_${Date.now()}`;
+      textFields.push({
+        id: newId,
+        label: "নতুন টেক্সট",
+        placeholder: "নমুনা লেখা",
+        x: 50,
+        y: 50,
+        fontSize: 16,
+        textColor: "#000000"
+      });
+      selectElement('text', newId);
+      renderFieldsList();
+      renderCanvasLayers();
+    });
+
+    function selectElement(type, id) {
+      selectedItem = { type, id };
+      const display = document.getElementById("selectedElementName");
+      const controls = document.getElementById("elementControls");
+
+      if (type === 'photo') {
+        display.innerText = "সিলেক্টেড: ফটো স্লট";
+        controls.classList.add("hidden");
+      } else {
+        const f = textFields.find(t => t.id === id);
+        display.innerText = `সিলেক্টেড: ${f ? f.label : id}`;
+        controls.classList.remove("hidden");
+        document.getElementById("fontSizeSlider").value = f.fontSize || 18;
+        document.getElementById("fontSizeDisplay").innerText = f.fontSize || 18;
+        document.getElementById("elementColorPicker").value = f.textColor || "#000000";
+      }
+      renderCanvasLayers();
+      renderFieldsList();
+    }
+
+    function unselectElement() {
+      selectedItem = null;
+      document.getElementById("selectedElementName").innerText = "কোনো এলিমেন্ট সিলেক্ট করা নেই";
+      document.getElementById("elementControls").classList.add("hidden");
+      renderCanvasLayers();
+      renderFieldsList();
+    }
+
+    // ফন্ট সাইজ ও কালার আপডেট
+    document.getElementById("fontSizeSlider").addEventListener("input", (e) => {
+      if (selectedItem?.type === 'text') {
+        const f = textFields.find(t => t.id === selectedItem.id);
+        if (f) {
+          f.fontSize = Number(e.target.value);
+          document.getElementById("fontSizeDisplay").innerText = f.fontSize;
+          renderCanvasLayers();
+        }
+      }
+    });
+
+    document.getElementById("elementColorPicker").addEventListener("input", (e) => {
+      if (selectedItem?.type === 'text') {
+        const f = textFields.find(t => t.id === selectedItem.id);
+        if (f) {
+          f.textColor = e.target.value;
+          renderCanvasLayers();
+        }
+      }
+    });
+
+    // D-Pad মুভমেন্ট কন্ট্রোল
+    function moveSelected(dx, dy) {
+      if (!selectedItem) return;
+      if (selectedItem.type === 'photo') {
+        photoSlotData.x = Math.max(0, Math.min(100, photoSlotData.x + dx));
+        photoSlotData.y = Math.max(0, Math.min(100, photoSlotData.y + dy));
+      } else {
+        const f = textFields.find(t => t.id === selectedItem.id);
+        if (f) {
+          f.x = Math.max(0, Math.min(100, f.x + dx));
+          f.y = Math.max(0, Math.min(100, f.y + dy));
+        }
+      }
+      renderCanvasLayers();
+    }
+
+    document.getElementById("moveUp").addEventListener("click", () => moveSelected(0, -0.8));
+    document.getElementById("moveDown").addEventListener("click", () => moveSelected(0, 0.8));
+    document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.8, 0));
+    document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.8, 0));
+
+    // ফায়ারবেসে সেভ করা
+    document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
+      const title = document.getElementById("tplTitle").value.trim() || "বিবাহ স্মরণিকা";
+      const category = document.getElementById("tplCategory").value.trim() || "বিয়ে";
+      const imageUrl = document.getElementById("tplImageUrl").value.trim();
+
+      if (!imageUrl) {
+        alert("অনুগ্রহ করে ব্যানার ফ্রেম ইমেজের URL দিন!");
+        return;
+      }
+
+      const btn = document.getElementById("saveTemplateBtn");
+      btn.innerText = "সংরক্ষণ করা হচ্ছে...";
       btn.disabled = true;
 
-      const canvas = document.getElementById("exportCanvas");
-      const ctx = canvas.getContext("2d");
+      try {
+        // ১. ক্যাটাগরি তৈরি/আপডেট
+        await db.collection("categories").doc(category).set({
+          name: category,
+          icon: "💍"
+        }, { merge: true });
 
-      const baseImg = new Image();
-      baseImg.crossOrigin = "anonymous";
-      baseImg.src = activeTemplate.fullImageUrl || activeTemplate.previewUrl;
+        // ২. টেমপ্লেট ডাটা সেভ
+        await db.collection("templates").add({
+          title: title,
+          category: category,
+          previewUrl: imageUrl,
+          fullImageUrl: imageUrl,
+          hasPhotoSlot: hasPhotoCheckbox.checked,
+          photoSlotX: photoSlotData.x,
+          photoSlotY: photoSlotData.y,
+          photoSlotSize: photoSlotData.size,
+          inputFields: textFields,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-      baseImg.onload = () => {
-        canvas.width = baseImg.naturalWidth;
-        canvas.height = baseImg.naturalHeight;
-
-        // লেয়ার ১: ছবি
-        if (activeTemplate.hasPhotoSlot && userUploadedImageObj) {
-          const slotW = (canvas.width * (activeTemplate.photoSlotSize || 45)) / 100;
-          const slotH = slotW;
-          const slotX = (canvas.width * (activeTemplate.photoSlotX || 50)) / 100 - (slotW / 2);
-          const slotY = (canvas.height * (activeTemplate.photoSlotY || 35)) / 100 - (slotH / 2);
-
-          ctx.save();
-          ctx.beginPath();
-          ctx.rect(slotX, slotY, slotW, slotH);
-          ctx.clip();
-          ctx.drawImage(userUploadedImageObj, slotX, slotY, slotW, slotH);
-          ctx.restore();
-        }
-
-        // লেয়ার ২: ফ্রেম
-        ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
-
-        // লেয়ার ৩: টেক্সট
-        if (activeTemplate.inputFields) {
-          activeTemplate.inputFields.forEach(f => {
-            const text = textState[f.id] || f.placeholder || f.label;
-            const posX = (canvas.width * f.x) / 100;
-            const posY = (canvas.height * f.y) / 100;
-
-            const scaleFactor = canvas.width / 600;
-            const fontSize = (f.fontSize || 20) * scaleFactor;
-
-            ctx.font = `bold ${fontSize}px 'Hind Siliguri', sans-serif`;
-            ctx.fillStyle = f.textColor || "#000000";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(text, posX, posY);
-          });
-        }
-
-        const link = document.createElement("a");
-        link.download = `${activeTemplate.title || 'banner'}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        btn.innerHTML = `<span>ডাউনলোড</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`;
+        alert("টেমপ্লেটটি সফলভাবে নতুন ডাটাবেজে সংরক্ষণ করা হয়েছে!");
+        window.location.reload();
+      } catch (err) {
+        console.error("Save error:", err);
+        alert("ত্রুটি: " + err.message);
+        btn.innerText = "💾 টেমপ্লেটটি নতুন ফায়ারবেসে সংরক্ষণ করুন";
         btn.disabled = false;
-      };
+      }
     });
 
-    loadDataFromFirestore();
+    // প্রাথমিক রেন্ডার
+    renderFieldsList();
+    renderCanvasLayers();
   </script>
 </body>
 </html>
