@@ -39,7 +39,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">ডুয়াল ইমেজ আপলোড সিস্টেম</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">ImgBB সক্রিয়</span>
     </div>
 
     <!-- ম্যানেজমেন্ট ট্যাব বার -->
@@ -88,7 +88,7 @@
             </label>
             <input type="url" id="previewImageUrl" placeholder="প্রিভিউ ছবির URL লিংক" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
-          <p class="text-[10px] text-slate-500">হোম পেজে দ্রুত লোড হওয়ার জন্য হালকা বা রেডিমেড ব্যানার পোস্টারের ছবি দিন।</p>
+          <p class="text-[10px] text-slate-500">হোম পেজে দ্রুত লোড হওয়ার জন্য হালকা বা ডেমো পোস্টারের ছবি দিন।</p>
         </div>
 
         <!-- ২. অরিজিনাল স্বচ্ছ ফ্রেম আপলোড -->
@@ -104,7 +104,7 @@
             </label>
             <input type="url" id="originalImageUrl" placeholder="অরিজিনাল স্বচ্ছ PNG URL" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
-          <p class="text-[10px] text-slate-500">কাটআউট ও স্বচ্ছ ব্যাকগ্রাউন্ড যুক্ত মূল ফ্রেমটি এখানে আপলোড করুন যা ক্যানভাসে লোড হবে।</p>
+          <p class="text-[10px] text-slate-500">লেখা ও ছবিহীন স্বচ্ছ ফ্রেমটি এখানে দিন যা ক্যানভাসে লোড হবে।</p>
         </div>
 
         <div class="pt-2 border-t flex items-center justify-between">
@@ -255,7 +255,8 @@
   </main>
 
   <script>
-    const IMGBB_API_KEY = "4a18018e69ee8ce9b0d110190141f173";
+    // আপনার নতুন ImgBB API Key
+    const IMGBB_API_KEY = "f58e7082c01a1f0e687721ebbbcff6da";
 
     const firebaseConfig = {
       apiKey: "AIzaSyANmFjDSGfdXhMfCUMgpurd1Jw_tVsrnWQ",
@@ -549,8 +550,8 @@
         await db.collection("templates").add({
           title,
           category,
-          previewUrl: previewUrl || originalUrl, // প্রিভিউ না থাকলে অরিজিনাল ব্যবহার হবে
-          fullImageUrl: originalUrl,            // অরিজিনাল ফ্রেম
+          previewUrl: previewUrl || originalUrl,
+          fullImageUrl: originalUrl,
           hasPhotoSlot: hasPhotoCheckbox.checked,
           photoSlotX: photoSlotData.x,
           photoSlotY: photoSlotData.y,
