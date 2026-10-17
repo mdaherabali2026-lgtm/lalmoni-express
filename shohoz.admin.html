@@ -8,6 +8,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Hind Siliguri', sans-serif; }
+    .draggable-item {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: move;
+    }
+    .draggable-item.active {
+      outline: 2px dashed #4f46e5;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800">
@@ -85,7 +97,7 @@
     <div id="loginSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-8 text-center max-w-md mx-auto my-12 space-y-4">
       <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
       <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-      <p class="text-sm text-slate-500">ব্যানার ও অ্যাপ কনটেন্ট পরিচালনা করতে অ্যাডমিন হিসেবে সাইন ইন করুন।</p>
+      <p class="text-sm text-slate-500">ব্যানার ও অ্যাপ কনটেন্ট পরিচালনা করতে অনুমোদিত অ্যাডমিন হিসেবে সাইন ইন করুন।</p>
       <button id="googleLoginBtn" class="w-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center justify-center gap-2 transition">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         গুগল দিয়ে লগইন করুন
@@ -102,18 +114,18 @@
         <button id="desktopLogoutBtn" class="text-rose-600 hover:underline font-bold">লগআউট</button>
       </div>
 
-      <!-- ================= ট্যাব ১: ব্যানার আপলোড ও এডিট ================= -->
+      <!-- ================= ট্যাব ১: ব্যানার আপলোড ও ভিউজুয়াল ক্যানভাস এডিটর ================= -->
       <section id="tab-upload" class="tab-content">
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden max-w-4xl mx-auto">
           <div class="bg-slate-50 border-b px-6 py-4 flex justify-between items-center">
             <div>
-              <h2 id="formHeading" class="text-lg font-bold text-slate-800">নতুন ব্যানার আপলোড করুন</h2>
-              <p class="text-xs text-slate-500">তথ্য ও ছবি দিয়ে অ্যাপের জন্য টেমপ্লেট তৈরি করুন</p>
+              <h2 id="formHeading" class="text-lg font-bold text-slate-800">নতুন ব্যানার আপলোড ও পজিশনিং</h2>
+              <p class="text-xs text-slate-500">ছবি সিলেক্ট করে ক্যানভাসে লেখার অবস্থান ঠিক করুন</p>
             </div>
             <button type="button" id="cancelEditBtn" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-lg font-semibold hidden hover:bg-rose-100">✕ এডিট বাতিল করুন</button>
           </div>
 
-          <form id="templateForm" class="p-6 md:p-8 space-y-6">
+          <form id="templateForm" class="p-4 md:p-8 space-y-6">
             <input type="hidden" id="editingDocId" value="">
             <input type="hidden" id="existingPreviewUrl" value="">
             <input type="hidden" id="existingFullImageUrl" value="">
@@ -141,7 +153,7 @@
               </div>
               <div class="p-3 bg-slate-50 border rounded-xl">
                 <label class="block text-sm font-semibold text-slate-700 mb-1">🎨 মূল ইমেজ ফাইল (Full Background)</label>
-                <p class="text-xs text-slate-500 mb-2">এডিটরের মূল ব্যাকগ্রাউন্ড <span id="fullNotice" class="text-indigo-600 font-bold hidden">(না বদলালে আগেরটাই থাকবে)</span></p>
+                <p class="text-xs text-slate-500 mb-2">এডিটরের ব্যাকগ্রাউন্ড <span id="fullNotice" class="text-indigo-600 font-bold hidden">(না বদলালে আগেরটাই থাকবে)</span></p>
                 <input type="file" id="fullFileInput" accept="image/*"
                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
               </div>
@@ -154,11 +166,12 @@
               </label>
             </div>
 
+            <!-- ইনপুট ফিল্ড লিস্ট -->
             <div class="border-t pt-5">
               <div class="flex justify-between items-center mb-3">
                 <div>
-                  <h3 class="text-base font-bold text-slate-800">এডিটরে কী কী লেখার ঘর থাকবে?</h3>
-                  <p class="text-xs text-slate-500">ইউজার অ্যাপে যে তথ্যগুলো লিখে ব্যানার বানাবে</p>
+                  <h3 class="text-base font-bold text-slate-800">১. লেখার ঘরগুলো নির্ধারণ করুন</h3>
+                  <p class="text-xs text-slate-500">যে তথ্যগুলো ব্যানারে বসানো হবে</p>
                 </div>
                 <button type="button" id="addFieldBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 transition">
                   + ফিল্ড যোগ করুন
@@ -167,10 +180,40 @@
               <div id="fieldsContainer" class="space-y-3"></div>
             </div>
 
+            <!-- ================= ভিউজুয়াল ড্র্যাগ অ্যান্ড ড্রপ ক্যানভাস ================= -->
+            <div class="border-t pt-5 space-y-3">
+              <div>
+                <h3 class="text-base font-bold text-slate-800">২. ভিউজুয়াল ক্যানভাস (আঙুল দিয়ে টেনে লেখা বসান)</h3>
+                <p class="text-xs text-slate-500">বক্সগুলোকে টেনে ব্যানারের সঠিক জায়গায় বসিয়ে দিন। যে বক্সে ট্যাপ করবেন তার ফন্ট সাইজ ও রঙ নিচে থেকে বদলাতে পারবেন।</p>
+              </div>
+
+              <!-- ক্যানভাস বক্স -->
+              <div class="relative w-full max-w-lg mx-auto bg-slate-900 border-2 border-indigo-400 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center min-h-[300px]" id="canvasContainer">
+                <img id="canvasBackgroundImg" src="https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন" class="w-full h-auto object-contain pointer-events-none block">
+                <div id="draggableOverlay" class="absolute inset-0 w-full h-full pointer-events-auto">
+                  <!-- ড্র্যাগেবল টেক্সট বক্সগুলো জাভাস্ক্রিপ্ট দিয়ে এখানে যুক্ত হবে -->
+                </div>
+              </div>
+
+              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার -->
+              <div id="activeBoxToolbar" class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl max-w-lg mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span class="font-bold text-indigo-700" id="selectedFieldName">কোনো টেক্সট সিলেক্ট নেই</span>
+                <div class="flex items-center gap-2">
+                  <label class="font-medium text-slate-600">কালার:</label>
+                  <input type="color" id="activeColorPicker" value="#ffffff" class="w-7 h-7 rounded border cursor-pointer">
+                </div>
+                <div class="flex items-center gap-2">
+                  <label class="font-medium text-slate-600">সাইজ:</label>
+                  <input type="range" id="activeFontSizeSlider" min="12" max="64" value="24" class="w-24">
+                  <span id="activeFontSizeDisplay" class="font-bold text-slate-800">24px</span>
+                </div>
+              </div>
+            </div>
+
             <div class="border-t pt-5">
               <div id="statusMessage" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
               <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
-                ক্লাউডে ব্যানার আপলোড করুন
+                ক্লাউডে ব্যানার ও পজিশন সংরক্ষণ করুন
               </button>
             </div>
           </form>
@@ -371,28 +414,22 @@
 
     mobileMenuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
 
-    // ফায়ারস্টোর ডাটাবেজে ইউজার/অ্যাডমিন অ্যাকাউন্ট স্বয়ংক্রিয়ভাবে সিঙ্ক করার ফাংশন
     async function syncAdminToDatabase(user) {
       try {
         const token = await user.getIdToken(true);
         const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/users/${user.uid}?updateMask.fieldPaths=email&updateMask.fieldPaths=displayName&updateMask.fieldPaths=photoUrl&updateMask.fieldPaths=role&updateMask.fieldPaths=lastLoginAt`;
-        
         const body = {
           fields: {
             email: { stringValue: user.email || "" },
-            displayName: { stringValue: user.displayName || "অ্যাডমিন" },
+            displayName: { stringValue: user.displayName || "মোঃ সিরাজুল ইসলাম" },
             photoUrl: { stringValue: user.photoURL || "" },
             role: { stringValue: "admin" },
             lastLoginAt: { timestampValue: new Date().toISOString() }
           }
         };
-
         await fetch(url, {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
           body: JSON.stringify(body)
         });
       } catch (err) {
@@ -400,21 +437,15 @@
       }
     }
 
-    // অথেন্টিকেশন স্টেট
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
-        // ডাটাবেজের সিকিউরিটি রুলসের সাথে মিলিয়ে অনুমোদিত কিনা চেক
-        const isVerifiedAdmin = user.email === "sirazulvai2263@gmail.com";
-
-        if (isVerifiedAdmin) {
+        if (user.email === "sirazulvai2263@gmail.com") {
           loginSection.classList.add("hidden");
           dashboardSection.classList.remove("hidden");
           adminEmailDisplay.innerText = user.email;
           mobileAdminEmail.innerText = user.email;
           authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1 rounded-full border border-emerald-400 font-medium">অ্যাডমিন সক্রিয়</span>`;
-          
-          // ফায়ারস্টোর ডাটাবেজে অ্যাডমিন তথ্য সিঙ্ক করে রাখা
           await syncAdminToDatabase(user);
           await loadAllCategories();
         } else {
@@ -457,7 +488,7 @@
     }
 
     // ==========================================
-    // ১. ব্যানার টেমপ্লেট লজিক
+    // ১. ব্যানার টেমপ্লেট ও ভিউজুয়াল ড্র্যাগ ক্যানভাস লজিক
     // ==========================================
     const formHeading = document.getElementById("formHeading");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
@@ -466,6 +497,7 @@
     const existingFullImageUrl = document.getElementById("existingFullImageUrl");
     const previewNotice = document.getElementById("previewNotice");
     const fullNotice = document.getElementById("fullNotice");
+    const fullFileInput = document.getElementById("fullFileInput");
     const fieldsContainer = document.getElementById("fieldsContainer");
     const addFieldBtn = document.getElementById("addFieldBtn");
     const templateForm = document.getElementById("templateForm");
@@ -475,25 +507,275 @@
     const loadingTemplates = document.getElementById("loadingTemplates");
     const refreshTemplatesBtn = document.getElementById("refreshTemplatesBtn");
 
-    function addFieldRow(label = "", placeholder = "", inputType = "Text") {
+    // ক্যানভাস এলিমেন্টস
+    const canvasContainer = document.getElementById("canvasContainer");
+    const canvasBackgroundImg = document.getElementById("canvasBackgroundImg");
+    const draggableOverlay = document.getElementById("draggableOverlay");
+    const activeBoxToolbar = document.getElementById("activeBoxToolbar");
+    const selectedFieldName = document.getElementById("selectedFieldName");
+    const activeColorPicker = document.getElementById("activeColorPicker");
+    const activeFontSizeSlider = document.getElementById("activeFontSizeSlider");
+    const activeFontSizeDisplay = document.getElementById("activeFontSizeDisplay");
+
+    let fieldConfigs = []; // { id, label, placeholder, x, y, fontSize, textColor }
+    let activeFieldId = null;
+
+    // লোকাল ফাইল সিলেক্ট করলেই ক্যানভাসে ছবি দেখানো
+    fullFileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        canvasBackgroundImg.src = url;
+      }
+    });
+
+    // ফিল্ড যোগ করার ফাংশন
+    function addFieldRow(label = "", placeholder = "", x = 50, y = 50, fontSize = 24, textColor = "#ffffff") {
+      const fieldId = "field_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
       const row = document.createElement("div");
       row.className = "flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200 field-row";
+      row.dataset.id = fieldId;
       row.innerHTML = `
         <input type="text" placeholder="লেবেল (যেমন: বরের নাম)" value="${label}" required class="field-label flex-1 px-3 py-1.5 border rounded-lg text-sm outline-none">
         <input type="text" placeholder="প্লেসহোল্ডার" value="${placeholder}" class="field-placeholder flex-1 px-3 py-1.5 border rounded-lg text-sm outline-none">
-        <select class="field-type px-2 py-1.5 border rounded-lg text-sm outline-none bg-white">
-          <option value="Text" ${inputType === 'Text' ? 'selected' : ''}>Text</option>
-          <option value="Number" ${inputType === 'Number' ? 'selected' : ''}>Number</option>
-          <option value="Date" ${inputType === 'Date' ? 'selected' : ''}>Date</option>
-        </select>
         <button type="button" class="remove-btn bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg text-sm font-bold">×</button>
       `;
-      row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
+
+      const cfg = {
+        id: fieldId,
+        label: label || "নতুন ফিল্ড",
+        placeholder: placeholder || label,
+        x: x,
+        y: y,
+        fontSize: fontSize,
+        textColor: textColor
+      };
+      fieldConfigs.push(cfg);
+
+      const labelInput = row.querySelector(".field-label");
+      labelInput.addEventListener("input", (e) => {
+        cfg.label = e.target.value.trim() || "লেখা";
+        updateCanvasItemLabel(cfg.id, cfg.label);
+      });
+
+      row.querySelector(".remove-btn").addEventListener("click", () => {
+        row.remove();
+        fieldConfigs = fieldConfigs.filter(item => item.id !== fieldId);
+        removeCanvasItem(fieldId);
+      });
+
       fieldsContainer.appendChild(row);
+      createCanvasDraggable(cfg);
     }
-    addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান");
-    addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
+
+    // ক্যানভাসে ড্র্যাগেবল বক্স তৈরি (মোবাইল টাচ-সাপোর্টসহ)
+    function createCanvasDraggable(cfg) {
+      const box = document.createElement("div");
+      box.id = "drag_" + cfg.id;
+      box.className = "draggable-item bg-black/60 backdrop-blur-sm border border-white/60 px-2.5 py-1 rounded-lg text-center font-bold shadow-lg transition-transform";
+      box.style.left = `${cfg.x}%`;
+      box.style.top = `${cfg.y}%`;
+      box.style.color = cfg.textColor;
+      box.style.fontSize = `${cfg.fontSize}px`;
+      box.innerText = cfg.label || "লেখা";
+
+      // বক্স নির্বাচন ও সক্রিয় করা
+      box.addEventListener("pointerdown", (e) => {
+        selectField(cfg.id);
+        startDragging(e, box, cfg);
+      });
+
+      draggableOverlay.appendChild(box);
+    }
+
+    function updateCanvasItemLabel(id, text) {
+      const box = document.getElementById("drag_" + id);
+      if (box) box.innerText = text;
+    }
+
+    function removeCanvasItem(id) {
+      const box = document.getElementById("drag_" + id);
+      if (box) box.remove();
+      if (activeFieldId === id) {
+        activeFieldId = null;
+        selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
+      }
+    }
+
+    function selectField(id) {
+      activeFieldId = id;
+      document.querySelectorAll(".draggable-item").forEach(b => b.classList.remove("active"));
+      const box = document.getElementById("drag_" + id);
+      if (box) box.classList.add("active");
+
+      const cfg = fieldConfigs.find(c => c.id === id);
+      if (cfg) {
+        selectedFieldName.innerText = `এডিট: ${cfg.label}`;
+        activeColorPicker.value = cfg.textColor;
+        activeFontSizeSlider.value = cfg.fontSize;
+        activeFontSizeDisplay.innerText = `${cfg.fontSize}px`;
+      }
+    }
+
+    // মোবাইল এবং ডেক্সটপ উভয়তেই স্মুথ টাচ ড্র্যাগ অ্যান্ড ড্রপ লজিক
+    function startDragging(e, box, cfg) {
+      e.preventDefault();
+      const rect = draggableOverlay.getBoundingClientRect();
+
+      function onPointerMove(moveEvent) {
+        const clientX = moveEvent.clientX;
+        const clientY = moveEvent.clientY;
+
+        let posX = ((clientX - rect.left) / rect.width) * 100;
+        let posY = ((clientY - rect.top) / rect.height) * 100;
+
+        // ০ থেকে ১০০% এর ভেতরে সীমাবদ্ধ রাখা
+        posX = Math.max(3, Math.min(97, posX));
+        posY = Math.max(3, Math.min(97, posY));
+
+        cfg.x = parseFloat(posX.toFixed(2));
+        cfg.y = parseFloat(posY.toFixed(2));
+
+        box.style.left = `${cfg.x}%`;
+        box.style.top = `${cfg.y}%`;
+      }
+
+      function onPointerUp() {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+      }
+
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+    }
+
+    // টুলবার কন্ট্রোলস (কালার ও সাইজ পরিবর্তন)
+    activeColorPicker.addEventListener("input", (e) => {
+      if (!activeFieldId) return;
+      const cfg = fieldConfigs.find(c => c.id === activeFieldId);
+      if (cfg) {
+        cfg.textColor = e.target.value;
+        const box = document.getElementById("drag_" + cfg.id);
+        if (box) box.style.color = cfg.textColor;
+      }
+    });
+
+    activeFontSizeSlider.addEventListener("input", (e) => {
+      if (!activeFieldId) return;
+      const cfg = fieldConfigs.find(c => c.id === activeFieldId);
+      if (cfg) {
+        cfg.fontSize = parseInt(e.target.value);
+        activeFontSizeDisplay.innerText = `${cfg.fontSize}px`;
+        const box = document.getElementById("drag_" + cfg.id);
+        if (box) box.style.fontSize = `${cfg.fontSize}px`;
+      }
+    });
+
+    // ডিফল্ট ফিল্ডস
+    addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান", 50, 40, 26, "#ffffff");
+    addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার", 50, 52, 26, "#ffffff");
     addFieldBtn.addEventListener("click", () => addFieldRow());
+
+    // ব্যানার সাবমিট
+    templateForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      statusMessage.className = "hidden";
+      try {
+        const isEdit = editingDocId.value !== "";
+        const docId = editingDocId.value;
+        const previewFile = document.getElementById("previewFileInput").files[0];
+        const fullFile = document.getElementById("fullFileInput").files[0];
+        let previewUrl = existingPreviewUrl.value;
+        let fullImageUrl = existingFullImageUrl.value;
+
+        if (previewFile) {
+          submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
+          previewUrl = await uploadToImgBB(previewFile);
+        }
+        if (fullFile) {
+          submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড আপলোড হচ্ছে...";
+          fullImageUrl = await uploadToImgBB(fullFile);
+        }
+
+        submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
+
+        // ফিল্ড ও পজিশন ডেটা প্রস্তুতকরণ
+        const formattedFields = fieldConfigs.map((f, index) => ({
+          mapValue: {
+            fields: {
+              id: { stringValue: `field_${index + 1}` },
+              label: { stringValue: f.label },
+              placeholder: { stringValue: f.placeholder || f.label },
+              inputType: { stringValue: "Text" },
+              x: { doubleValue: f.x },
+              y: { doubleValue: f.y },
+              fontSize: { integerValue: String(f.fontSize) },
+              textColor: { stringValue: f.textColor || "#ffffff" }
+            }
+          }
+        }));
+
+        const body = {
+          fields: {
+            title: { stringValue: document.getElementById("title").value.trim() },
+            categoryId: { stringValue: document.getElementById("categoryId").value },
+            previewUrl: { stringValue: previewUrl },
+            fullImageUrl: { stringValue: fullImageUrl },
+            hasPhotoSlot: { booleanValue: document.getElementById("hasPhotoSlot").checked },
+            usedCount: { integerValue: "0" },
+            inputFields: { arrayValue: { values: formattedFields } },
+            updatedAt: { timestampValue: new Date().toISOString() }
+          }
+        };
+        if (!isEdit) body.fields.createdAt = { timestampValue: new Date().toISOString() };
+
+        let url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
+        let method = "POST";
+        if (isEdit) { url = `${url}/${docId}`; method = "PATCH"; }
+
+        const token = await currentUser.getIdToken(true);
+        const res = await fetch(url, {
+          method: method,
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error?.message || "ডাটাবেজে সেভ ব্যর্থ");
+
+        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
+        statusMessage.innerText = isEdit ? "🎉 ব্যানার ও পজিশন সফলভাবে আপডেট হয়েছে!" : "🎉 নতুন ব্যানার ও পজিশন সফলভাবে আপলোড হয়েছে!";
+        resetFormState();
+      } catch (err) {
+        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
+        statusMessage.innerText = "সমস্যা: " + err.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function resetFormState() {
+      templateForm.reset();
+      editingDocId.value = "";
+      existingPreviewUrl.value = "";
+      existingFullImageUrl.value = "";
+      previewNotice.classList.add("hidden");
+      fullNotice.classList.add("hidden");
+      document.getElementById("previewFileInput").required = true;
+      document.getElementById("fullFileInput").required = true;
+      formHeading.innerText = "নতুন ব্যানার আপলোড ও পজিশনিং";
+      submitBtn.innerText = "ক্লাউডে ব্যানার ও পজিশন সংরক্ষণ করুন";
+      cancelEditBtn.classList.add("hidden");
+      fieldsContainer.innerHTML = "";
+      draggableOverlay.innerHTML = "";
+      fieldConfigs = [];
+      activeFieldId = null;
+      selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
+      canvasBackgroundImg.src = "https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন";
+      addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান", 50, 40, 26, "#ffffff");
+      addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার", 50, 52, 26, "#ffffff");
+    }
+    cancelEditBtn.addEventListener("click", resetFormState);
 
     async function loadAllTemplates() {
       loadingTemplates.classList.remove("hidden");
@@ -519,12 +801,19 @@
           const f = doc.fields || {};
           let parsedFields = [];
           if (f.inputFields?.arrayValue?.values) {
-            parsedFields = f.inputFields.arrayValue.values.map(v => ({
-              id: v.mapValue?.fields?.id?.stringValue || "",
-              label: v.mapValue?.fields?.label?.stringValue || "",
-              placeholder: v.mapValue?.fields?.placeholder?.stringValue || "",
-              inputType: v.mapValue?.fields?.inputType?.stringValue || "Text"
-            }));
+            parsedFields = f.inputFields.arrayValue.values.map(v => {
+              const mf = v.mapValue?.fields || {};
+              return {
+                id: mf.id?.stringValue || "",
+                label: mf.label?.stringValue || "",
+                placeholder: mf.placeholder?.stringValue || "",
+                inputType: mf.inputType?.stringValue || "Text",
+                x: mf.x?.doubleValue !== undefined ? mf.x.doubleValue : (mf.x?.integerValue !== undefined ? Number(mf.x.integerValue) : 50),
+                y: mf.y?.doubleValue !== undefined ? mf.y.doubleValue : (mf.y?.integerValue !== undefined ? Number(mf.y.integerValue) : 50),
+                fontSize: Number(mf.fontSize?.integerValue || 24),
+                textColor: mf.textColor?.stringValue || "#ffffff"
+              };
+            });
           }
           const t = {
             id: docId,
@@ -579,104 +868,24 @@
       formHeading.innerText = `এডিট হচ্ছে: ${item.title}`;
       submitBtn.innerText = "পরিবর্তন সংরক্ষণ করুন (Update)";
       cancelEditBtn.classList.remove("hidden");
+
+      // ক্যানভাসে মূল ছবি সেট করা
+      canvasBackgroundImg.src = item.fullImageUrl || item.previewUrl;
+
+      // ফিল্ড ও ক্যানভাস রেন্ডার
       fieldsContainer.innerHTML = "";
-      if (item.inputFields.length > 0) item.inputFields.forEach(f => addFieldRow(f.label, f.placeholder, f.inputType));
-      else addFieldRow();
-    }
+      draggableOverlay.innerHTML = "";
+      fieldConfigs = [];
 
-    function resetFormState() {
-      templateForm.reset();
-      editingDocId.value = "";
-      existingPreviewUrl.value = "";
-      existingFullImageUrl.value = "";
-      previewNotice.classList.add("hidden");
-      fullNotice.classList.add("hidden");
-      document.getElementById("previewFileInput").required = true;
-      document.getElementById("fullFileInput").required = true;
-      formHeading.innerText = "নতুন ব্যানার আপলোড করুন";
-      submitBtn.innerText = "ক্লাউডে ব্যানার আপলোড করুন";
-      cancelEditBtn.classList.add("hidden");
-      fieldsContainer.innerHTML = "";
-      addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান");
-      addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার");
-    }
-    cancelEditBtn.addEventListener("click", resetFormState);
-    refreshTemplatesBtn.addEventListener("click", loadAllTemplates);
-
-    templateForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      statusMessage.className = "hidden";
-      try {
-        const isEdit = editingDocId.value !== "";
-        const docId = editingDocId.value;
-        const previewFile = document.getElementById("previewFileInput").files[0];
-        const fullFile = document.getElementById("fullFileInput").files[0];
-        let previewUrl = existingPreviewUrl.value;
-        let fullImageUrl = existingFullImageUrl.value;
-
-        if (previewFile) {
-          submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
-          previewUrl = await uploadToImgBB(previewFile);
-        }
-        if (fullFile) {
-          submitBtn.innerText = "⏳ মূল ব্যাকগ্রাউন্ড আপলোড হচ্ছে...";
-          fullImageUrl = await uploadToImgBB(fullFile);
-        }
-
-        submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
-        const rows = document.querySelectorAll(".field-row");
-        const inputFields = [];
-        rows.forEach((row, index) => {
-          inputFields.push({
-            id: `field_${index + 1}`,
-            label: row.querySelector(".field-label").value.trim(),
-            placeholder: row.querySelector(".field-placeholder").value.trim() || row.querySelector(".field-label").value.trim(),
-            inputType: row.querySelector(".field-type").value
-          });
+      if (item.inputFields && item.inputFields.length > 0) {
+        item.inputFields.forEach(f => {
+          addFieldRow(f.label, f.placeholder, f.x, f.y, f.fontSize, f.textColor);
         });
-
-        const formattedFields = inputFields.map(f => ({
-          mapValue: { fields: { id: { stringValue: f.id }, label: { stringValue: f.label }, placeholder: { stringValue: f.placeholder }, inputType: { stringValue: f.inputType } } }
-        }));
-
-        const body = {
-          fields: {
-            title: { stringValue: document.getElementById("title").value.trim() },
-            categoryId: { stringValue: document.getElementById("categoryId").value },
-            previewUrl: { stringValue: previewUrl },
-            fullImageUrl: { stringValue: fullImageUrl },
-            hasPhotoSlot: { booleanValue: document.getElementById("hasPhotoSlot").checked },
-            usedCount: { integerValue: "0" },
-            inputFields: { arrayValue: { values: formattedFields } },
-            updatedAt: { timestampValue: new Date().toISOString() }
-          }
-        };
-        if (!isEdit) body.fields.createdAt = { timestampValue: new Date().toISOString() };
-
-        let url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
-        let method = "POST";
-        if (isEdit) { url = `${url}/${docId}`; method = "PATCH"; }
-
-        const token = await currentUser.getIdToken(true);
-        const res = await fetch(url, {
-          method: method,
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-          body: JSON.stringify(body)
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error?.message || "ডাটাবেজে সেভ ব্যর্থ");
-
-        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 block";
-        statusMessage.innerText = isEdit ? "🎉 ব্যানার সফলভাবে আপডেট হয়েছে!" : "🎉 নতুন ব্যানার সফলভাবে আপলোড হয়েছে!";
-        resetFormState();
-      } catch (err) {
-        statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
-        statusMessage.innerText = "সমস্যা: " + err.message;
-      } finally {
-        submitBtn.disabled = false;
+      } else {
+        addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান", 50, 40, 26, "#ffffff");
       }
-    });
+    }
+    refreshTemplatesBtn.addEventListener("click", loadAllTemplates);
 
     // ==========================================
     // ২. হোম স্লাইডার লজিক
@@ -903,7 +1112,6 @@
       usersListBody.innerHTML = "";
       try {
         const token = await currentUser.getIdToken(true);
-
         const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents:runQuery`;
         const res = await fetch(url, {
           method: "POST",
@@ -916,7 +1124,6 @@
 
         const allDisplayUsers = [];
 
-        // ১. বর্তমান অ্যাডমিনকে সবার উপরে সুপার অ্যাডমিন হিসেবে প্রদর্শন
         if (currentUser) {
           allDisplayUsers.push({
             uid: currentUser.uid,
@@ -927,7 +1134,6 @@
           });
         }
 
-        // ২. ডাটাবেসের ইউজারদের যোগ করা
         validDocs.forEach(doc => {
           const uid = doc.name.split("/").pop();
           const f = doc.fields || {};
@@ -986,7 +1192,6 @@
     }
     refreshUsersBtn.addEventListener("click", loadAllUsers);
 
-    // সাধারণ ডিলিট ফাংশন
     async function deleteItem(collectionName, docId, title, callback) {
       if (!confirm(`আপনি কি নিশ্চিত যে "${title || docId}" মুছে ফেলতে চান?`)) return;
       try {
