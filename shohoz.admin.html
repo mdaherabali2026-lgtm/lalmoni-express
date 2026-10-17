@@ -22,6 +22,19 @@
       outline: 2px dashed #4f46e5;
       outline-offset: 2px;
     }
+    .draggable-photo-slot {
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: move;
+      border: 2px dashed #0284c7;
+      background-color: rgba(14, 165, 233, 0.25);
+    }
+    .draggable-photo-slot.active {
+      outline: 3px solid #0284c7;
+    }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800">
@@ -122,7 +135,7 @@
           <div class="bg-slate-50 border-b px-6 py-4 flex justify-between items-center">
             <div>
               <h2 id="formHeading" class="text-lg font-bold text-slate-800">নতুন ব্যানার আপলোড ও পজিশনিং</h2>
-              <p class="text-xs text-slate-500">ছবি সিলেক্ট করে ক্যানভাসে লেখার অবস্থান ঠিক করুন</p>
+              <p class="text-xs text-slate-500">ছবি সিলেক্ট করে ক্যানভাসে লেখা ও ফটো ফ্রেমের অবস্থান ঠিক করুন</p>
             </div>
             <button type="button" id="cancelEditBtn" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-lg font-semibold hidden hover:bg-rose-100">✕ এডিট বাতিল করুন</button>
           </div>
@@ -163,8 +176,8 @@
 
             <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-xl">
               <input type="checkbox" id="hasPhotoSlot" class="w-5 h-5 text-indigo-600 rounded">
-              <label for="hasPhotoSlot" class="text-sm font-medium text-slate-700 cursor-pointer">
-                এই ব্যানারে ব্যবহারকারীর নিজস্ব ছবি যোগ করার ফ্রেম/স্লট আছে কি?
+              <label for="hasPhotoSlot" class="text-sm font-semibold text-slate-800 cursor-pointer">
+                📷 এই ব্যানারে ব্যবহারকারীর নিজস্ব ছবি যোগ করার ফ্রেম/স্লট আছে (ক্লিক করুন)
               </label>
             </div>
 
@@ -185,24 +198,26 @@
             <!-- ================= ভিউজুয়াল ড্র্যাগ অ্যান্ড ড্রপ ক্যানভাস ================= -->
             <div class="border-t pt-5 space-y-3">
               <div>
-                <h3 class="text-base font-bold text-slate-800">২. ভিউজুয়াল ক্যানভাস (আঙুল দিয়ে টেনে লেখা বসান)</h3>
-                <p class="text-xs text-slate-500">বক্সগুলোকে টেনে অথবা নিচের অ্যারো প্যাড দিয়ে নিখুঁতভাবে বসান।</p>
+                <h3 class="text-base font-bold text-slate-800">২. ভিউজুয়াল ক্যানভাস (লেখা ও ফটো ফ্রেম টেনে বসান)</h3>
+                <p class="text-xs text-slate-500">লেখা ও নীল রঙের ফটো ফ্রেমটিকে টেনে সঠিক জায়গায় বসিয়ে দিন। যেটিতে ট্যাপ করবেন তার সাইজ ও অ্যারো প্যাড নিচে সক্রিয় হবে।</p>
               </div>
 
               <!-- ক্যানভাস বক্স -->
               <div class="relative w-full max-w-lg mx-auto bg-slate-900 border-2 border-indigo-400 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center min-h-[300px]" id="canvasContainer">
                 <img id="canvasBackgroundImg" src="https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন" class="w-full h-auto object-contain pointer-events-none block">
                 <div id="draggableOverlay" class="absolute inset-0 w-full h-full pointer-events-auto">
-                  <!-- ড্র্যাগেবল টেক্সট বক্সগুলো এখানে যুক্ত হবে -->
+                  <!-- ড্র্যাগেবল টেক্সট বক্স এবং ফটো স্লট এখানে যুক্ত হবে -->
                 </div>
               </div>
 
-              <!-- সিলেক্টেড টেক্সট বক্স কন্ট্রোলার এবং পজিশন অ্যারো প্যাড -->
+              <!-- সিলেক্টেড টেক্সট বক্স / ফটো স্লট কন্ট্রোলার -->
               <div id="activeBoxToolbar" class="bg-white border-2 border-indigo-100 p-4 rounded-2xl max-w-lg mx-auto shadow-sm space-y-3">
                 
                 <div class="flex items-center justify-between border-b pb-2">
                   <span class="font-bold text-indigo-700 text-sm" id="selectedFieldName">কোনো টেক্সট সিলেক্ট নেই</span>
-                  <div class="flex items-center gap-3">
+                  
+                  <!-- টেক্সটের কালার ও সাইজ কন্ট্রোল -->
+                  <div class="flex items-center gap-3" id="textControlsGroup">
                     <div class="flex items-center gap-1.5">
                       <label class="text-xs font-medium text-slate-600">কালার:</label>
                       <input type="color" id="activeColorPicker" value="#ffffff" class="w-6 h-6 rounded border cursor-pointer">
@@ -213,11 +228,18 @@
                       <span id="activeFontSizeDisplay" class="font-bold text-slate-800 text-xs">24px</span>
                     </div>
                   </div>
+
+                  <!-- ফটো ফ্রেমের সাইজ কন্ট্রোল -->
+                  <div class="flex items-center gap-2 hidden" id="photoControlsGroup">
+                    <label class="text-xs font-medium text-slate-600">ফ্রেম সাইজ:</label>
+                    <input type="range" id="photoSizeSlider" min="15" max="80" value="45" class="w-28">
+                    <span id="photoSizeDisplay" class="font-bold text-sky-700 text-xs">45%</span>
+                  </div>
                 </div>
 
                 <!-- ৪-মুখী পজিশনিং প্যাড (D-Pad Controller) -->
                 <div id="positionPadContainer" class="hidden pt-1">
-                  <div class="text-[11px] text-slate-500 text-center mb-2 font-medium">🎯 নিখুঁতভাবে ডানে-বামে সরাতে তীর চিহ্নে ট্যাপ করুন:</div>
+                  <div class="text-[11px] text-slate-500 text-center mb-2 font-medium">🎯 নিখুঁতভাবে সরাতে তীর চিহ্নে ট্যাপ করুন:</div>
                   <div class="flex justify-center items-center">
                     <div class="grid grid-cols-3 gap-1.5 w-36">
                       <div></div>
@@ -516,7 +538,7 @@
     }
 
     // ==========================================
-    // ১. ব্যানার টেমপ্লেট ও ভিউজুয়াল ড্র্যাগ ক্যানভাস লজিক
+    // ১. ব্যানার টেমপ্লেট ও ভিউজুয়াল ড্র্যাগ ক্যানভাস লজিক (টেক্সট + ফটো স্লট)
     // ==========================================
     const formHeading = document.getElementById("formHeading");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
@@ -526,6 +548,7 @@
     const previewNotice = document.getElementById("previewNotice");
     const fullNotice = document.getElementById("fullNotice");
     const fullFileInput = document.getElementById("fullFileInput");
+    const hasPhotoSlotCheckbox = document.getElementById("hasPhotoSlot");
     const fieldsContainer = document.getElementById("fieldsContainer");
     const addFieldBtn = document.getElementById("addFieldBtn");
     const templateForm = document.getElementById("templateForm");
@@ -541,9 +564,13 @@
     const draggableOverlay = document.getElementById("draggableOverlay");
     const activeBoxToolbar = document.getElementById("activeBoxToolbar");
     const selectedFieldName = document.getElementById("selectedFieldName");
+    const textControlsGroup = document.getElementById("textControlsGroup");
+    const photoControlsGroup = document.getElementById("photoControlsGroup");
     const activeColorPicker = document.getElementById("activeColorPicker");
     const activeFontSizeSlider = document.getElementById("activeFontSizeSlider");
     const activeFontSizeDisplay = document.getElementById("activeFontSizeDisplay");
+    const photoSizeSlider = document.getElementById("photoSizeSlider");
+    const photoSizeDisplay = document.getElementById("photoSizeDisplay");
 
     // প্যাড এলিমেন্টস
     const positionPadContainer = document.getElementById("positionPadContainer");
@@ -553,13 +580,85 @@
     const btnMoveRight = document.getElementById("btnMoveRight");
 
     let fieldConfigs = []; // { id, label, placeholder, x, y, fontSize, textColor }
-    let activeFieldId = null;
+    let activeFieldId = null; // 'photo_slot' অথবা field id
+
+    // ফটো স্লট কনফিগ
+    let photoSlotConfig = {
+      enabled: false,
+      x: 50,
+      y: 35,
+      size: 45 // পার্সেন্টেজ প্রস্থ
+    };
 
     fullFileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
         const url = URL.createObjectURL(file);
         canvasBackgroundImg.src = url;
+      }
+    });
+
+    // ফটো স্লট চেকবক্স টগল
+    hasPhotoSlotCheckbox.addEventListener("change", (e) => {
+      photoSlotConfig.enabled = e.target.checked;
+      renderPhotoSlot();
+    });
+
+    function renderPhotoSlot() {
+      let slot = document.getElementById("drag_photo_slot");
+      if (photoSlotConfig.enabled) {
+        if (!slot) {
+          slot = document.createElement("div");
+          slot.id = "drag_photo_slot";
+          slot.className = "draggable-photo-slot rounded-2xl flex flex-col items-center justify-center text-sky-800 font-bold shadow-lg";
+          slot.innerHTML = `
+            <span class="text-2xl">📷</span>
+            <span class="text-[10px] mt-0.5 bg-white/80 px-1.5 py-0.5 rounded">প্রোফাইল ছবি</span>
+          `;
+          slot.addEventListener("pointerdown", (e) => {
+            selectPhotoSlot();
+            startDragging(e, slot, photoSlotConfig);
+          });
+          draggableOverlay.appendChild(slot);
+        }
+        slot.style.left = `${photoSlotConfig.x}%`;
+        slot.style.top = `${photoSlotConfig.y}%`;
+        slot.style.width = `${photoSlotConfig.size}%`;
+        slot.style.height = `${photoSlotConfig.size}%`;
+        slot.style.display = "flex";
+      } else {
+        if (slot) slot.remove();
+        if (activeFieldId === "photo_slot") {
+          activeFieldId = null;
+          selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
+          positionPadContainer.classList.add("hidden");
+          photoControlsGroup.classList.add("hidden");
+          textControlsGroup.classList.remove("hidden");
+        }
+      }
+    }
+
+    function selectPhotoSlot() {
+      activeFieldId = "photo_slot";
+      document.querySelectorAll(".draggable-item").forEach(b => b.classList.remove("active"));
+      const slot = document.getElementById("drag_photo_slot");
+      if (slot) slot.classList.add("active");
+
+      selectedFieldName.innerText = "📷 ফটো ফ্রেম পজিশন";
+      textControlsGroup.classList.add("hidden");
+      photoControlsGroup.classList.remove("hidden");
+      photoSizeSlider.value = photoSlotConfig.size;
+      photoSizeDisplay.innerText = `${photoSlotConfig.size}%`;
+      positionPadContainer.classList.remove("hidden");
+    }
+
+    photoSizeSlider.addEventListener("input", (e) => {
+      photoSlotConfig.size = parseInt(e.target.value);
+      photoSizeDisplay.innerText = `${photoSlotConfig.size}%`;
+      const slot = document.getElementById("drag_photo_slot");
+      if (slot) {
+        slot.style.width = `${photoSlotConfig.size}%`;
+        slot.style.height = `${photoSlotConfig.size}%`;
       }
     });
 
@@ -636,6 +735,8 @@
 
     function selectField(id) {
       activeFieldId = id;
+      const slot = document.getElementById("drag_photo_slot");
+      if (slot) slot.classList.remove("active");
       document.querySelectorAll(".draggable-item").forEach(b => b.classList.remove("active"));
       const box = document.getElementById("drag_" + id);
       if (box) box.classList.add("active");
@@ -643,10 +744,12 @@
       const cfg = fieldConfigs.find(c => c.id === id);
       if (cfg) {
         selectedFieldName.innerText = `এডিট: ${cfg.label}`;
+        textControlsGroup.classList.remove("hidden");
+        photoControlsGroup.classList.add("hidden");
         activeColorPicker.value = cfg.textColor;
         activeFontSizeSlider.value = cfg.fontSize;
         activeFontSizeDisplay.innerText = `${cfg.fontSize}px`;
-        positionPadContainer.classList.remove("hidden"); // অবজেক্ট সিলেক্ট করলে প্যাড ওপেন হবে
+        positionPadContainer.classList.remove("hidden");
       }
     }
 
@@ -681,11 +784,21 @@
       window.addEventListener("pointerup", onPointerUp);
     }
 
-    // ==================================================
-    // নজ / অ্যারো প্যাড (D-Pad) দিয়ে সূক্ষ্ম নড়াচড়ার লজিক
-    // ==================================================
+    // নজ / অ্যারো প্যাড
     function nudgeActiveItem(dx, dy) {
       if (!activeFieldId) return;
+
+      if (activeFieldId === "photo_slot") {
+        photoSlotConfig.x = parseFloat(Math.max(1, Math.min(99, photoSlotConfig.x + dx)).toFixed(2));
+        photoSlotConfig.y = parseFloat(Math.max(1, Math.min(99, photoSlotConfig.y + dy)).toFixed(2));
+        const slot = document.getElementById("drag_photo_slot");
+        if (slot) {
+          slot.style.left = `${photoSlotConfig.x}%`;
+          slot.style.top = `${photoSlotConfig.y}%`;
+        }
+        return;
+      }
+
       const cfg = fieldConfigs.find(c => c.id === activeFieldId);
       if (!cfg) return;
 
@@ -699,15 +812,14 @@
       box.style.top = `${cfg.y}%`;
     }
 
-    // প্রতি ক্লিকে ০.৪% করে সূক্ষ্ম মুভ হবে
     btnMoveUp.addEventListener("click", () => nudgeActiveItem(0, -0.4));
     btnMoveDown.addEventListener("click", () => nudgeActiveItem(0, 0.4));
     btnMoveLeft.addEventListener("click", () => nudgeActiveItem(-0.4, 0));
     btnMoveRight.addEventListener("click", () => nudgeActiveItem(0.4, 0));
 
-    // টুলবার কন্ট্রোলস
+    // কালার ও ফন্ট সাইজ
     activeColorPicker.addEventListener("input", (e) => {
-      if (!activeFieldId) return;
+      if (!activeFieldId || activeFieldId === "photo_slot") return;
       const cfg = fieldConfigs.find(c => c.id === activeFieldId);
       if (cfg) {
         cfg.textColor = e.target.value;
@@ -717,7 +829,7 @@
     });
 
     activeFontSizeSlider.addEventListener("input", (e) => {
-      if (!activeFieldId) return;
+      if (!activeFieldId || activeFieldId === "photo_slot") return;
       const cfg = fieldConfigs.find(c => c.id === activeFieldId);
       if (cfg) {
         cfg.fontSize = parseInt(e.target.value);
@@ -777,7 +889,10 @@
             categoryId: { stringValue: document.getElementById("categoryId").value },
             previewUrl: { stringValue: previewUrl },
             fullImageUrl: { stringValue: fullImageUrl },
-            hasPhotoSlot: { booleanValue: document.getElementById("hasPhotoSlot").checked },
+            hasPhotoSlot: { booleanValue: hasPhotoSlotCheckbox.checked },
+            photoSlotX: { doubleValue: photoSlotConfig.x },
+            photoSlotY: { doubleValue: photoSlotConfig.y },
+            photoSlotSize: { integerValue: String(photoSlotConfig.size) },
             usedCount: { integerValue: "0" },
             inputFields: { arrayValue: { values: formattedFields } },
             updatedAt: { timestampValue: new Date().toISOString() }
@@ -825,8 +940,11 @@
       draggableOverlay.innerHTML = "";
       fieldConfigs = [];
       activeFieldId = null;
+      photoSlotConfig = { enabled: false, x: 50, y: 35, size: 45 };
       selectedFieldName.innerText = "কোনো টেক্সট সিলেক্ট নেই";
       positionPadContainer.classList.add("hidden");
+      photoControlsGroup.classList.add("hidden");
+      textControlsGroup.classList.remove("hidden");
       canvasBackgroundImg.src = "https://placehold.co/600x800/222/fff?text=মূল+ছবি+নির্বাচন+করুন";
       addFieldRow("বরের নাম", "যেমন: মোঃ রায়হান", 50, 40, 26, "#ffffff");
       addFieldRow("কনের নাম", "যেমন: সুমাইয়া আক্তার", 50, 52, 26, "#ffffff");
@@ -878,6 +996,9 @@
             previewUrl: f.previewUrl?.stringValue || "",
             fullImageUrl: f.fullImageUrl?.stringValue || "",
             hasPhotoSlot: f.hasPhotoSlot?.booleanValue || false,
+            photoSlotX: f.photoSlotX?.doubleValue !== undefined ? f.photoSlotX.doubleValue : 50,
+            photoSlotY: f.photoSlotY?.doubleValue !== undefined ? f.photoSlotY.doubleValue : 35,
+            photoSlotSize: Number(f.photoSlotSize?.integerValue || 45),
             inputFields: parsedFields
           };
           const card = document.createElement("div");
@@ -916,7 +1037,7 @@
       existingFullImageUrl.value = item.fullImageUrl;
       document.getElementById("title").value = item.title;
       document.getElementById("categoryId").value = item.categoryId;
-      document.getElementById("hasPhotoSlot").checked = item.hasPhotoSlot;
+      hasPhotoSlotCheckbox.checked = item.hasPhotoSlot;
       previewNotice.classList.remove("hidden");
       fullNotice.classList.remove("hidden");
       document.getElementById("previewFileInput").required = false;
@@ -930,6 +1051,15 @@
       fieldsContainer.innerHTML = "";
       draggableOverlay.innerHTML = "";
       fieldConfigs = [];
+
+      // ফটো স্লট সেটআপ
+      photoSlotConfig = {
+        enabled: item.hasPhotoSlot,
+        x: item.photoSlotX || 50,
+        y: item.photoSlotY || 35,
+        size: item.photoSlotSize || 45
+      };
+      renderPhotoSlot();
 
       if (item.inputFields && item.inputFields.length > 0) {
         item.inputFields.forEach(f => {
