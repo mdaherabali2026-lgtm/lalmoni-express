@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
-  <title>ব্যানার মেকার - অ্যাডমিন সিএমএস</title>
+  <title>ব্যানার মেকার প্রো - অ্যাডমিন কনসোল</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   
@@ -20,11 +20,14 @@
       transition: transform 0.1s ease, opacity 0.1s ease;
     }
     .press-effect:active {
-      transform: scale(0.92);
+      transform: scale(0.95);
       opacity: 0.8;
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tab-active {
+      border-bottom: 2px solid #B91C1C;
+      color: #B91C1C;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased pb-20">
@@ -34,124 +37,185 @@
     <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-xl">🛠️</span>
-        <h1 class="text-base font-bold tracking-tight">ব্যানার মেকার - অ্যাডমিন প্যানেল</h1>
+        <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-xs bg-emerald-600 px-2 py-0.5 rounded-full font-medium">নতুন ডাটাবেজ কানেক্টেড</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">banner-maker-pro</span>
+    </div>
+
+    <!-- ম্যানেজমেন্ট ট্যাব বার -->
+    <div class="max-w-2xl mx-auto px-4 flex border-t border-slate-800 text-xs text-slate-400 bg-slate-900/95 overflow-x-auto">
+      <button onclick="switchTab('templates')" id="tab_templates" class="py-2.5 px-3 tab-active whitespace-nowrap">টেমপ্লেট বিল্ডার</button>
+      <button onclick="switchTab('sliders')" id="tab_sliders" class="py-2.5 px-3 whitespace-nowrap">স্লাইডার ম্যানেজার</button>
+      <button onclick="switchTab('categories')" id="tab_categories" class="py-2.5 px-3 whitespace-nowrap">ক্যাটাগরি কন্ট্রোল</button>
+      <button onclick="switchTab('manage')" id="tab_manage" class="py-2.5 px-3 whitespace-nowrap">সংরক্ষিত টেমপ্লেট</button>
     </div>
   </header>
 
   <main class="max-w-2xl mx-auto px-4 pt-4 space-y-6">
 
-    <!-- সেকশন ১: ব্যানার আপলোড ও মৌলিক তথ্য -->
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
-      <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 border-b pb-2">
-        <span>📌</span> টেমপ্লেটের সাধারণ তথ্য
-      </h2>
+    <!-- ================= ট্যাব ১: টেমপ্লেট মেকার ও ক্যানভাস এডিটর ================= -->
+    <div id="view_templates" class="space-y-4">
+      
+      <!-- বেসিক ইনফো -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b pb-2">
+          <span>📌</span> নতুন টেমপ্লেট কনফিগারেশন
+        </h2>
 
-      <div class="space-y-3">
-        <div>
-          <label class="text-xs font-semibold text-slate-600">টেমপ্লেটের নাম / শিরোনাম</label>
-          <input type="text" id="tplTitle" placeholder="উদা: বিবাহ স্মরণিকা প্রিমিয়াম" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-semibold text-slate-600">টেমপ্লেট শিরোনাম</label>
+            <input type="text" id="tplTitle" placeholder="বিবাহ স্মরণিকা প্রিমিয়াম" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
+          </div>
+          <div>
+            <label class="text-[11px] font-semibold text-slate-600">ক্যাটাগরি নির্বাচন</label>
+            <select id="tplCategorySelect" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1 bg-white">
+              <option value="বিয়ে">বিয়ে</option>
+            </select>
+          </div>
         </div>
 
         <div>
-          <label class="text-xs font-semibold text-slate-600">ক্যাটাগরি</label>
-          <input type="text" id="tplCategory" placeholder="উদা: বিয়ে" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
+          <label class="text-[11px] font-semibold text-slate-600">স্বচ্ছ ফ্রেম ইমেজ লিংক (PNG URL)</label>
+          <input type="url" id="tplImageUrl" placeholder="https://i.ibb.co/.../frame.png" class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
         </div>
 
-        <div>
-          <label class="text-xs font-semibold text-slate-600">ব্যানার ফ্রেম ইমেজ URL (স্বচ্ছ PNG)</label>
-          <input type="url" id="tplImageUrl" placeholder="https://..." class="w-full text-xs px-3 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-slate-800 mt-1">
-          <p class="text-[10px] text-slate-400 mt-0.5">স্বচ্ছ কাটআউট যুক্ত ব্যানার ফ্রেমের ডিরেক্ট ইমেজ লিঙ্ক দিন।</p>
-        </div>
-
-        <!-- ফটো স্লট টগল -->
         <div class="pt-2 border-t flex items-center justify-between">
           <div>
-            <div class="text-xs font-bold text-slate-700">ফটো স্লট সক্রিয় করবেন?</div>
-            <div class="text-[10px] text-slate-500">ইউজার নিজের ছবি আপলোড করে ফ্রেমের নিচে বসাতে পারবে</div>
+            <div class="text-xs font-bold text-slate-700">ফটো স্লট চালু করবেন?</div>
+            <div class="text-[10px] text-slate-500">ইউজার ফ্রেমের নিচে নিজের ছবি বসাতে পারবে</div>
           </div>
-          <input type="checkbox" id="hasPhotoSlot" class="w-4 h-4 accent-slate-900 cursor-pointer">
+          <input type="checkbox" id="hasPhotoSlot" class="w-4 h-4 accent-red-600 cursor-pointer">
         </div>
       </div>
-    </div>
 
-    <!-- সেকশন ২: ভিজ্যুয়াল লাইভ ক্যানভাস এডিটর -->
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between border-b pb-2">
-        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <span>🎯</span> লাইভ ভিজ্যুয়াল ক্যানভাস
-        </h2>
-        <span class="text-[11px] text-slate-500">এলিমেন্ট সিলেক্ট করে D-Pad দিয়ে নাড়ান</span>
-      </div>
-
-      <!-- ক্যানভাস বক্স -->
-      <div class="relative w-full rounded-2xl overflow-hidden shadow-inner border border-slate-300 bg-slate-50 aspect-[3/4] flex items-center justify-center select-none" id="adminCanvas">
-        <!-- ফ্রেম ইমেজ -->
-        <img id="adminCanvasImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" alt="Frame">
-
-        <!-- ফটো স্লট বক্স -->
-        <div id="canvasPhotoSlot" class="absolute border-2 border-dashed border-amber-500 bg-amber-200/40 rounded-xl flex items-center justify-center text-[10px] font-bold text-amber-900 cursor-pointer hidden z-20" style="transform: translate(-50%, -50%);">
-          ফটো স্লট
+      <!-- লাইভ ক্যানভাস ও D-Pad কন্ট্রোল -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h2 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <span>🎯</span> ভিজ্যুয়াল ক্যানভাস পজিশনার
+          </h2>
+          <span class="text-[10px] text-slate-500">এলিমেন্টে ট্যাপ করে D-Pad ব্যবহার করুন</span>
         </div>
 
-        <!-- টেক্সট বক্স লেয়ারগুলো এখানে যোগ হবে -->
-        <div id="canvasTextLayers" class="absolute inset-0 w-full h-full z-30 pointer-events-none"></div>
-      </div>
+        <!-- ক্যানভাস ভিউপোর্ট -->
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-inner border border-slate-300 bg-slate-50 aspect-[3/4] flex items-center justify-center select-none" id="adminCanvas">
+          <img id="adminCanvasImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-10">
 
-      <!-- D-Pad ও ফাইন পজিশন কন্ট্রোলার -->
-      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
-        <span class="text-xs font-bold text-slate-700" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
-        
-        <div class="grid grid-cols-3 gap-1.5 w-36">
-          <div></div>
-          <button id="moveUp" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▲</button>
-          <div></div>
+          <!-- ফটো স্লট মেকার -->
+          <div id="canvasPhotoSlot" class="absolute border-2 border-dashed border-amber-500 bg-amber-200/40 rounded-xl flex items-center justify-center text-[10px] font-bold text-amber-900 cursor-pointer hidden z-20" style="transform: translate(-50%, -50%);">
+            ফটো স্লট
+          </div>
+
+          <!-- টেক্সট ওভারলে লেয়ার -->
+          <div id="canvasTextLayers" class="absolute inset-0 w-full h-full z-30 pointer-events-none"></div>
+        </div>
+
+        <!-- D-Pad ও ফাইন পজিশন কন্ট্রোলার -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
+          <span class="text-xs font-bold text-slate-800" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
           
-          <button id="moveLeft" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">◀</button>
-          <div class="flex items-center justify-center text-[10px] text-slate-400 font-bold">D-Pad</div>
-          <button id="moveRight" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▶</button>
-          
-          <div></div>
-          <button id="moveDown" class="bg-slate-800 hover:bg-slate-900 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▼</button>
-          <div></div>
-        </div>
-
-        <!-- ফন্ট সাইজ ও কালার সিলেক্টর (সিলেক্টেড এলিমেন্টের জন্য) -->
-        <div id="elementControls" class="w-full flex items-center justify-between gap-3 pt-2 border-t mt-1 hidden">
-          <div class="flex-1">
-            <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
-            <input type="range" id="fontSizeSlider" min="5" max="60" value="20" class="w-full accent-slate-800">
+          <div class="grid grid-cols-3 gap-1.5 w-36">
+            <div></div>
+            <button id="moveUp" class="bg-slate-800 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▲</button>
+            <div></div>
+            
+            <button id="moveLeft" class="bg-slate-800 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">◀</button>
+            <div class="flex items-center justify-center text-[10px] text-slate-400 font-bold">D-Pad</div>
+            <button id="moveRight" class="bg-slate-800 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▶</button>
+            
+            <div></div>
+            <button id="moveDown" class="bg-slate-800 text-white p-2 rounded-lg text-xs font-bold press-effect flex justify-center">▼</button>
+            <div></div>
           </div>
-          <div>
-            <label class="text-[10px] font-semibold text-slate-500">কালার</label>
-            <input type="color" id="elementColorPicker" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer block border">
+
+          <!-- ফন্ট সাইজ ও কালার কন্ট্রোল -->
+          <div id="elementControls" class="w-full flex items-center justify-between gap-3 pt-2 border-t mt-1 hidden">
+            <div class="flex-1">
+              <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
+              <input type="range" id="fontSizeSlider" min="6" max="60" value="20" class="w-full accent-slate-800">
+            </div>
+            <div>
+              <label class="text-[10px] font-semibold text-slate-500">রং</label>
+              <input type="color" id="elementColorPicker" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer block border">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- সেকশন ৩: টেক্সট ইনপুট ফিল্ড ম্যানেজমেন্ট -->
-    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between border-b pb-2">
-        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <span>✍️</span> ডায়নামিক টেক্সট ফিল্ডসমূহ
-        </h2>
-        <button id="addTextFieldBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl press-effect flex items-center gap-1">
-          <span>+ নতুন ফিল্ড</span>
-        </button>
+      <!-- টেক্সট ফিল্ড ম্যানেজমেন্ট -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h2 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <span>✍️</span> ইনপুট ফিল্ডের তালিকা
+          </h2>
+          <button id="addTextFieldBtn" class="bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-xl press-effect flex items-center gap-1">
+            <span>+ নতুন ফিল্ড</span>
+          </button>
+        </div>
+        <div id="fieldsList" class="space-y-3"></div>
       </div>
 
-      <div id="fieldsList" class="space-y-3">
-        <!-- ডায়নামিক ফিল্ড কার্ড এখানে যুক্ত হবে -->
-      </div>
-    </div>
-
-    <!-- সেকশন ৪: সংরক্ষণ বাটন -->
-    <div class="pt-2">
-      <button id="saveTemplateBtn" class="w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 shadow-lg press-effect">
-        <span>💾 টেমপ্লেটটি নতুন ফায়ারবেসে সংরক্ষণ করুন</span>
+      <button id="saveTemplateBtn" class="w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-3.5 rounded-2xl text-sm shadow-md press-effect">
+        💾 টেমপ্লেটটি সংরক্ষণ করুন
       </button>
+
+    </div>
+
+    <!-- ================= ট্যাব ২: স্লাইডার ম্যানেজার ================= -->
+    <div id="view_sliders" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 border-b pb-2">🖼️ নতুন স্লাইডার ব্যানার যোগ করুন</h2>
+        <div class="space-y-2.5">
+          <input type="text" id="slideTitle" placeholder="শিরোনাম (উদা: ঈদ মোবারক অফার)" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
+          <input type="text" id="slideSubtitle" placeholder="উপ-শিরোনাম (উদা: বিশেষ ছাড়ে প্রিমিয়াম ব্যানার)" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="slideBadge" placeholder="ব্যাজ (উদা: অফার / নতুন)" class="text-xs px-3 py-2 border rounded-xl outline-none">
+            <input type="url" id="slideImageUrl" placeholder="ব্যানার ছবি লিংক (URL)" class="text-xs px-3 py-2 border rounded-xl outline-none">
+          </div>
+          <button onclick="saveSlider()" class="w-full bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl press-effect">
+            + স্লাইডার যুক্ত করুন
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 border-b pb-2">বর্তমান স্লাইডারসমূহ</h2>
+        <div id="activeSlidersList" class="space-y-2">
+          <div class="text-xs text-slate-400">স্লাইডার লোড হচ্ছে...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ট্যাব ৩: ক্যাটাগরি কন্ট্রোল ================= -->
+    <div id="view_categories" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 border-b pb-2">🏷️ নতুন ক্যাটাগরি তৈরি</h2>
+        <div class="flex gap-2">
+          <input type="text" id="newCatIcon" placeholder="ইমোজি (উদা: 🎂)" class="w-20 text-center text-sm px-2 py-2 border rounded-xl outline-none">
+          <input type="text" id="newCatName" placeholder="ক্যাটাগরির নাম (উদা: জন্মদিন)" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none">
+          <button onclick="saveCategory()" class="bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl press-effect">
+            যোগ করুন
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 border-b pb-2">ক্যাটাগরি তালিকা</h2>
+        <div id="activeCategoriesList" class="grid grid-cols-2 gap-2">
+          <div class="text-xs text-slate-400">ক্যাটাগরি লোড হচ্ছে...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ট্যাব ৪: সংরক্ষিত টেমপ্লেট ম্যানেজমেন্ট ================= -->
+    <div id="view_manage" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <h2 class="text-xs font-bold text-slate-700 border-b pb-2">📦 সংরক্ষিত টেমপ্লেটের তালিকা</h2>
+        <div id="savedTemplatesList" class="grid grid-cols-1 gap-3">
+          <div class="text-xs text-slate-400">টেমপ্লেট লোড হচ্ছে...</div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -184,22 +248,29 @@
       { id: "event_place", label: "স্থান", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000" }
     ];
 
-    let photoSlotData = {
-      x: 50,
-      y: 36,
-      size: 45
+    let photoSlotData = { x: 50, y: 36, size: 45 };
+    let selectedItem = null;
+
+    // ট্যাব স্যুইচার
+    window.switchTab = function(tabName) {
+      const views = ['templates', 'sliders', 'categories', 'manage'];
+      views.forEach(v => {
+        document.getElementById(`view_${v}`).classList.add('hidden');
+        document.getElementById(`tab_${v}`).classList.remove('tab-active');
+      });
+      document.getElementById(`view_${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab_${tabName}`).classList.add('tab-active');
+
+      if (tabName === 'sliders') loadSlidersList();
+      if (tabName === 'categories') loadCategoriesList();
+      if (tabName === 'manage') loadSavedTemplatesList();
     };
 
-    let selectedItem = null; // { type: 'text'|'photo', id: ... }
-
-    // ফ্রেম ইমেজ লোডার
-    const tplImageInput = document.getElementById("tplImageUrl");
-    const canvasImg = document.getElementById("adminCanvasImg");
-    tplImageInput.addEventListener("input", (e) => {
-      canvasImg.src = e.target.value;
+    // ক্যানভাস ইমেজ ও ফটো স্লট
+    document.getElementById("tplImageUrl").addEventListener("input", (e) => {
+      document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
-    // ফটো স্লট চেক
     const hasPhotoCheckbox = document.getElementById("hasPhotoSlot");
     const canvasPhotoSlot = document.getElementById("canvasPhotoSlot");
     hasPhotoCheckbox.addEventListener("change", (e) => {
@@ -212,18 +283,14 @@
       }
     });
 
-    canvasPhotoSlot.addEventListener("click", () => {
-      selectElement('photo', 'photo_slot');
-    });
+    canvasPhotoSlot.addEventListener("click", () => selectElement('photo', 'photo_slot'));
 
     function renderCanvasLayers() {
-      // ফটো স্লট পজিশন
       canvasPhotoSlot.style.left = `${photoSlotData.x}%`;
       canvasPhotoSlot.style.top = `${photoSlotData.y}%`;
       canvasPhotoSlot.style.width = `${photoSlotData.size}%`;
       canvasPhotoSlot.style.height = `${photoSlotData.size}%`;
 
-      // টেক্সট ওভারলে
       const container = document.getElementById("canvasTextLayers");
       container.innerHTML = "";
 
@@ -256,7 +323,7 @@
       const list = document.getElementById("fieldsList");
       list.innerHTML = "";
 
-      textFields.forEach((f, idx) => {
+      textFields.forEach(f => {
         const item = document.createElement("div");
         item.className = `p-3 rounded-xl border flex flex-col gap-2 ${selectedItem?.id === f.id ? 'border-red-500 bg-red-50/40' : 'border-slate-200 bg-slate-50'}`;
         item.innerHTML = `
@@ -265,28 +332,25 @@
             <button onclick="removeField('${f.id}')" class="text-xs text-red-600 font-bold hover:underline">ডিলিট</button>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" value="${f.placeholder}" placeholder="ডিফল্ট টেক্সট" class="text-[11px] px-2 py-1 bg-white border rounded-lg outline-none" oninput="updateFieldPlaceholder('${f.id}', this.value)">
-            <button onclick="selectElement('text', '${f.id}')" class="text-[11px] bg-slate-800 text-white rounded-lg font-bold press-effect">পজিশন এডিট করুন</button>
+            <input type="text" value="${f.placeholder}" placeholder="ডিফল্ট লেখা" class="text-[11px] px-2 py-1 bg-white border rounded-lg outline-none" oninput="updateFieldPlaceholder('${f.id}', this.value)">
+            <button onclick="selectElement('text', '${f.id}')" class="text-[11px] bg-slate-800 text-white rounded-lg font-bold press-effect">পজিশন এডিট</button>
           </div>
         `;
         list.appendChild(item);
       });
     }
 
-    window.updateFieldLabel = function(id, val) {
+    window.updateFieldLabel = (id, val) => {
       const f = textFields.find(t => t.id === id);
       if (f) f.label = val;
     };
 
-    window.updateFieldPlaceholder = function(id, val) {
+    window.updateFieldPlaceholder = (id, val) => {
       const f = textFields.find(t => t.id === id);
-      if (f) {
-        f.placeholder = val;
-        renderCanvasLayers();
-      }
+      if (f) { f.placeholder = val; renderCanvasLayers(); }
     };
 
-    window.removeField = function(id) {
+    window.removeField = (id) => {
       textFields = textFields.filter(t => t.id !== id);
       if (selectedItem?.id === id) unselectElement();
       renderFieldsList();
@@ -295,15 +359,7 @@
 
     document.getElementById("addTextFieldBtn").addEventListener("click", () => {
       const newId = `field_${Date.now()}`;
-      textFields.push({
-        id: newId,
-        label: "নতুন টেক্সট",
-        placeholder: "নমুনা লেখা",
-        x: 50,
-        y: 50,
-        fontSize: 16,
-        textColor: "#000000"
-      });
+      textFields.push({ id: newId, label: "নতুন টেক্সট", placeholder: "নমুনা লেখা", x: 50, y: 50, fontSize: 16, textColor: "#000000" });
       selectElement('text', newId);
       renderFieldsList();
       renderCanvasLayers();
@@ -337,7 +393,6 @@
       renderFieldsList();
     }
 
-    // ফন্ট সাইজ ও কালার আপডেট
     document.getElementById("fontSizeSlider").addEventListener("input", (e) => {
       if (selectedItem?.type === 'text') {
         const f = textFields.find(t => t.id === selectedItem.id);
@@ -352,14 +407,10 @@
     document.getElementById("elementColorPicker").addEventListener("input", (e) => {
       if (selectedItem?.type === 'text') {
         const f = textFields.find(t => t.id === selectedItem.id);
-        if (f) {
-          f.textColor = e.target.value;
-          renderCanvasLayers();
-        }
+        if (f) { f.textColor = e.target.value; renderCanvasLayers(); }
       }
     });
 
-    // D-Pad মুভমেন্ট কন্ট্রোল
     function moveSelected(dx, dy) {
       if (!selectedItem) return;
       if (selectedItem.type === 'photo') {
@@ -380,14 +431,14 @@
     document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.8, 0));
     document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.8, 0));
 
-    // ফায়ারবেসে সেভ করা
+    // ================= টেমপ্লেট সেভ =================
     document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
       const title = document.getElementById("tplTitle").value.trim() || "বিবাহ স্মরণিকা";
-      const category = document.getElementById("tplCategory").value.trim() || "বিয়ে";
+      const category = document.getElementById("tplCategorySelect").value;
       const imageUrl = document.getElementById("tplImageUrl").value.trim();
 
       if (!imageUrl) {
-        alert("অনুগ্রহ করে ব্যানার ফ্রেম ইমেজের URL দিন!");
+        alert("অনুগ্রহ করে ফ্রেম ইমেজের URL দিন!");
         return;
       }
 
@@ -396,16 +447,9 @@
       btn.disabled = true;
 
       try {
-        // ১. ক্যাটাগরি তৈরি/আপডেট
-        await db.collection("categories").doc(category).set({
-          name: category,
-          icon: "💍"
-        }, { merge: true });
-
-        // ২. টেমপ্লেট ডাটা সেভ
         await db.collection("templates").add({
-          title: title,
-          category: category,
+          title,
+          category,
           previewUrl: imageUrl,
           fullImageUrl: imageUrl,
           hasPhotoSlot: hasPhotoCheckbox.checked,
@@ -416,19 +460,160 @@
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        alert("টেমপ্লেটটি সফলভাবে নতুন ডাটাবেজে সংরক্ষণ করা হয়েছে!");
+        alert("টেমপ্লেট সফলভাবে সংরক্ষিত হয়েছে!");
         window.location.reload();
       } catch (err) {
-        console.error("Save error:", err);
         alert("ত্রুটি: " + err.message);
-        btn.innerText = "💾 টেমপ্লেটটি নতুন ফায়ারবেসে সংরক্ষণ করুন";
+        btn.innerText = "💾 টেমপ্লেটটি সংরক্ষণ করুন";
         btn.disabled = false;
       }
     });
 
-    // প্রাথমিক রেন্ডার
+    // ================= স্লাইডার মডিউল =================
+    window.saveSlider = async function() {
+      const title = document.getElementById("slideTitle").value.trim();
+      const subTitle = document.getElementById("slideSubtitle").value.trim();
+      const badge = document.getElementById("slideBadge").value.trim();
+      const imageUrl = document.getElementById("slideImageUrl").value.trim();
+
+      if (!imageUrl) { alert("স্লাইডারের ছবির লিংক দিন!"); return; }
+
+      await db.collection("sliders").add({
+        title, subTitle, badge, imageUrl,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert("স্লাইডার ব্যানার যোগ হয়েছে!");
+      document.getElementById("slideTitle").value = "";
+      document.getElementById("slideSubtitle").value = "";
+      document.getElementById("slideImageUrl").value = "";
+      loadSlidersList();
+    };
+
+    async function loadSlidersList() {
+      const container = document.getElementById("activeSlidersList");
+      const snap = await db.collection("sliders").get();
+      container.innerHTML = "";
+      if (snap.empty) { container.innerHTML = `<div class="text-xs text-slate-400">কোনো স্লাইডার নেই।</div>`; return; }
+
+      snap.forEach(doc => {
+        const d = doc.data();
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-2 bg-slate-50 border rounded-xl";
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="${d.imageUrl}" class="w-12 h-8 object-cover rounded-lg">
+            <div>
+              <div class="text-xs font-bold text-slate-800">${d.title || 'শিরোনামহীন'}</div>
+              <div class="text-[10px] text-slate-400">${d.badge || ''}</div>
+            </div>
+          </div>
+          <button onclick="deleteSlider('${doc.id}')" class="text-xs text-red-600 font-bold press-effect">মুছুন</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    window.deleteSlider = async function(id) {
+      if (confirm("এই স্লাইডার ব্যানারটি মুছে ফেলতে চান?")) {
+        await db.collection("sliders").doc(id).delete();
+        loadSlidersList();
+      }
+    };
+
+    // ================= ক্যাটাগরি মডিউল =================
+    window.saveCategory = async function() {
+      const name = document.getElementById("newCatName").value.trim();
+      const icon = document.getElementById("newCatIcon").value.trim() || "🏷️";
+      if (!name) { alert("ক্যাটাগরির নাম দিন!"); return; }
+
+      await db.collection("categories").doc(name).set({ name, icon });
+      alert("ক্যাটাগরি যুক্ত হয়েছে!");
+      document.getElementById("newCatName").value = "";
+      document.getElementById("newCatIcon").value = "";
+      loadCategoriesList();
+    };
+
+    async function loadCategoriesList() {
+      const container = document.getElementById("activeCategoriesList");
+      const selectDropdown = document.getElementById("tplCategorySelect");
+      const snap = await db.collection("categories").get();
+      
+      container.innerHTML = "";
+      selectDropdown.innerHTML = "";
+
+      if (snap.empty) { container.innerHTML = `<div class="text-xs text-slate-400">কোনো ক্যাটাগরি নেই।</div>`; return; }
+
+      snap.forEach(doc => {
+        const d = doc.data();
+        // ড্রপডাউন আপডেট
+        const opt = document.createElement("option");
+        opt.value = d.name;
+        opt.innerText = d.name;
+        selectDropdown.appendChild(opt);
+
+        // লিস্ট ভিউ
+        const card = document.createElement("div");
+        card.className = "flex items-center justify-between p-2.5 bg-slate-50 border rounded-xl";
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-lg">${d.icon || '🏷️'}</span>
+            <span class="text-xs font-bold text-slate-700">${d.name}</span>
+          </div>
+          <button onclick="deleteCategory('${doc.id}')" class="text-xs text-red-600 font-bold press-effect">মুছুন</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    window.deleteCategory = async function(id) {
+      if (confirm(`"${id}" ক্যাটাগরি মুছে ফেলতে চান?`)) {
+        await db.collection("categories").doc(id).delete();
+        loadCategoriesList();
+      }
+    };
+
+    // ================= সেভ করা টেমপ্লেট লিস্ট ও ডিলিট =================
+    async function loadSavedTemplatesList() {
+      const container = document.getElementById("savedTemplatesList");
+      const snap = await db.collection("templates").orderBy("createdAt", "desc").get();
+      container.innerHTML = "";
+
+      if (snap.empty) {
+        container.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">কোনো সংরক্ষিত টেমপ্লেট নেই।</div>`;
+        return;
+      }
+
+      snap.forEach(doc => {
+        const d = doc.data();
+        const item = document.createElement("div");
+        item.className = "flex items-center justify-between p-3 bg-slate-50 border rounded-xl";
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <img src="${d.previewUrl}" class="w-12 h-16 object-cover rounded-lg shadow-sm border">
+            <div>
+              <div class="text-xs font-bold text-slate-800">${d.title}</div>
+              <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">${d.category}</span>
+            </div>
+          </div>
+          <button onclick="deleteTemplate('${doc.id}')" class="text-xs text-red-600 font-bold press-effect bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg">
+            মুছুন
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    window.deleteTemplate = async function(id) {
+      if (confirm("টেমপ্লেটটি ডাটাবেজ থেকে স্থায়ীভাবে মুছে ফেলতে চান?")) {
+        await db.collection("templates").doc(id).delete();
+        loadSavedTemplatesList();
+      }
+    };
+
+    // প্রাথমিক লোড
     renderFieldsList();
     renderCanvasLayers();
+    loadCategoriesList();
   </script>
 </body>
 </html>
