@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- ফায়ারবেস লাইব্রেরি -->
+  <!-- ফায়ারবেস কম্প্যাট লাইব্রেরি -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -34,11 +34,14 @@
       opacity: 0;
       transform: translateY(12px);
     }
+    .slide-item {
+      transition: opacity 0.6s ease-in-out;
+    }
   </style>
 </head>
 <body class="bg-[#F8F9FA] text-slate-800 antialiased pb-24">
 
-  <!-- মোবাইল হেডার -->
+  <!-- ================= ১. মোবাইল হেডার ================= -->
   <header class="bg-[#B91C1C] text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -66,37 +69,37 @@
 
   <div class="max-w-md mx-auto">
 
-    <!-- হোম পেজ ভিউ -->
+    <!-- ================= ২. হোম পেজ ভিউ ================= -->
     <main id="homePage" class="page-view px-4 pt-4 space-y-6">
 
-      <!-- স্লাইডার -->
-      <section class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-900 aspect-[16/9]">
-        <div class="w-full h-full relative">
-          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-80">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
-            <span class="text-xs bg-red-600 font-bold px-2 py-0.5 rounded-full w-max mb-1">অফার</span>
-            <h3 class="text-base font-bold">বিশ্ব শান্তি ও সম্প্রীতি দিবস</h3>
-            <p class="text-xs text-slate-200">হিংসা নয়, মানবতার জয় হোক...</p>
+      <!-- ডায়নামিক স্লাইডার ব্যানার -->
+      <section class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-900 aspect-[16/9]" id="sliderWrapper">
+        <div id="sliderContent" class="w-full h-full relative">
+          <!-- লোডিং প্লেসহোল্ডার -->
+          <div class="w-full h-full flex items-center justify-center text-xs text-slate-400">
+            স্লাইডার লোড হচ্ছে...
           </div>
         </div>
+        <!-- ডট ইন্ডিকেটর -->
+        <div id="sliderDots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20"></div>
       </section>
 
-      <!-- ক্যাটাগরি -->
+      <!-- ডায়নামিক ক্যাটাগরি -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-slate-900">ব্যানার ক্যাটাগরি</h2>
-          <button class="text-xs font-semibold text-[#B91C1C] press-effect">সব দেখুন &rsaquo;</button>
+          <button onclick="filterTemplates('all')" class="text-xs font-semibold text-[#B91C1C] press-effect">সব দেখুন &rsaquo;</button>
         </div>
         <div id="categoryContainer" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
           <div class="text-xs text-slate-400 py-3">ক্যাটাগরি লোড হচ্ছে...</div>
         </div>
       </section>
 
-      <!-- জনপ্রিয় টেমপ্লেট গ্রিড -->
+      <!-- ডায়নামিক ও ফিল্টারড টেমপ্লেট গ্রিড -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
-          <button class="text-xs font-semibold text-[#B91C1C] press-effect">আরও দেখুন &rsaquo;</button>
+          <h2 id="templateSectionTitle" class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
+          <span id="templateCount" class="text-xs text-slate-400">০টি টেমপ্লেট</span>
         </div>
         <div id="templateGrid" class="grid grid-cols-2 gap-3.5">
           <div class="col-span-2 text-center py-10 text-xs text-slate-400">টেমপ্লেট লোড হচ্ছে...</div>
@@ -105,7 +108,7 @@
 
     </main>
 
-    <!-- পূর্ণাঙ্গ এডিটর স্ক্রিন ভিউ -->
+    <!-- ================= ৩. পূর্ণাঙ্গ এডিটর স্ক্রিন ভিউ ================= -->
     <div id="editorPage" class="page-view page-hidden px-4 pt-3 space-y-4">
       
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
@@ -122,7 +125,7 @@
         </button>
       </div>
 
-      <!-- ব্যানার ক্যানভাস -->
+      <!-- ইন্টারঅ্যাক্টিভ ব্যানার ক্যানভাস -->
       <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-white aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
         <!-- লেয়ার ১: ব্যবহারকারীর ছবি -->
         <div id="userPhotoSlot" class="absolute overflow-hidden z-10 hidden" style="transform: translate(-50%, -50%);">
@@ -160,7 +163,7 @@
 
   </div>
 
-  <!-- বটম ন্যাভিগেশন -->
+  <!-- ================= ৪. ফিক্সড মোবাইল বটম ন্যাভ ================= -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200/80 px-6 py-2 z-40">
     <div class="max-w-md mx-auto flex justify-between items-center text-[11px] font-semibold text-slate-500">
       <button class="flex flex-col items-center gap-1 text-[#B91C1C] press-effect" onclick="showHome()">
@@ -200,20 +203,231 @@
     }
     const db = firebase.firestore();
 
+    let allTemplates = [];
+    let currentCategory = "all";
     let activeTemplate = null;
     let userUploadedImageObj = null;
     let textState = {};
+    let sliderTimer = null;
+    let currentSlideIdx = 0;
+    let slidesData = [];
 
     window.showHome = function() {
       document.getElementById("editorPage").classList.add("page-hidden");
       document.getElementById("homePage").classList.remove("page-hidden");
     };
 
+    // ================= স্লাইডার ইঞ্জিন =================
+    async function loadSliders() {
+      const sliderContent = document.getElementById("sliderContent");
+      const sliderDots = document.getElementById("sliderDots");
+
+      try {
+        const snap = await db.collection("sliders").get();
+        slidesData = [];
+        snap.forEach(doc => slidesData.push({ id: doc.id, ...doc.data() }));
+
+        // ফায়ারবেসে স্লাইডার না থাকলে ডিফল্ট স্লাইডার দেখানো
+        if (slidesData.length === 0) {
+          slidesData = [
+            {
+              imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
+              title: "বিশ্ব শান্তি ও সম্প্রীতি দিবস",
+              subTitle: "হিংসা নয়, মানবতার জয় হোক...",
+              badge: "অফার"
+            }
+          ];
+        }
+
+        sliderContent.innerHTML = "";
+        sliderDots.innerHTML = "";
+
+        slidesData.forEach((s, idx) => {
+          const slide = document.createElement("div");
+          slide.className = `slide-item absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+          slide.id = `slide_${idx}`;
+          slide.innerHTML = `
+            <img src="${s.imageUrl}" class="w-full h-full object-cover opacity-80">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
+              ${s.badge ? `<span class="text-xs bg-red-600 font-bold px-2 py-0.5 rounded-full w-max mb-1">${s.badge}</span>` : ''}
+              <h3 class="text-base font-bold">${s.title || ''}</h3>
+              <p class="text-xs text-slate-200">${s.subTitle || ''}</p>
+            </div>
+          `;
+          sliderContent.appendChild(slide);
+
+          // ডটস
+          const dot = document.createElement("div");
+          dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-white w-4' : 'bg-white/50'}`;
+          dot.id = `dot_${idx}`;
+          sliderDots.appendChild(dot);
+        });
+
+        // অটো স্লাইড টাইমার
+        if (slidesData.length > 1) {
+          if (sliderTimer) clearInterval(sliderTimer);
+          sliderTimer = setInterval(() => {
+            const nextIdx = (currentSlideIdx + 1) % slidesData.length;
+            goToSlide(nextIdx);
+          }, 4500);
+        }
+
+      } catch (e) {
+        console.error("Slider fetch error:", e);
+      }
+    }
+
+    function goToSlide(idx) {
+      document.getElementById(`slide_${currentSlideIdx}`)?.classList.replace('opacity-100', 'opacity-0');
+      document.getElementById(`slide_${currentSlideIdx}`)?.classList.replace('z-10', 'z-0');
+      document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('w-4', 'w-2');
+      document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white', 'bg-white/50');
+
+      currentSlideIdx = idx;
+
+      document.getElementById(`slide_${currentSlideIdx}`)?.classList.replace('opacity-0', 'opacity-100');
+      document.getElementById(`slide_${currentSlideIdx}`)?.classList.replace('z-0', 'z-10');
+      document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('w-2', 'w-4');
+      document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white/50', 'bg-white');
+    }
+
+    // ================= ক্যাটাগরি ও টেমপ্লেট ডাটা =================
+    async function loadData() {
+      try {
+        // ১. ক্যাটাগরি লোড
+        const catRes = await db.collection("categories").get();
+        const catContainer = document.getElementById("categoryContainer");
+        catContainer.innerHTML = "";
+
+        // ডিফল্ট "সব" ক্যাটাগরি বাটন
+        const allCat = document.createElement("div");
+        allCat.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
+        allCat.onclick = () => filterTemplates("all");
+        allCat.innerHTML = `
+          <div id="cat_all" class="w-14 h-14 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center text-xl font-bold shadow-sm border-2 border-red-500">
+            সব
+          </div>
+          <span class="text-xs font-bold text-slate-800">সকল ব্যানার</span>
+        `;
+        catContainer.appendChild(allCat);
+
+        const colors = [
+          { bg: 'bg-pink-100', text: 'text-pink-700' },
+          { bg: 'bg-amber-100', text: 'text-amber-700' },
+          { bg: 'bg-sky-100', text: 'text-sky-700' },
+          { bg: 'bg-purple-100', text: 'text-purple-700' },
+          { bg: 'bg-emerald-100', text: 'text-emerald-700' }
+        ];
+
+        let cIdx = 0;
+        catRes.forEach(doc => {
+          const d = doc.data();
+          const name = d.name || doc.id;
+          const icon = d.icon || "🏷️";
+          const theme = colors[cIdx % colors.length];
+          cIdx++;
+
+          const item = document.createElement("div");
+          item.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
+          item.onclick = () => filterTemplates(name);
+          item.innerHTML = `
+            <div id="cat_${name}" class="w-14 h-14 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-2xl shadow-sm border border-transparent">
+              ${icon}
+            </div>
+            <span class="text-xs font-semibold text-slate-700">${name}</span>
+          `;
+          catContainer.appendChild(item);
+        });
+
+        // ২. টেমপ্লেট লোড
+        const tempRes = await db.collection("templates").orderBy("createdAt", "desc").get();
+        allTemplates = [];
+
+        tempRes.forEach(doc => {
+          const data = doc.data();
+          allTemplates.push({
+            id: doc.id,
+            title: data.title || "ব্যানার",
+            category: data.category || "সাধারণ",
+            previewUrl: data.previewUrl || "",
+            fullImageUrl: data.fullImageUrl || data.previewUrl,
+            hasPhotoSlot: data.hasPhotoSlot || false,
+            photoSlotX: data.photoSlotX !== undefined ? data.photoSlotX : 50,
+            photoSlotY: data.photoSlotY !== undefined ? data.photoSlotY : 35,
+            photoSlotSize: data.photoSlotSize || 45,
+            inputFields: data.inputFields || []
+          });
+        });
+
+        renderTemplates();
+
+      } catch (e) {
+        console.error("Data load error:", e);
+        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড হতে সমস্যা হয়েছে।</div>`;
+      }
+    }
+
+    // ================= ক্যাটাগরি ফিল্টারিং =================
+    window.filterTemplates = function(category) {
+      currentCategory = category;
+
+      // ক্যাটাগরি বাটনের বর্ডার হাইলাইট
+      document.querySelectorAll('#categoryContainer > div > div').forEach(el => {
+        el.classList.remove('border-2', 'border-red-500');
+        el.classList.add('border-transparent');
+      });
+      const activeBtn = document.getElementById(category === 'all' ? 'cat_all' : `cat_${category}`);
+      if (activeBtn) {
+        activeBtn.classList.add('border-2', 'border-red-500');
+      }
+
+      document.getElementById("templateSectionTitle").innerText = category === 'all' ? 'জনপ্রিয় টেমপ্লেট' : `${category} ব্যানারসমূহ`;
+      renderTemplates();
+    };
+
+    function renderTemplates() {
+      const templateGrid = document.getElementById("templateGrid");
+      templateGrid.innerHTML = "";
+
+      const filtered = currentCategory === "all" 
+        ? allTemplates 
+        : allTemplates.filter(t => t.category === currentCategory);
+
+      document.getElementById("templateCount").innerText = `${filtered.length}টি টেমপ্লেট`;
+
+      if (filtered.length === 0) {
+        templateGrid.innerHTML = `<div class="col-span-2 text-center py-12 text-xs text-slate-400">এই ক্যাটাগরিতে এখনো কোনো টেমপ্লেট যুক্ত করা হয়নি।</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 flex flex-col justify-between";
+        card.innerHTML = `
+          <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden">
+            <img src="${item.previewUrl}" class="w-full h-full object-cover">
+            <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
+              👁️ ৭ বার ব্যবহৃত
+            </span>
+          </div>
+          <div class="p-3 space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 truncate">${item.title}</h3>
+            <button class="create-btn w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm press-effect">
+              <span>✏️ Create</span>
+            </button>
+          </div>
+        `;
+        card.querySelector(".create-btn").addEventListener("click", () => openEditor(item));
+        templateGrid.appendChild(card);
+      });
+    }
+
+    // ================= ব্যানার এডিটর লজিক =================
     function openEditor(template) {
       activeTemplate = template;
       textState = {};
 
-      document.getElementById("editorTitle").innerText = template.title || "ব্যানার এডিটর";
+      document.getElementById("editorTitle").innerText = template.title;
       document.getElementById("templateFrameImg").src = template.fullImageUrl || template.previewUrl;
 
       const photoSlot = document.getElementById("userPhotoSlot");
@@ -289,90 +503,7 @@
       }
     });
 
-    async function loadDataFromFirestore() {
-      try {
-        // ক্যাটাগরি লোড
-        const catSnapshot = await db.collection("categories").get();
-        const catContainer = document.getElementById("categoryContainer");
-        catContainer.innerHTML = "";
-
-        const colors = [
-          'bg-pink-100 text-pink-700',
-          'bg-amber-100 text-amber-700',
-          'bg-sky-100 text-sky-700',
-          'bg-purple-100 text-purple-700',
-          'bg-emerald-100 text-emerald-700'
-        ];
-
-        let catIdx = 0;
-        catSnapshot.forEach(doc => {
-          const data = doc.data();
-          const name = data.name || "ক্যাটাগরি";
-          const icon = data.icon || "🏷️";
-          const colorClass = colors[catIdx % colors.length];
-          catIdx++;
-
-          const item = document.createElement("div");
-          item.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
-          item.innerHTML = `
-            <div class="w-14 h-14 rounded-2xl ${colorClass} flex items-center justify-center text-2xl shadow-sm">
-              ${icon}
-            </div>
-            <span class="text-xs font-semibold text-slate-700">${name}</span>
-          `;
-          catContainer.appendChild(item);
-        });
-
-        // টেমপ্লেট লোড
-        const tempSnapshot = await db.collection("templates").get();
-        const templateGrid = document.getElementById("templateGrid");
-        templateGrid.innerHTML = "";
-
-        if (tempSnapshot.empty) {
-          templateGrid.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-slate-400">কোনো টেমপ্লেট যুক্ত করা হয়নি। অ্যাডমিন প্যানেল থেকে টেমপ্লেট যোগ করুন।</div>`;
-          return;
-        }
-
-        tempSnapshot.forEach(doc => {
-          const data = doc.data();
-          const item = {
-            id: doc.id,
-            title: data.title || "ব্যানার",
-            previewUrl: data.previewUrl || "",
-            fullImageUrl: data.fullImageUrl || data.previewUrl,
-            hasPhotoSlot: data.hasPhotoSlot || false,
-            photoSlotX: data.photoSlotX !== undefined ? data.photoSlotX : 50,
-            photoSlotY: data.photoSlotY !== undefined ? data.photoSlotY : 35,
-            photoSlotSize: data.photoSlotSize || 45,
-            inputFields: data.inputFields || []
-          };
-
-          const card = document.createElement("div");
-          card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 flex flex-col justify-between";
-          card.innerHTML = `
-            <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden">
-              <img src="${item.previewUrl}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
-                👁️ ৭ বার ব্যবহৃত
-              </span>
-            </div>
-            <div class="p-3 space-y-2">
-              <h3 class="text-xs font-bold text-slate-800 truncate">${item.title}</h3>
-              <button class="create-btn w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm press-effect">
-                <span>✏️ Create</span>
-              </button>
-            </div>
-          `;
-          card.querySelector(".create-btn").addEventListener("click", () => openEditor(item));
-          templateGrid.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Firestore loading error:", err);
-        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড ত্রুটি: ${err.message}</div>`;
-      }
-    }
-
-    // এইচডি ব্যানার ডাউনলোড
+    // ================= এইচডি এক্সপোর্ট ও ডাউনলোড =================
     document.getElementById("downloadBannerBtn").addEventListener("click", async () => {
       const btn = document.getElementById("downloadBannerBtn");
       btn.innerText = "রেন্ডার হচ্ছে...";
@@ -389,7 +520,7 @@
         canvas.width = baseImg.naturalWidth;
         canvas.height = baseImg.naturalHeight;
 
-        // লেয়ার ১: ছবি
+        // লেয়ার ১: ইউজারের ছবি
         if (activeTemplate.hasPhotoSlot && userUploadedImageObj) {
           const slotW = (canvas.width * (activeTemplate.photoSlotSize || 45)) / 100;
           const slotH = slotW;
@@ -404,10 +535,10 @@
           ctx.restore();
         }
 
-        // লেয়ার ২: ফ্রেম
+        // লেয়ার ২: ফ্রেম ব্যাকগ্রাউন্ড
         ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
 
-        // লেয়ার ৩: টেক্সট
+        // লেয়ার ৩: টেক্সট ওভারলে
         if (activeTemplate.inputFields) {
           activeTemplate.inputFields.forEach(f => {
             const text = textState[f.id] || f.placeholder || f.label;
@@ -425,6 +556,7 @@
           });
         }
 
+        // ব্রাউজার ডাউনলোড
         const link = document.createElement("a");
         link.download = `${activeTemplate.title || 'banner'}.png`;
         link.href = canvas.toDataURL("image/png");
@@ -435,7 +567,9 @@
       };
     });
 
-    loadDataFromFirestore();
+    // ইনিশিয়ালাইজেশন
+    loadSliders();
+    loadData();
   </script>
 </body>
 </html>
