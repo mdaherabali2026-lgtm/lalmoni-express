@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- ফায়ারবেস লাইব্রেরি (অ্যাডমিন প্যানেলের মতো সেইম কনফিগ) -->
+  <!-- ফায়ারবেস লাইব্রেরি -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -92,7 +92,7 @@
         </div>
       </section>
 
-      <!-- জনপ্রিয় টেমপ্লেট -->
+      <!-- জনপ্রিয় টেমপ্লেট গ্রিড -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
@@ -122,7 +122,7 @@
         </button>
       </div>
 
-      <!-- ইন্টারঅ্যাক্টিভ ব্যানার ক্যানভাস -->
+      <!-- ব্যানার ক্যানভাস -->
       <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-white aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
         <!-- লেয়ার ১: ব্যবহারকারীর ছবি -->
         <div id="userPhotoSlot" class="absolute overflow-hidden z-10 hidden" style="transform: translate(-50%, -50%);">
@@ -185,12 +185,14 @@
   <canvas id="exportCanvas" class="hidden"></canvas>
 
   <script>
-    // আপনার ফায়ারবেস কনফিগারেশন
+    // নতুন ফায়ারবেস কনফিগারেশন
     const firebaseConfig = {
-      apiKey: "AIzaSyDDNcHb2USv94bPW_bCp8SuK9y1wTIbufE",
-      authDomain: "gen-lang-client-0426695413.firebaseapp.com",
-      projectId: "gen-lang-client-0426695413",
-      storageBucket: "gen-lang-client-0426695413.firebasestorage.app"
+      apiKey: "AIzaSyANmFjDSGfdXhMfCUMgpurd1Jw_tVsrnWQ",
+      authDomain: "banner-maker-pro.firebaseapp.com",
+      projectId: "banner-maker-pro",
+      storageBucket: "banner-maker-pro.firebasestorage.app",
+      messagingSenderId: "83426747166",
+      appId: "1:83426747166:web:eb0ed6daef0ed6019c9f0f"
     };
 
     if (!firebase.apps.length) {
@@ -287,7 +289,6 @@
       }
     });
 
-    // ফায়ারস্টোর থেকে সরাসরি ডাটা লোড
     async function loadDataFromFirestore() {
       try {
         // ক্যাটাগরি লোড
@@ -328,7 +329,7 @@
         templateGrid.innerHTML = "";
 
         if (tempSnapshot.empty) {
-          templateGrid.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-slate-400">কোনো টেমপ্লেট পাওয়া যায়নি</div>`;
+          templateGrid.innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-slate-400">কোনো টেমপ্লেট যুক্ত করা হয়নি। অ্যাডমিন প্যানেল থেকে টেমপ্লেট যোগ করুন।</div>`;
           return;
         }
 
@@ -336,7 +337,7 @@
           const data = doc.data();
           const item = {
             id: doc.id,
-            title: data.title || "বিবাহ স্মরণিকা",
+            title: data.title || "ব্যানার",
             previewUrl: data.previewUrl || "",
             fullImageUrl: data.fullImageUrl || data.previewUrl,
             hasPhotoSlot: data.hasPhotoSlot || false,
@@ -367,11 +368,11 @@
         });
       } catch (err) {
         console.error("Firestore loading error:", err);
-        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড হতে সমস্যা হয়েছে: ${err.message}</div>`;
+        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড ত্রুটি: ${err.message}</div>`;
       }
     }
 
-    // এইচডি ব্যানার এক্সপোর্ট ও ডাউনলোড
+    // এইচডি ব্যানার ডাউনলোড
     document.getElementById("downloadBannerBtn").addEventListener("click", async () => {
       const btn = document.getElementById("downloadBannerBtn");
       btn.innerText = "রেন্ডার হচ্ছে...";
@@ -388,7 +389,7 @@
         canvas.width = baseImg.naturalWidth;
         canvas.height = baseImg.naturalHeight;
 
-        // লেয়ার ১: ইউজারের ছবি
+        // লেয়ার ১: ছবি
         if (activeTemplate.hasPhotoSlot && userUploadedImageObj) {
           const slotW = (canvas.width * (activeTemplate.photoSlotSize || 45)) / 100;
           const slotH = slotW;
@@ -424,7 +425,6 @@
           });
         }
 
-        // ডাউনলোড
         const link = document.createElement("a");
         link.download = `${activeTemplate.title || 'banner'}.png`;
         link.href = canvas.toDataURL("image/png");
