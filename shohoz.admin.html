@@ -229,7 +229,6 @@
 
     const ALLOWED_ADMINS = ["sirazulvai2263@gmail.com"];
 
-    // এলিমেন্ট রেফারেন্স
     const loginSection = document.getElementById("loginSection");
     const dashboardSection = document.getElementById("dashboardSection");
     const authStatusBadge = document.getElementById("authStatusBadge");
@@ -264,13 +263,11 @@
     let currentUser = null;
     let loadedTemplates = [];
 
-    // ট্যাব সুইচিং লজিক
     function switchTab(targetTabId) {
       document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
       const target = document.getElementById(targetTabId);
       if (target) target.classList.remove("hidden");
 
-      // ডেক্সটপ বাটন স্টাইল
       document.querySelectorAll(".nav-btn").forEach(btn => {
         if (btn.getAttribute("data-tab") === targetTabId) {
           btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition bg-white/20 text-white shadow-inner";
@@ -279,7 +276,6 @@
         }
       });
 
-      // মোবাইল বাটন স্টাইল
       document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
         if (btn.getAttribute("data-tab") === targetTabId) {
           btn.classList.add("bg-indigo-800", "text-white");
@@ -306,7 +302,6 @@
       mobileMenu.classList.toggle("hidden");
     });
 
-    // অথেন্টিকেশন স্টেট
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
@@ -343,7 +338,6 @@
     desktopLogoutBtn.addEventListener("click", () => signOut(auth));
     mobileLogoutBtn.addEventListener("click", () => signOut(auth));
 
-    // ফিল্ড রো তৈরি
     function addFieldRow(label = "", placeholder = "", inputType = "Text") {
       const row = document.createElement("div");
       row.className = "flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200 field-row";
@@ -381,31 +375,43 @@
       return result.data.url;
     }
 
-    // ফায়ারস্টোর থেকে সকল ব্যানার লোড করা
+    // ফায়ারস্টোর থেকে শতভাগ নিশ্চিতভাবে ডাটা লোড করার মেথড (:runQuery)
     async function loadAllTemplates() {
       loadingTemplates.classList.remove("hidden");
       templatesGrid.innerHTML = "";
 
       try {
         const token = await currentUser.getIdToken(true);
-        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates?pageSize=100&_t=${Date.now()}`;
+        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents:runQuery`;
+
+        const queryBody = {
+          structuredQuery: {
+            from: [{ collectionId: "templates" }]
+          }
+        };
 
         const res = await fetch(url, {
+          method: "POST",
           headers: { 
             "Authorization": `Bearer ${token}`,
-            "Cache-Control": "no-cache"
-          }
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(queryBody)
         });
 
         const data = await res.json();
         loadingTemplates.classList.add("hidden");
 
-        if (!data.documents || data.documents.length === 0) {
+        const validDocs = (Array.isArray(data) ? data : [])
+          .filter(item => item && item.document && item.document.fields)
+          .map(item => item.document);
+
+        if (validDocs.length === 0) {
           templatesGrid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-12">ডাটাবেজে বর্তমানে কোনো ব্যানার টেমপ্লেট নেই।</p>`;
           return;
         }
 
-        loadedTemplates = data.documents.map(doc => {
+        loadedTemplates = validDocs.map(doc => {
           const docId = doc.name.split("/").pop();
           const f = doc.fields || {};
           
@@ -469,7 +475,6 @@
       });
     }
 
-    // এডিট সেটআপ ও ফর্ম ট্যাবে নিয়ে যাওয়া
     function setupEdit(item) {
       switchTab("tab-upload");
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -519,7 +524,6 @@
     cancelEditBtn.addEventListener("click", resetFormState);
     refreshTemplatesBtn.addEventListener("click", loadAllTemplates);
 
-    // টেমপ্লেট মুছে ফেলা
     async function deleteTemplate(docId, title) {
       if (!confirm(`আপনি কি নিশ্চিত যে "${title}" ব্যানারটি মুছে ফেলতে চান? এটি মুছে দিলে অ্যাপ থেকেও চলে যাবে!`)) {
         return;
@@ -545,7 +549,6 @@
       }
     }
 
-    // সেভ বা আপডেট করা
     async function saveOrUpdateTemplate(templateData, token, isEdit, docId) {
       let url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
       let method = "POST";
@@ -619,7 +622,6 @@
         let previewUrl = existingPreviewUrl.value;
         let fullImageUrl = existingFullImageUrl.value;
 
-        // নতুন ছবি থাকলে আপলোড
         if (previewFile) {
           submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
           previewUrl = await uploadToImgBB(previewFile);
@@ -630,7 +632,6 @@
           fullImageUrl = await uploadToImgBB(fullFile);
         }
 
-        // ফিল্ড তৈরি
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
         const rows = document.querySelectorAll(".field-row");
         const inputFields = [];
