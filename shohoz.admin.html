@@ -3,151 +3,208 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ব্যানার মেকার - নিরাপদ অ্যাডমিন প্যানেল</title>
+  <title>ব্যানার মেকার - সুপার অ্যাডমিন ড্যাশবোর্ড</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Hind Siliguri', sans-serif; }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen p-4 md:p-8">
+<body class="bg-slate-100 min-h-screen text-slate-800">
 
-  <div class="max-w-4xl mx-auto space-y-8">
-    
-    <!-- প্রধান কন্টেইনার -->
-    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
-      <!-- Header -->
-      <div class="bg-indigo-600 px-6 py-5 text-white flex justify-between items-center">
+  <!-- টপ নেভিগেশন বার -->
+  <header class="bg-indigo-600 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🎨</span>
         <div>
-          <h1 class="text-2xl font-bold">সহজ ব্যানার অ্যাডমিন</h1>
-          <p class="text-xs text-indigo-100 mt-1">টেমপ্লেট আপলোড, এডিট ও ডিলিট ড্যাশবোর্ড</p>
-        </div>
-        <div id="authStatusBadge">
-          <span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>
+          <h1 class="text-xl font-bold leading-none">সহজ অ্যাডমিন</h1>
+          <p class="text-[11px] text-indigo-200 mt-0.5">ম্যানেজমেন্ট পোর্টাল</p>
         </div>
       </div>
 
-      <!-- Auth Lock Screen -->
-      <div id="loginSection" class="p-8 text-center space-y-4">
-        <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
-        <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
-        <p class="text-sm text-slate-500 max-w-sm mx-auto">ব্যানার আপলোড ও ম্যানেজ করতে আপনার অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
-        <button id="googleLoginBtn" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center gap-2 transition">
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
-          গুগল দিয়ে লগইন করুন
+      <!-- ডেক্সটপ মেনুবার -->
+      <nav class="hidden md:flex items-center gap-2" id="desktopNav">
+        <button data-tab="tab-upload" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition bg-white/20 text-white shadow-inner">
+          ➕ নতুন টেমপ্লেট
         </button>
-        <div id="loginError" class="text-red-500 text-sm hidden font-medium"></div>
+        <button data-tab="tab-list" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition text-indigo-100 hover:bg-white/10">
+          📋 টেমপ্লেট লিস্ট
+        </button>
+        <button data-tab="tab-slider" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition text-indigo-100 hover:bg-white/10">
+          🖼️ হোম স্লাইডার <span class="text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.5 rounded-full font-bold ml-1">শীঘ্রই</span>
+        </button>
+      </nav>
+
+      <!-- মোবাইল মেনু টগল বাটন -->
+      <div class="flex items-center gap-2">
+        <button id="mobileMenuBtn" class="md:hidden p-2 text-white hover:bg-indigo-700 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+        <div id="authStatusBadge">
+          <span class="bg-amber-600 text-xs px-3 py-1 rounded-full border border-amber-400 font-medium">লগইন প্রয়োজন</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- মোবাইল ড্রপডাউন মেনু -->
+    <div id="mobileMenu" class="hidden md:hidden bg-indigo-700 px-4 py-3 border-t border-indigo-500 space-y-2">
+      <button data-tab="tab-upload" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-white bg-indigo-800">
+        ➕ নতুন টেমপ্লেট
+      </button>
+      <button data-tab="tab-list" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600">
+        📋 টেমপ্লেট লিস্ট
+      </button>
+      <button data-tab="tab-slider" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-semibold text-indigo-100 hover:bg-indigo-600 flex justify-between items-center">
+        <span>🖼️ হোম স্লাইডার</span>
+        <span class="text-[10px] bg-amber-400 text-slate-900 px-1.5 py-0.5 rounded-full font-bold">শীঘ্রই</span>
+      </button>
+      <div class="pt-2 border-t border-indigo-600 flex justify-between items-center text-xs text-indigo-200">
+        <span id="mobileAdminEmail">লগইন নেই</span>
+        <button id="mobileLogoutBtn" class="text-rose-300 font-bold hover:underline">লগআউট</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 md:p-8">
+
+    <!-- Auth Lock Screen -->
+    <div id="loginSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-8 text-center max-w-md mx-auto my-12 space-y-4">
+      <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🔒</div>
+      <h2 class="text-xl font-bold text-slate-800">অ্যাডমিন অ্যাক্সেস প্রয়োজন</h2>
+      <p class="text-sm text-slate-500">ব্যানার আপলোড ও ম্যানেজ করতে অনুমোদিত গুগল অ্যাডমিন অ্যাকাউন্ট দিয়ে সাইন ইন করুন।</p>
+      <button id="googleLoginBtn" class="w-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-6 py-2.5 rounded-xl shadow-sm inline-flex items-center justify-center gap-2 transition">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
+        গুগল দিয়ে লগইন করুন
+      </button>
+      <div id="loginError" class="text-red-500 text-sm hidden font-medium"></div>
+    </div>
+
+    <!-- মূল সুরক্ষিত ড্যাশবোর্ড সেকশন -->
+    <div id="dashboardSection" class="hidden space-y-6">
+
+      <!-- অ্যাডমিন ইনফো বার -->
+      <div class="hidden md:flex justify-between items-center bg-white px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm text-xs text-slate-600">
+        <div>লগইন অ্যাকাউন্ট: <strong id="adminEmailDisplay" class="text-slate-900"></strong></div>
+        <button id="desktopLogoutBtn" class="text-rose-600 hover:underline font-bold">লগআউট</button>
       </div>
 
-      <!-- Main Dashboard Form -->
-      <div id="dashboardSection" class="hidden">
-        <!-- Admin User Bar -->
-        <div class="bg-slate-50 border-b px-6 py-3 flex justify-between items-center text-sm">
-          <div class="text-slate-600">লগইন আছেন: <strong id="adminEmailDisplay" class="text-slate-900"></strong></div>
-          <button id="logoutBtn" class="text-red-600 hover:underline font-semibold text-xs">লগআউট</button>
-        </div>
-
-        <form id="templateForm" class="p-6 md:p-8 space-y-6">
-          <input type="hidden" id="editingDocId" value="">
-          <input type="hidden" id="existingPreviewUrl" value="">
-          <input type="hidden" id="existingFullImageUrl" value="">
-
-          <div class="flex justify-between items-center border-b pb-3">
-            <h2 id="formHeading" class="text-lg font-bold text-slate-800">নতুন ব্যানার যোগ করুন</h2>
-            <button type="button" id="cancelEditBtn" class="text-xs text-rose-600 font-semibold hidden hover:underline">✕ এডিট বাতিল করুন</button>
-          </div>
-
-          <!-- ব্যানার নাম ও ক্যাটাগরি -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- ================= ট্যাব ১: নতুন টেমপ্লেট ও এডিট ফর্ম ================= -->
+      <section id="tab-upload" class="tab-content">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden max-w-3xl mx-auto">
+          <div class="bg-slate-50 border-b px-6 py-4 flex justify-between items-center">
             <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1">ব্যানারের নাম (Title)</label>
-              <input type="text" id="title" required placeholder="যেমন: বন্ধন বিবাহ স্মরণিকা" 
-                     class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+              <h2 id="formHeading" class="text-lg font-bold text-slate-800">নতুন ব্যানার আপলোড করুন</h2>
+              <p class="text-xs text-slate-500">তথ্য ও ছবি দিয়ে অ্যাপের জন্য টেমপ্লেট তৈরি করুন</p>
             </div>
-            <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1">ক্যাটাগরি আইডি (Category ID)</label>
-              <select id="categoryId" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
-                <option value="wedding">বিবাহ / Wedding</option>
-                <option value="political">রাজনৈতিক / Political</option>
-                <option value="business">ব্যবসা ও দোকান / Business</option>
-                <option value="islamic">ওয়াজ ও দোয়া / Islamic</option>
-                <option value="general">সাধারণ ব্যানার / General</option>
-              </select>
-            </div>
+            <button type="button" id="cancelEditBtn" class="text-xs bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded-lg font-semibold hidden hover:bg-rose-100">✕ এডিট বাতিল করুন</button>
           </div>
 
-          <!-- সরাসরি ফাইল আপলোড (ImgBB) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-3 bg-slate-50 border rounded-xl">
-              <label class="block text-sm font-semibold text-slate-700 mb-1">🖼️ প্রিভিউ ইমেজ ফাইল (Preview Image)</label>
-              <p class="text-xs text-slate-500 mb-2">হোমস্ক্রিনের ছোট ছবি <span id="previewNotice" class="text-indigo-600 font-bold hidden">(এডিটের সময় নতুন না দিলে আগেরটাই থাকবে)</span></p>
-              <input type="file" id="previewFileInput" accept="image/*"
-                     class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-            </div>
-            <div class="p-3 bg-slate-50 border rounded-xl">
-              <label class="block text-sm font-semibold text-slate-700 mb-1">🎨 মূল ইমেজ ফাইল (Full Background)</label>
-              <p class="text-xs text-slate-500 mb-2">অ্যাপের এডিটরে কাজ করার মূল ব্যানার <span id="fullNotice" class="text-indigo-600 font-bold hidden">(এডিটের সময় নতুন না দিলে আগেরটাই থাকবে)</span></p>
-              <input type="file" id="fullFileInput" accept="image/*"
-                     class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
-            </div>
-          </div>
+          <form id="templateForm" class="p-6 md:p-8 space-y-6">
+            <input type="hidden" id="editingDocId" value="">
+            <input type="hidden" id="existingPreviewUrl" value="">
+            <input type="hidden" id="existingFullImageUrl" value="">
 
-          <!-- ফটো স্লট চেকবক্স -->
-          <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-xl">
-            <input type="checkbox" id="hasPhotoSlot" class="w-5 h-5 text-indigo-600 rounded">
-            <label for="hasPhotoSlot" class="text-sm font-medium text-slate-700 cursor-pointer">
-              এই ব্যানারে ব্যবহারকারীর নিজস্ব ছবি যোগ করার ফ্রেম/স্লট আছে কি?
-            </label>
-          </div>
-
-          <!-- ডায়নামিক ইনপুট ফিল্ড সেকশন -->
-          <div class="border-t pt-5">
-            <div class="flex justify-between items-center mb-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h2 class="text-base font-bold text-slate-800">এডিটরে কী কী লেখার ঘর থাকবে?</h2>
-                <p class="text-xs text-slate-500">ইউজার অ্যাপে যে তথ্যগুলো লিখে ব্যানার বানাবে</p>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">ব্যানারের নাম (Title)</label>
+                <input type="text" id="title" required placeholder="যেমন: বন্ধন বিবাহ স্মরণিকা" 
+                       class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
               </div>
-              <button type="button" id="addFieldBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 transition">
-                + ফিল্ড যোগ করুন
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">ক্যাটাগরি আইডি (Category ID)</label>
+                <select id="categoryId" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800">
+                  <option value="wedding">বিবাহ / Wedding</option>
+                  <option value="political">রাজনৈতিক / Political</option>
+                  <option value="business">ব্যবসা ও দোকান / Business</option>
+                  <option value="islamic">ওয়াজ ও দোয়া / Islamic</option>
+                  <option value="general">সাধারণ ব্যানার / General</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-3 bg-slate-50 border rounded-xl">
+                <label class="block text-sm font-semibold text-slate-700 mb-1">🖼️ প্রিভিউ ইমেজ ফাইল (Preview Image)</label>
+                <p class="text-xs text-slate-500 mb-2">হোমস্ক্রিনের ছোট ছবি <span id="previewNotice" class="text-indigo-600 font-bold hidden">(পরিবর্তন না করলে আগেরটাই থাকবে)</span></p>
+                <input type="file" id="previewFileInput" accept="image/*"
+                       class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+              </div>
+              <div class="p-3 bg-slate-50 border rounded-xl">
+                <label class="block text-sm font-semibold text-slate-700 mb-1">🎨 মূল ইমেজ ফাইল (Full Background)</label>
+                <p class="text-xs text-slate-500 mb-2">এডিটরের মূল ব্যাকগ্রাউন্ড <span id="fullNotice" class="text-indigo-600 font-bold hidden">(পরিবর্তন না করলে আগেরটাই থাকবে)</span></p>
+                <input type="file" id="fullFileInput" accept="image/*"
+                       class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-xl">
+              <input type="checkbox" id="hasPhotoSlot" class="w-5 h-5 text-indigo-600 rounded">
+              <label for="hasPhotoSlot" class="text-sm font-medium text-slate-700 cursor-pointer">
+                এই ব্যানারে ব্যবহারকারীর নিজস্ব ছবি যোগ করার ফ্রেম/স্লট আছে কি?
+              </label>
+            </div>
+
+            <div class="border-t pt-5">
+              <div class="flex justify-between items-center mb-3">
+                <div>
+                  <h3 class="text-base font-bold text-slate-800">এডিটরে কী কী লেখার ঘর থাকবে?</h3>
+                  <p class="text-xs text-slate-500">ইউজার অ্যাপে যে তথ্যগুলো লিখে ব্যানার বানাবে</p>
+                </div>
+                <button type="button" id="addFieldBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 transition">
+                  + ফিল্ড যোগ করুন
+                </button>
+              </div>
+              <div id="fieldsContainer" class="space-y-3"></div>
+            </div>
+
+            <div class="border-t pt-5">
+              <div id="statusMessage" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
+              <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
+                ক্লাউডে ব্যানার আপলোড করুন
               </button>
             </div>
+          </form>
+        </div>
+      </section>
 
-            <div id="fieldsContainer" class="space-y-3"></div>
-          </div>
-
-          <!-- সাবমিট স্ট্যাটাস ও বাটন -->
-          <div class="border-t pt-5">
-            <div id="statusMessage" class="hidden mb-4 p-3 rounded-xl text-sm font-medium"></div>
-
-            <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
-              ক্লাউডে ব্যানার আপলোড করুন
+      <!-- ================= ট্যাব ২: সকল টেমপ্লেট লিস্ট (ফুল পেজ) ================= -->
+      <section id="tab-list" class="tab-content hidden">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">সকল আপলোডকৃত টেমপ্লেট তালিকা</h2>
+              <p class="text-xs text-slate-500">ডাটাবেজে থাকা টেমপ্লেট ম্যানেজ করুন, এডিট করুন বা মুছে ফেলুন</p>
+            </div>
+            <button id="refreshTemplatesBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 transition">
+              🔄 তালিকা রিফ্রেশ করুন
             </button>
           </div>
 
-        </form>
-      </div>
-    </div>
+          <div id="loadingTemplates" class="text-center py-12 text-slate-500 text-sm">
+            ডাটাবেজ থেকে ব্যানারগুলো লোড হচ্ছে...
+          </div>
 
-    <!-- টেমপ্লেট তালিকা ও ম্যানেজমেন্ট সেকশন -->
-    <div id="listSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 hidden space-y-4">
-      <div class="flex justify-between items-center border-b pb-4">
-        <div>
-          <h2 class="text-xl font-bold text-slate-800">সকল আপলোডকৃত টেমপ্লেট</h2>
-          <p class="text-xs text-slate-500">ডাটাবেজে বর্তমানে সংরক্ষিত ব্যানারসমূহ</p>
+          <div id="templatesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </div>
-        <button id="refreshTemplatesBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-3 py-2 rounded-lg font-semibold flex items-center gap-1">
-          🔄 রিফ্রেশ তালিকা
-        </button>
-      </div>
+      </section>
 
-      <div id="loadingTemplates" class="text-center py-8 text-slate-500 text-sm">
-        লোড হচ্ছে...
-      </div>
+      <!-- ================= ট্যাব ৩: হোম স্লাইডার (ভবিষ্যতের ফিচার) ================= -->
+      <section id="tab-slider" class="tab-content hidden">
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-8 text-center max-w-xl mx-auto space-y-4">
+          <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto text-3xl">🖼️</div>
+          <h2 class="text-xl font-bold text-slate-800">অ্যাপ হোম স্লাইডার ম্যানেজার</h2>
+          <p class="text-sm text-slate-500">আপনার অ্যান্ড্রয়েড অ্যাপের হোম স্ক্রিনের উপরে যে ব্যানার স্লাইডার ঘোরে, খুব শীঘ্রই এই ট্যাব থেকে আপনি সরাসরি সেই স্লাইডার ইমেজ ও ক্লিক অ্যাকশন যোগ বা পরিবর্তন করতে পারবেন।</p>
+          <div class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-4 py-1.5 rounded-full">
+            পরবর্তী আপডেটে সক্রিয় হবে
+          </div>
+        </div>
+      </section>
 
-      <div id="templatesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
-
-  </div>
+  </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -172,14 +229,19 @@
 
     const ALLOWED_ADMINS = ["sirazulvai2263@gmail.com"];
 
+    // এলিমেন্ট রেফারেন্স
     const loginSection = document.getElementById("loginSection");
     const dashboardSection = document.getElementById("dashboardSection");
-    const listSection = document.getElementById("listSection");
     const authStatusBadge = document.getElementById("authStatusBadge");
     const adminEmailDisplay = document.getElementById("adminEmailDisplay");
+    const mobileAdminEmail = document.getElementById("mobileAdminEmail");
     const googleLoginBtn = document.getElementById("googleLoginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const desktopLogoutBtn = document.getElementById("desktopLogoutBtn");
+    const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
     const loginError = document.getElementById("loginError");
+
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
 
     const formHeading = document.getElementById("formHeading");
     const cancelEditBtn = document.getElementById("cancelEditBtn");
@@ -202,29 +264,69 @@
     let currentUser = null;
     let loadedTemplates = [];
 
+    // ট্যাব সুইচিং লজিক
+    function switchTab(targetTabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      const target = document.getElementById(targetTabId);
+      if (target) target.classList.remove("hidden");
+
+      // ডেক্সটপ বাটন স্টাইল
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        if (btn.getAttribute("data-tab") === targetTabId) {
+          btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition bg-white/20 text-white shadow-inner";
+        } else {
+          btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition text-indigo-100 hover:bg-white/10";
+        }
+      });
+
+      // মোবাইল বাটন স্টাইল
+      document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
+        if (btn.getAttribute("data-tab") === targetTabId) {
+          btn.classList.add("bg-indigo-800", "text-white");
+        } else {
+          btn.classList.remove("bg-indigo-800", "text-white");
+        }
+      });
+
+      mobileMenu.classList.add("hidden");
+
+      if (targetTabId === "tab-list") {
+        loadAllTemplates();
+      }
+    }
+
+    document.querySelectorAll(".nav-btn, .mobile-nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tabId = btn.getAttribute("data-tab");
+        switchTab(tabId);
+      });
+    });
+
+    mobileMenuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    // অথেন্টিকেশন স্টেট
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
         if (ALLOWED_ADMINS.includes(user.email)) {
           loginSection.classList.add("hidden");
           dashboardSection.classList.remove("hidden");
-          listSection.classList.remove("hidden");
           adminEmailDisplay.innerText = user.email;
-          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1.5 rounded-full border border-emerald-400">অ্যাডমিন অ্যাক্টিভ</span>`;
-          loadAllTemplates();
+          mobileAdminEmail.innerText = user.email;
+          authStatusBadge.innerHTML = `<span class="bg-emerald-600 text-xs px-3 py-1 rounded-full border border-emerald-400 font-medium">অ্যাডমিন অ্যাক্টিভ</span>`;
         } else {
           loginSection.classList.remove("hidden");
           dashboardSection.classList.add("hidden");
-          listSection.classList.add("hidden");
-          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") কোনো অনুমোদিত অ্যাডমিন অ্যাকাউন্ট নয়!";
+          loginError.innerText = "❌ অ্যাক্সেস ডিনাইড: (" + user.email + ") অনুমোদিত নয়!";
           loginError.classList.remove("hidden");
           await signOut(auth);
         }
       } else {
         loginSection.classList.remove("hidden");
         dashboardSection.classList.add("hidden");
-        listSection.classList.add("hidden");
-        authStatusBadge.innerHTML = `<span class="bg-amber-600 text-xs px-3 py-1.5 rounded-full border border-amber-400">লগইন প্রয়োজন</span>`;
+        authStatusBadge.innerHTML = `<span class="bg-amber-600 text-xs px-3 py-1 rounded-full border border-amber-400 font-medium">লগইন প্রয়োজন</span>`;
       }
     });
 
@@ -238,8 +340,10 @@
       }
     });
 
-    logoutBtn.addEventListener("click", () => signOut(auth));
+    desktopLogoutBtn.addEventListener("click", () => signOut(auth));
+    mobileLogoutBtn.addEventListener("click", () => signOut(auth));
 
+    // ফিল্ড রো তৈরি
     function addFieldRow(label = "", placeholder = "", inputType = "Text") {
       const row = document.createElement("div");
       row.className = "flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200 field-row";
@@ -277,24 +381,27 @@
       return result.data.url;
     }
 
-    // ফায়ারস্টোর থেকে সকল টেমপ্লেট রিড করা
+    // ফায়ারস্টোর থেকে সকল ব্যানার লোড করা
     async function loadAllTemplates() {
       loadingTemplates.classList.remove("hidden");
       templatesGrid.innerHTML = "";
 
       try {
         const token = await currentUser.getIdToken(true);
-        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
+        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates?pageSize=100&_t=${Date.now()}`;
 
         const res = await fetch(url, {
-          headers: { "Authorization": `Bearer ${token}` }
+          headers: { 
+            "Authorization": `Bearer ${token}`,
+            "Cache-Control": "no-cache"
+          }
         });
 
         const data = await res.json();
         loadingTemplates.classList.add("hidden");
 
         if (!data.documents || data.documents.length === 0) {
-          templatesGrid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-6">বর্তমানে কোনো ব্যানার টেমপ্লেট নেই।</p>`;
+          templatesGrid.innerHTML = `<p class="col-span-full text-center text-slate-400 py-12">ডাটাবেজে বর্তমানে কোনো ব্যানার টেমপ্লেট নেই।</p>`;
           return;
         }
 
@@ -305,7 +412,7 @@
           let parsedFields = [];
           if (f.inputFields && f.inputFields.arrayValue && f.inputFields.arrayValue.values) {
             parsedFields = f.inputFields.arrayValue.values.map(v => {
-              const item = v.mapValue.fields;
+              const item = v.mapValue ? v.mapValue.fields : {};
               return {
                 id: item.id?.stringValue || "",
                 label: item.label?.stringValue || "",
@@ -317,7 +424,7 @@
 
           return {
             id: docId,
-            title: f.title?.stringValue || "শিরোনামহীন",
+            title: f.title?.stringValue || "শিরোনামহীন ব্যানার",
             categoryId: f.categoryId?.stringValue || "general",
             previewUrl: f.previewUrl?.stringValue || "",
             fullImageUrl: f.fullImageUrl?.stringValue || "",
@@ -336,22 +443,22 @@
       templatesGrid.innerHTML = "";
       items.forEach(t => {
         const card = document.createElement("div");
-        card.className = "border rounded-xl p-3 bg-slate-50 flex flex-col justify-between shadow-sm hover:shadow transition";
+        card.className = "border rounded-2xl p-3 bg-white flex flex-col justify-between shadow-sm hover:shadow-md transition border-slate-200";
         card.innerHTML = `
           <div>
-            <div class="h-40 bg-slate-200 rounded-lg overflow-hidden mb-2">
+            <div class="h-44 bg-slate-100 rounded-xl overflow-hidden mb-3 border border-slate-100 flex items-center justify-center">
               <img src="${t.previewUrl}" alt="${t.title}" class="w-full h-full object-cover">
             </div>
-            <h3 class="font-bold text-slate-800 text-sm truncate">${t.title}</h3>
-            <div class="flex items-center gap-2 mt-1 text-xs text-slate-500">
-              <span class="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">${t.categoryId}</span>
-              <span>${t.inputFields.length} টি ফিল্ড</span>
-              ${t.hasPhotoSlot ? '<span class="text-emerald-600 font-semibold">ফটো ফ্রেমযুক্ত</span>' : ''}
+            <h3 class="font-bold text-slate-800 text-sm truncate" title="${t.title}">${t.title}</h3>
+            <div class="flex items-center gap-1.5 mt-1.5 text-xs text-slate-500 flex-wrap">
+              <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md font-semibold">${t.categoryId}</span>
+              <span class="bg-slate-100 px-2 py-0.5 rounded-md">${t.inputFields.length} ফিল্ড</span>
+              ${t.hasPhotoSlot ? '<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">ফটো ফ্রেম</span>' : ''}
             </div>
           </div>
           <div class="flex gap-2 mt-4 pt-3 border-t">
-            <button class="edit-btn flex-1 bg-amber-500 hover:bg-amber-600 text-white text-xs py-1.5 rounded-lg font-semibold transition" data-id="${t.id}">✏️ এডিট</button>
-            <button class="delete-btn flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs py-1.5 rounded-lg font-semibold transition" data-id="${t.id}">🗑️ মুছুন</button>
+            <button class="edit-btn flex-1 bg-amber-500 hover:bg-amber-600 text-white text-xs py-2 rounded-xl font-semibold transition" data-id="${t.id}">✏️ এডিট</button>
+            <button class="delete-btn flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs py-2 rounded-xl font-semibold transition" data-id="${t.id}">🗑️ মুছুন</button>
           </div>
         `;
 
@@ -362,9 +469,11 @@
       });
     }
 
-    // এডিট মোড সেটআপ
+    // এডিট সেটআপ ও ফর্ম ট্যাবে নিয়ে যাওয়া
     function setupEdit(item) {
+      switchTab("tab-upload");
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
       editingDocId.value = item.id;
       existingPreviewUrl.value = item.previewUrl;
       existingFullImageUrl.value = item.fullImageUrl;
@@ -399,7 +508,7 @@
       fullNotice.classList.add("hidden");
       document.getElementById("previewFileInput").required = true;
       document.getElementById("fullFileInput").required = true;
-      formHeading.innerText = "নতুন ব্যানার যোগ করুন";
+      formHeading.innerText = "নতুন ব্যানার আপলোড করুন";
       submitBtn.innerText = "ক্লাউডে ব্যানার আপলোড করুন";
       cancelEditBtn.classList.add("hidden");
       fieldsContainer.innerHTML = "";
@@ -410,9 +519,9 @@
     cancelEditBtn.addEventListener("click", resetFormState);
     refreshTemplatesBtn.addEventListener("click", loadAllTemplates);
 
-    // ফায়ারস্টোর থেকে টেমপ্লেট ডিলিট করা
+    // টেমপ্লেট মুছে ফেলা
     async function deleteTemplate(docId, title) {
-      if (!confirm(`আপনি কি নিশ্চিত যে "${title}" ব্যানারটি মুছে ফেলতে চান? এটি মুছে দিলে অ্যাপ থেকেও এটি চলে যাবে!`)) {
+      if (!confirm(`আপনি কি নিশ্চিত যে "${title}" ব্যানারটি মুছে ফেলতে চান? এটি মুছে দিলে অ্যাপ থেকেও চলে যাবে!`)) {
         return;
       }
 
@@ -436,7 +545,7 @@
       }
     }
 
-    // ফায়ারস্টোর ডাটা সেভ বা আপডেট করা
+    // সেভ বা আপডেট করা
     async function saveOrUpdateTemplate(templateData, token, isEdit, docId) {
       let url = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/${DATABASE_ID}/documents/templates`;
       let method = "POST";
@@ -510,7 +619,7 @@
         let previewUrl = existingPreviewUrl.value;
         let fullImageUrl = existingFullImageUrl.value;
 
-        // ১. ছবি আপলোড (যদি নতুন ফাইল সিলেক্ট করা হয়)
+        // নতুন ছবি থাকলে আপলোড
         if (previewFile) {
           submitBtn.innerText = "⏳ প্রিভিউ ছবি আপলোড হচ্ছে...";
           previewUrl = await uploadToImgBB(previewFile);
@@ -521,7 +630,7 @@
           fullImageUrl = await uploadToImgBB(fullFile);
         }
 
-        // ২. ফিল্ড সংগ্রহ
+        // ফিল্ড তৈরি
         submitBtn.innerText = "⏳ ফায়ারবেসে সেভ হচ্ছে...";
         const rows = document.querySelectorAll(".field-row");
         const inputFields = [];
@@ -544,7 +653,6 @@
           inputFields: inputFields
         };
 
-        // ৩. টোকেন নিয়ে ক্লাউডে পাঠানো
         const token = await currentUser.getIdToken(true);
         await saveOrUpdateTemplate(templateData, token, isEdit, docId);
 
@@ -552,7 +660,6 @@
         statusMessage.innerText = isEdit ? "🎉 ব্যানার সফলভাবে আপডেট করা হয়েছে!" : "🎉 নতুন ব্যানার সফলভাবে আপলোড হয়েছে!";
         
         resetFormState();
-        loadAllTemplates();
       } catch (error) {
         statusMessage.className = "mb-4 p-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 block";
         statusMessage.innerText = "সমস্যা হয়েছে: " + error.message;
