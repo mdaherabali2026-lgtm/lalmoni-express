@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
   <title>ব্যানার মেকার প্রো</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- ৮টি সেরা বাংলা ফন্ট -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;600;700&family=Atma:wght@400;600;700&family=Galada&family=Hind+Siliguri:wght@400;500;600;700&family=Mina:wght@400;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Serif+Bengali:wght@400;600;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
   
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -112,7 +116,7 @@
         </button>
       </div>
 
-      <!-- ব্যানার ক্যানভাস প্রিভিউ কনটেইনার -->
+      <!-- ব্যানার ক্যানভাস প্রিভিউ -->
       <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-amber-50/30 aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
         <div id="userPhotoSlot" class="absolute overflow-hidden z-10 hidden" style="transform: translate(-50%, -50%);">
           <img id="userRenderedImg" class="w-full h-full object-cover">
@@ -137,7 +141,7 @@
         <!-- টেক্সট ইনপুট ফিল্ড -->
         <div class="space-y-3">
           <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span>✍️</span> ব্যানারের তথ্য পরিবর্তন করুন
+            <span>✍️</span> ব্যানারের তথ্য লিখুন
           </div>
           <div id="dynamicInputFields" class="space-y-2.5"></div>
         </div>
@@ -423,7 +427,7 @@
           inputElem.addEventListener("input", (e) => {
             textState[f.id] = e.target.value;
             const el = document.getElementById(`overlay_${f.id}`);
-            if (el) el.innerText = e.target.value;
+            if (el) el.innerText = (f.prefix || "") + e.target.value;
           });
           inputContainer.appendChild(fieldRow);
 
@@ -438,7 +442,8 @@
           overlaySpan.style.top = `${f.y}%`;
           overlaySpan.style.color = f.textColor || "#000000";
           overlaySpan.style.fontSize = `${Math.max(6, (f.fontSize || 16) * 0.45)}px`;
-          overlaySpan.innerText = textState[f.id];
+          overlaySpan.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
+          overlaySpan.innerText = (f.prefix || "") + textState[f.id];
           overlayContainer.appendChild(overlaySpan);
         });
       }
@@ -471,6 +476,9 @@
       const btn = document.getElementById("downloadBannerBtn");
       btn.innerText = "রেন্ডার হচ্ছে...";
       btn.disabled = true;
+
+      // ফন্টগুলো রেন্ডার হওয়ার আগে লোড নিশ্চিত করা
+      await document.fonts.ready;
 
       const canvas = document.getElementById("exportCanvas");
       const ctx = canvas.getContext("2d");
@@ -511,26 +519,27 @@
         // লেয়ার ২: মূল ফ্রেম
         ctx.drawImage(baseImg, 0, 0, origWidth, origHeight);
 
-        // লেয়ার ৩: টেক্সট ওভারলে (সঠিক অ্যালাইনমেন্ট সহ)
+        // লেয়ার ৩: টেক্সট ওভারলে (অটো-প্রিফিক্স, ফন্ট ও অ্যালাইনমেন্ট সহ)
         if (activeTemplate.inputFields) {
           const previewWidth = document.getElementById("editorCanvasWrapper").clientWidth || 360;
           const trueScaleRatio = origWidth / previewWidth;
 
           activeTemplate.inputFields.forEach(f => {
-            const text = textState[f.id] || f.placeholder || f.label;
+            const rawText = textState[f.id] || f.placeholder || f.label;
+            const fullText = (f.prefix || "") + rawText;
+
             const posX = (origWidth * f.x) / 100;
             const posY = (origHeight * f.y) / 100;
 
             const displayFont = Math.max(6, (f.fontSize || 16) * 0.45);
             const finalPx = displayFont * trueScaleRatio;
+            const fontFam = f.fontFamily || "Hind Siliguri";
 
-            ctx.font = `bold ${finalPx}px 'Hind Siliguri', sans-serif`;
+            ctx.font = `bold ${finalPx}px '${fontFam}', sans-serif`;
             ctx.fillStyle = f.textColor || "#000000";
-            
-            // অ্যালাইনমেন্ট সমর্থন (Left / Center / Right)
             ctx.textAlign = f.align || "center";
             ctx.textBaseline = "middle";
-            ctx.fillText(text, posX, posY);
+            ctx.fillText(fullText, posX, posY);
           });
         }
 
