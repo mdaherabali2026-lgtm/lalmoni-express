@@ -30,10 +30,6 @@
     #zoomViewport {
       touch-action: none;
     }
-    .picking-color {
-      cursor: crosshair !important;
-      outline: 3px solid #F59E0B;
-    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased pb-20">
@@ -44,7 +40,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">টাচ পিকার সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">জুম ও ড্রপার সক্রিয়</span>
     </div>
 
     <div class="max-w-2xl mx-auto px-4 flex border-t border-slate-800 text-xs text-slate-400 bg-slate-900/95 overflow-x-auto">
@@ -100,12 +96,13 @@
             </label>
             <input type="url" id="previewImageUrl" placeholder="প্রিভিউ ছবির URL লিংক" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
+          <p class="text-[10px] text-slate-500">হোম পেজে দ্রুত লোড হওয়ার হালকা ডেমো ছবি।</p>
         </div>
 
         <!-- অরিজিনাল ফ্রেম আপলোড -->
         <div class="p-3 bg-red-50/70 rounded-xl border border-red-200/80 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-800">🎯 ২. অরিজিনাল ফ্রেম (স্বচ্ছ PNG)</span>
+            <span class="text-xs font-bold text-slate-800">🎯 ২. অরিজিনাল ফ্রেম (স্বচ্ছ PNG এডিটর ও ডাউনলোডের জন্য)</span>
             <span id="originalUploadStatus" class="text-[10px] font-semibold text-slate-500"></span>
           </div>
           <div class="flex items-center gap-2">
@@ -115,6 +112,7 @@
             </label>
             <input type="url" id="originalImageUrl" placeholder="অরিজিনাল স্বচ্ছ PNG URL" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
+          <p class="text-[10px] text-slate-500">মূল স্বচ্ছ ফ্রেমের লিঙ্ক যা ক্যানভাসে লোড হবে।</p>
         </div>
 
         <div class="pt-2 border-t flex items-center justify-between">
@@ -126,12 +124,12 @@
         </div>
       </div>
 
-      <!-- লাইভ ক্যানভাস -->
+      <!-- লাইভ ক্যানভাস (জুম ও প্যান সহ) -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b pb-2">
           <div class="flex items-center gap-2">
             <span class="text-xs font-bold text-slate-700">🎯 ভিজ্যুয়াল ক্যানভাস</span>
-            <span id="colorPickerNotice" class="hidden text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold animate-pulse">ক্যানভাসে ছুঁয়ে রং বাছুন</span>
+            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border">পিঞ্চ/টাচে জুম</span>
           </div>
           <div class="flex items-center gap-1">
             <button id="zoomInBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-2 py-0.5 rounded text-xs press-effect">+</button>
@@ -153,7 +151,7 @@
           </div>
         </div>
 
-        <!-- D-Pad ও কন্ট্রোলার -->
+        <!-- D-Pad ও কালার ড্রপার কন্ট্রোল -->
         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
           <span class="text-xs font-bold text-slate-800" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
           
@@ -171,36 +169,21 @@
             <div></div>
           </div>
 
-          <!-- ফন্ট সাইজ, কালার ও অ্যালাইনমেন্ট -->
-          <div id="elementControls" class="w-full space-y-3 pt-2 border-t mt-1 hidden">
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex-1">
-                <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
-                <input type="range" id="fontSizeSlider" min="6" max="60" value="20" class="w-full accent-slate-800">
-              </div>
-
-              <!-- অ্যালাইনমেন্ট -->
-              <div class="flex flex-col items-center">
-                <label class="text-[10px] font-semibold text-slate-500 mb-0.5">অ্যালাইনমেন্ট</label>
-                <div class="flex border rounded-lg overflow-hidden bg-white">
-                  <button onclick="setTextAlign('left')" id="align_left" class="px-2 py-1 text-xs hover:bg-slate-100 font-bold">L</button>
-                  <button onclick="setTextAlign('center')" id="align_center" class="px-2 py-1 text-xs hover:bg-slate-100 font-bold bg-slate-200">C</button>
-                  <button onclick="setTextAlign('right')" id="align_right" class="px-2 py-1 text-xs hover:bg-slate-100 font-bold">R</button>
-                </div>
-              </div>
+          <!-- ফন্ট সাইজ, কালার পিকার ও স্ক্রিন কালার ড্রপার -->
+          <div id="elementControls" class="w-full flex items-center justify-between gap-3 pt-2 border-t mt-1 hidden">
+            <div class="flex-1">
+              <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
+              <input type="range" id="fontSizeSlider" min="6" max="60" value="20" class="w-full accent-slate-800">
             </div>
             
-            <div class="flex items-center justify-between pt-1">
-              <div class="flex items-center gap-2">
-                <label class="text-[10px] font-semibold text-slate-500">রং:</label>
+            <div class="flex items-end gap-1.5">
+              <div>
+                <label class="text-[10px] font-semibold text-slate-500 block">রং</label>
                 <input type="color" id="elementColorPicker" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer block border">
-                <span id="currentColorHex" class="text-xs font-mono font-bold text-slate-700">#000000</span>
               </div>
-              
-              <!-- টাচ কালার স্যাম্পলার বাটন -->
-              <button id="startColorPickBtn" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs flex items-center gap-1 shadow-sm press-effect">
+              <button id="screenEyeDropperBtn" title="স্ক্রিনের যেকোনো অংশ থেকে রং নিন" class="h-8 px-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-xs flex items-center gap-1 shadow-sm press-effect">
                 <span>💉</span>
-                <span>ব্যানার থেকে রং নিন</span>
+                <span class="text-[10px]">পিকার</span>
               </button>
             </div>
           </div>
@@ -231,16 +214,18 @@
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">🖼️ নতুন স্লাইডার ব্যানার যোগ করুন</h2>
         <div class="space-y-2.5">
-          <input type="text" id="slideTitle" placeholder="শিরোনাম" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
-          <input type="text" id="slideSubtitle" placeholder="উপ-শিরোনাম" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
+          <input type="text" id="slideTitle" placeholder="শিরোনাম (উদা: ঈদ মোবারক অফার)" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
+          <input type="text" id="slideSubtitle" placeholder="উপ-শিরোনাম (উদা: বিশেষ ছাড়ে প্রিমিয়াম ব্যানার)" class="w-full text-xs px-3 py-2 border rounded-xl outline-none">
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="slideBadge" placeholder="ব্যাজ (উদা: অফার)" class="text-xs px-3 py-2 border rounded-xl outline-none">
-            <label class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer press-effect flex items-center justify-center gap-1">
-              <span>📁 স্লাইডার ছবি বাছুন</span>
-              <input type="file" id="slideFileInput" accept="image/*" class="hidden">
-            </label>
+            <input type="text" id="slideBadge" placeholder="ব্যাজ (উদা: অফার / নতুন)" class="text-xs px-3 py-2 border rounded-xl outline-none">
+            <div class="relative">
+              <label class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer press-effect flex items-center justify-center gap-1">
+                <span>📁 স্লাইডার ছবি বাছুন</span>
+                <input type="file" id="slideFileInput" accept="image/*" class="hidden">
+              </label>
+            </div>
           </div>
-          <input type="url" id="slideImageUrl" placeholder="ব্যানার ছবি লিংক" class="w-full text-xs px-3 py-2 border rounded-xl outline-none bg-slate-50">
+          <input type="url" id="slideImageUrl" placeholder="ব্যানার ছবি লিংক (URL স্বয়ংক্রিয়ভাবে বসবে)" class="w-full text-xs px-3 py-2 border rounded-xl outline-none bg-slate-50">
           <span id="slideUploadStatus" class="text-[10px] font-semibold text-slate-500 block"></span>
           <button onclick="saveSlider()" class="w-full bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl press-effect">
             + স্লাইডার যুক্ত করুন
@@ -250,7 +235,9 @@
 
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">বর্তমান স্লাইডারসমূহ</h2>
-        <div id="activeSlidersList" class="space-y-2"></div>
+        <div id="activeSlidersList" class="space-y-2">
+          <div class="text-xs text-slate-400">স্লাইডার লোড হচ্ছে...</div>
+        </div>
       </div>
     </div>
 
@@ -259,8 +246,8 @@
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">🏷️ নতুন ক্যাটাগরি তৈরি</h2>
         <div class="flex gap-2">
-          <input type="text" id="newCatIcon" placeholder="🎂" class="w-20 text-center text-sm px-2 py-2 border rounded-xl outline-none">
-          <input type="text" id="newCatName" placeholder="ক্যাটাগরির নাম" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none">
+          <input type="text" id="newCatIcon" placeholder="ইমোজি (উদা: 🎂)" class="w-20 text-center text-sm px-2 py-2 border rounded-xl outline-none">
+          <input type="text" id="newCatName" placeholder="ক্যাটাগরির নাম (উদা: জন্মদিন)" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none">
           <button onclick="saveCategory()" class="bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl press-effect">
             যোগ করুন
           </button>
@@ -269,7 +256,9 @@
 
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">ক্যাটাগরি তালিকা</h2>
-        <div id="activeCategoriesList" class="grid grid-cols-2 gap-2"></div>
+        <div id="activeCategoriesList" class="grid grid-cols-2 gap-2">
+          <div class="text-xs text-slate-400">ক্যাটাগরি লোড হচ্ছে...</div>
+        </div>
       </div>
     </div>
 
@@ -277,13 +266,13 @@
     <div id="view_manage" class="hidden space-y-4">
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">📦 সংরক্ষিত টেমপ্লেটের তালিকা</h2>
-        <div id="savedTemplatesList" class="grid grid-cols-1 gap-3"></div>
+        <div id="savedTemplatesList" class="grid grid-cols-1 gap-3">
+          <div class="text-xs text-slate-400">টেমপ্লেট লোড হচ্ছে...</div>
+        </div>
       </div>
     </div>
 
   </main>
-
-  <canvas id="hiddenColorCanvas" class="hidden"></canvas>
 
   <script>
     const IMGBB_API_KEY = "f58e7082c01a1f0e687721ebbbcff6da";
@@ -303,7 +292,6 @@
     const db = firebase.firestore();
 
     let editingTemplateId = null;
-    let isColorPickingMode = false;
 
     // ImgBB Upload
     async function uploadToImgBB(file, statusElement) {
@@ -366,23 +354,23 @@
       document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
-    // ফ্রেমের সাথে সামঞ্জস্যপূর্ণ ডিফল্ট টেক্সট ফিল্ড
+    // টেক্সট ফিল্ডসমূহ
     let defaultFields = [
-      { id: "groom_name", label: "বরের নাম", placeholder: "মোঃ সিরাজুল ইসলাম", x: 28, y: 62, fontSize: 16, textColor: "#000000", align: "left" },
-      { id: "groom_father", label: "বরের পিতার নাম", placeholder: "মোঃ রফিকুল ইসলাম", x: 28, y: 65, fontSize: 13, textColor: "#000000", align: "left" },
-      { id: "groom_mother", label: "বরের মাতার নাম", placeholder: "মোছাঃ ফাতেমা বেগম", x: 28, y: 68, fontSize: 13, textColor: "#000000", align: "left" },
-      { id: "bride_name", label: "কনের নাম", placeholder: "মোছাঃ ফাতেমা খাতুন", x: 68, y: 62, fontSize: 16, textColor: "#000000", align: "left" },
-      { id: "bride_father", label: "কনের পিতার নাম", placeholder: "মোঃ করিম শেখ", x: 68, y: 65, fontSize: 13, textColor: "#000000", align: "left" },
-      { id: "bride_mother", label: "কনের মাতার নাম", placeholder: "মোছাঃ রহিমা বেগম", x: 68, y: 68, fontSize: 13, textColor: "#000000", align: "left" },
-      { id: "event_date", label: "তারিখ", placeholder: "২৬ নভেম্বর, ২০২৬", x: 50, y: 77, fontSize: 15, textColor: "#000000", align: "center" },
-      { id: "event_place", label: "স্থান", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000", align: "center" }
+      { id: "groom_name", label: "বরের নাম", placeholder: "মোঃ সিরাজুল ইসলাম", x: 26, y: 62, fontSize: 16, textColor: "#000000" },
+      { id: "groom_father", label: "বরের পিতার নাম", placeholder: "মোঃ রফিকুল ইসলাম", x: 26, y: 65, fontSize: 13, textColor: "#000000" },
+      { id: "groom_mother", label: "বরের মাতার নাম", placeholder: "মোছাঃ ফাতেমা বেগম", x: 26, y: 68, fontSize: 13, textColor: "#000000" },
+      { id: "bride_name", label: "কনের নাম", placeholder: "মোছাঃ ফাতেমা খাতুন", x: 67, y: 62, fontSize: 16, textColor: "#000000" },
+      { id: "bride_father", label: "কনের পিতার নাম", placeholder: "মোঃ করিম শেখ", x: 67, y: 65, fontSize: 13, textColor: "#000000" },
+      { id: "bride_mother", label: "কনের মাতার নাম", placeholder: "মোছাঃ রহিমা বেগম", x: 67, y: 68, fontSize: 13, textColor: "#000000" },
+      { id: "event_date", label: "তারিখ", placeholder: "২৬ নভেম্বর, ২০২৬", x: 50, y: 77, fontSize: 15, textColor: "#000000" },
+      { id: "event_place", label: "স্থান", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000" }
     ];
 
     let textFields = JSON.parse(JSON.stringify(defaultFields));
     let photoSlotData = { x: 50, y: 36, size: 45 };
     let selectedItem = null;
 
-    // জুম ও প্যান
+    // ================= টাচ ও বাটন জুম লজিক =================
     let zoomScale = 1.0;
     let panX = 0;
     let panY = 0;
@@ -411,56 +399,69 @@
       updateZoomTransform();
     });
 
-    // ================= ইন-ক্যানভাস টাচ কালার স্যাম্পলার =================
-    document.getElementById("startColorPickBtn").addEventListener("click", () => {
-      if (!selectedItem || selectedItem.type !== 'text') {
-        alert("আগে যে লেখার রং পরিবর্তন করবেন, সেটি সিলেক্ট করুন!");
-        return;
-      }
-      isColorPickingMode = true;
-      zoomViewport.classList.add("picking-color");
-      document.getElementById("colorPickerNotice").classList.remove("hidden");
-    });
-
-    zoomViewport.addEventListener("click", (e) => {
-      if (!isColorPickingMode) return;
-      sampleColorFromCanvas(e.clientX, e.clientY);
-    });
+    // পিঞ্চ টু জুম ও প্যান টাচ হ্যান্ডলার
+    let initialTouchDist = null;
+    let initialScale = 1.0;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
 
     zoomViewport.addEventListener("touchstart", (e) => {
-      if (!isColorPickingMode) return;
-      const touch = e.touches[0];
-      sampleColorFromCanvas(touch.clientX, touch.clientY);
+      if (e.touches.length === 2) {
+        initialTouchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialScale = zoomScale;
+      } else if (e.touches.length === 1 && zoomScale > 1.0) {
+        lastTouchX = e.touches[0].clientX;
+        lastTouchY = e.touches[0].clientY;
+      }
     }, { passive: true });
 
-    function sampleColorFromCanvas(clientX, clientY) {
-      const img = document.getElementById("adminCanvasImg");
-      if (!img.src || !img.complete) return;
+    zoomViewport.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2 && initialTouchDist) {
+        const currentDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        zoomScale = Math.min(3.5, Math.max(0.8, initialScale * (currentDist / initialTouchDist)));
+        updateZoomTransform();
+      } else if (e.touches.length === 1 && zoomScale > 1.0) {
+        const dx = e.touches[0].clientX - lastTouchX;
+        const dy = e.touches[0].clientY - lastTouchY;
+        panX += dx;
+        panY += dy;
+        lastTouchX = e.touches[0].clientX;
+        lastTouchY = e.touches[0].clientY;
+        updateZoomTransform();
+      }
+    }, { passive: true });
 
-      const rect = zoomViewport.getBoundingClientRect();
-      const xRatio = (clientX - rect.left) / rect.width;
-      const yRatio = (clientY - rect.top) / rect.height;
+    zoomViewport.addEventListener("touchend", (e) => {
+      if (e.touches.length < 2) initialTouchDist = null;
+    });
 
-      const hiddenCanvas = document.getElementById("hiddenColorCanvas");
-      const ctx = hiddenCanvas.getContext("2d", { willReadFrequently: true });
-      hiddenCanvas.width = img.naturalWidth || 600;
-      hiddenCanvas.height = img.naturalHeight || 800;
+    // ================= আই-ড্রপার স্ক্রিন কালার পিকার =================
+    document.getElementById("screenEyeDropperBtn").addEventListener("click", async () => {
+      if (!selectedItem || selectedItem.type !== 'text') {
+        alert("আগে যে লেখার রং পরিবর্তন করতে চান, সেটি সিলেক্ট করুন!");
+        return;
+      }
 
-      ctx.drawImage(img, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
-
-      const targetX = Math.floor(xRatio * hiddenCanvas.width);
-      const targetY = Math.floor(yRatio * hiddenCanvas.height);
-
-      const pixel = ctx.getImageData(targetX, targetY, 1, 1).data;
-      const hex = "#" + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
-
-      applyColorToSelected(hex);
-
-      // স্যাম্পলার বন্ধ করা
-      isColorPickingMode = false;
-      zoomViewport.classList.remove("picking-color");
-      document.getElementById("colorPickerNotice").classList.add("hidden");
-    }
+      if ('EyeDropper' in window) {
+        try {
+          const eyeDropper = new EyeDropper();
+          const result = await eyeDropper.open();
+          if (result && result.sRGBHex) {
+            applyColorToSelected(result.sRGBHex);
+          }
+        } catch (e) {
+          console.log("EyeDropper closed or cancelled");
+        }
+      } else {
+        alert("আপনার ব্রাউজারে আই-ড্রপার সরাসরি সমর্থিত নয়। পাশের কালার প্লেটটি ব্যবহার করুন।");
+      }
+    });
 
     function applyColorToSelected(colorHex) {
       if (selectedItem?.type === 'text') {
@@ -468,35 +469,12 @@
         if (f) {
           f.textColor = colorHex;
           document.getElementById("elementColorPicker").value = colorHex;
-          document.getElementById("currentColorHex").innerText = colorHex.toUpperCase();
           renderCanvasLayers();
         }
       }
     }
 
-    window.setTextAlign = function(align) {
-      if (selectedItem?.type === 'text') {
-        const f = textFields.find(t => t.id === selectedItem.id);
-        if (f) {
-          f.align = align;
-          updateAlignButtons(align);
-          renderCanvasLayers();
-        }
-      }
-    };
-
-    function updateAlignButtons(align) {
-      ['left', 'center', 'right'].forEach(a => {
-        const btn = document.getElementById(`align_${a}`);
-        if (a === align) {
-          btn.classList.add("bg-slate-200");
-        } else {
-          btn.classList.remove("bg-slate-200");
-        }
-      });
-    }
-
-    // ট্যাব স্যুইচার
+    // ট্যাব সুইচ
     window.switchTab = function(tabName) {
       const views = ['templates', 'sliders', 'categories', 'manage'];
       views.forEach(v => {
@@ -537,12 +515,7 @@
       textFields.forEach(f => {
         const span = document.createElement("div");
         span.id = `canvas_node_${f.id}`;
-        
-        let alignClass = "-translate-x-1/2";
-        if (f.align === "left") alignClass = "translate-x-0";
-        if (f.align === "right") alignClass = "-translate-x-full";
-
-        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold`;
+        span.className = "absolute transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold";
         span.style.left = `${f.x}%`;
         span.style.top = `${f.y}%`;
         span.style.fontSize = `${Math.max(6, f.fontSize * 0.45)}px`;
@@ -604,7 +577,7 @@
 
     document.getElementById("addTextFieldBtn").addEventListener("click", () => {
       const newId = `field_${Date.now()}`;
-      textFields.push({ id: newId, label: "নতুন টেক্সট", placeholder: "নমুনা লেখা", x: 50, y: 50, fontSize: 16, textColor: "#000000", align: "center" });
+      textFields.push({ id: newId, label: "নতুন টেক্সট", placeholder: "নমুনা লেখা", x: 50, y: 50, fontSize: 16, textColor: "#000000" });
       selectElement('text', newId);
       renderFieldsList();
       renderCanvasLayers();
@@ -625,8 +598,6 @@
         document.getElementById("fontSizeSlider").value = f.fontSize || 18;
         document.getElementById("fontSizeDisplay").innerText = f.fontSize || 18;
         document.getElementById("elementColorPicker").value = f.textColor || "#000000";
-        document.getElementById("currentColorHex").innerText = (f.textColor || "#000000").toUpperCase();
-        updateAlignButtons(f.align || "left");
       }
       renderCanvasLayers();
       renderFieldsList();
@@ -657,6 +628,7 @@
       }
     });
 
+    // D-Pad মুভমেন্ট (০.২%)
     function moveSelected(dx, dy) {
       if (!selectedItem) return;
       if (selectedItem.type === 'photo') {
@@ -677,7 +649,7 @@
     document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.2, 0));
     document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.2, 0));
 
-    // সংরক্ষণ ও আপডেট
+    // সেভ বা আপডেট
     document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
       const title = document.getElementById("tplTitle").value.trim() || "বিবাহ স্মরণিকা";
       const category = document.getElementById("tplCategorySelect").value;
@@ -740,6 +712,7 @@
       document.getElementById("slideTitle").value = "";
       document.getElementById("slideSubtitle").value = "";
       document.getElementById("slideImageUrl").value = "";
+      document.getElementById("slideUploadStatus").innerText = "";
       loadSlidersList();
     };
 
@@ -824,7 +797,7 @@
       }
     };
 
-    // সংরক্ষিত টেমপ্লেট তালিকা
+    // টেমপ্লেট তালিকা
     async function loadSavedTemplatesList() {
       const container = document.getElementById("savedTemplatesList");
       const snap = await db.collection("templates").orderBy("createdAt", "desc").get();
