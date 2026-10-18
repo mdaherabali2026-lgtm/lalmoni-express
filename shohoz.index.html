@@ -64,7 +64,6 @@
     <!-- হোম পেজ ভিউ -->
     <main id="homePage" class="page-view px-4 pt-4 space-y-6">
 
-      <!-- স্লাইডার -->
       <section class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-900 aspect-[16/9]" id="sliderWrapper">
         <div id="sliderContent" class="w-full h-full relative">
           <div class="w-full h-full flex items-center justify-center text-xs text-slate-400">
@@ -74,7 +73,6 @@
         <div id="sliderDots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20"></div>
       </section>
 
-      <!-- ক্যাটাগরি -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-slate-900">ব্যানার ক্যাটাগরি</h2>
@@ -85,7 +83,6 @@
         </div>
       </section>
 
-      <!-- টেমপ্লেট গ্রিড -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 id="templateSectionTitle" class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
@@ -198,7 +195,6 @@
       document.getElementById("homePage").classList.remove("page-hidden");
     };
 
-    // স্লাইডার
     async function loadSliders() {
       const sliderContent = document.getElementById("sliderContent");
       const sliderDots = document.getElementById("sliderDots");
@@ -267,7 +263,6 @@
       document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white/50', 'bg-white');
     }
 
-    // ক্যাটাগরি ও টেমপ্লেট
     async function loadData() {
       try {
         const catRes = await db.collection("categories").get();
@@ -432,9 +427,13 @@
           });
           inputContainer.appendChild(fieldRow);
 
+          let alignClass = "-translate-x-1/2";
+          if (f.align === "left") alignClass = "translate-x-0";
+          if (f.align === "right") alignClass = "-translate-x-full";
+
           const overlaySpan = document.createElement("span");
           overlaySpan.id = `overlay_${f.id}`;
-          overlaySpan.className = "absolute font-bold pointer-events-none transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap";
+          overlaySpan.className = `absolute font-bold pointer-events-none transform ${alignClass} -translate-y-1/2 whitespace-nowrap`;
           overlaySpan.style.left = `${f.x}%`;
           overlaySpan.style.top = `${f.y}%`;
           overlaySpan.style.color = f.textColor || "#000000";
@@ -487,13 +486,12 @@
         canvas.width = origWidth;
         canvas.height = origHeight;
 
-        // ছবির স্লটের অবস্থান গণনা
         const slotW = (origWidth * (activeTemplate.photoSlotSize || 45)) / 100;
         const slotH = slotW;
         const slotX = (origWidth * (activeTemplate.photoSlotX || 50)) / 100 - (slotW / 2);
         const slotY = (origHeight * (activeTemplate.photoSlotY || 35)) / 100 - (slotH / 2);
 
-        // লেয়ার ১: ইউজার ফটো অথবা ব্যাকগ্রাউন্ড ফিল (কালো ফ্রেম সমাধান)
+        // লেয়ার ১: ইউজার ফটো
         if (activeTemplate.hasPhotoSlot) {
           if (userUploadedImageObj) {
             ctx.save();
@@ -503,7 +501,6 @@
             ctx.drawImage(userUploadedImageObj, slotX, slotY, slotW, slotH);
             ctx.restore();
           } else {
-            // ছবি আপলোড না থাকলে সুন্দর ক্রিম/হোয়াইট গ্রেডিয়েন্ট দিয়ে ফিল হবে
             ctx.save();
             ctx.fillStyle = "#FFF9F2";
             ctx.fillRect(slotX, slotY, slotW, slotH);
@@ -511,12 +508,11 @@
           }
         }
 
-        // লেয়ার ২: মূল অরিজিনাল স্বচ্ছ ফ্রেম
+        // লেয়ার ২: মূল ফ্রেম
         ctx.drawImage(baseImg, 0, 0, origWidth, origHeight);
 
-        // লেয়ার ৩: টেক্সট ওভারলে (সঠিক আনুপাতিক রেন্ডারিং)
+        // লেয়ার ৩: টেক্সট ওভারলে (সঠিক অ্যালাইনমেন্ট সহ)
         if (activeTemplate.inputFields) {
-          // প্রিভিউ কন্টেইনারের প্রস্থ এবং অরিজিনাল উইডথের প্রকৃত অনুপাত
           const previewWidth = document.getElementById("editorCanvasWrapper").clientWidth || 360;
           const trueScaleRatio = origWidth / previewWidth;
 
@@ -525,13 +521,14 @@
             const posX = (origWidth * f.x) / 100;
             const posY = (origHeight * f.y) / 100;
 
-            // প্রিভিউ ফন্টের সাথে আসল হাই-রেজলুশন স্কেল লক
             const displayFont = Math.max(6, (f.fontSize || 16) * 0.45);
             const finalPx = displayFont * trueScaleRatio;
 
             ctx.font = `bold ${finalPx}px 'Hind Siliguri', sans-serif`;
             ctx.fillStyle = f.textColor || "#000000";
-            ctx.textAlign = "center";
+            
+            // অ্যালাইনমেন্ট সমর্থন (Left / Center / Right)
+            ctx.textAlign = f.align || "center";
             ctx.textBaseline = "middle";
             ctx.fillText(text, posX, posY);
           });
