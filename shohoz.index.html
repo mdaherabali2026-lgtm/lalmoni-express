@@ -138,10 +138,10 @@
           </label>
         </div>
 
-        <!-- টেক্সট ইনপুট ফিল্ড -->
+        <!-- টেক্সট ও ক্যালেন্ডার ইনপুট ফিল্ড -->
         <div class="space-y-3">
           <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span>✍️</span> ব্যানারের তথ্য লিখুন
+            <span>✍️</span> ব্যানারের তথ্য পূরণ করুন
           </div>
           <div id="dynamicInputFields" class="space-y-2.5"></div>
         </div>
@@ -193,6 +193,75 @@
     let sliderTimer = null;
     let currentSlideIdx = 0;
     let slidesData = [];
+
+    // ================= ইংরেজি তারিখ থেকে বঙ্গাব্দ ও বার কনভার্টার =================
+    const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+    function toBnNum(n) {
+      return n.toString().split('').map(d => bnNums[d] || d).join('');
+    }
+
+    const enMonthsBn = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+    const bnDays = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
+    const bnMonths = ["বৈশাখ", "জ্যৈষ্ঠ", "আষাঢ়", "শ্রাবণ", "ভাদ্র", "আশ্বিন", "কার্তিক", "অগ্রহায়ণ", "পৌষ", "মাঘ", "ফাল্গুন", "চৈত্র"];
+
+    function isLeapYear(y) {
+      return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+    }
+
+    function formatDualDate(dateStr) {
+      if (!dateStr) return "";
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return dateStr;
+
+      const d = date.getDate();
+      const m = date.getMonth(); // 0-based
+      const y = date.getFullYear();
+      const dayName = bnDays[date.getDay()];
+
+      // ইংরেজি অংশ
+      const engPart = `${toBnNum(d)} ${enMonthsBn[m]} ${toBnNum(y)} ইংরেজি`;
+
+      // বাংলা বঙ্গাব্দ ক্যালকুলেশন (সংশোধিত বাংলা একাডেমী ক্যালেন্ডার)
+      let bYear = y - 593;
+      let bMonthIdx = 0;
+      let bDay = 1;
+
+      const falgDayCount = isLeapYear(y) ? 30 : 29;
+      // ১৪ এপ্রিল থেকে নতুন বঙ্গাব্দ শুরু
+      const daysInBnMonths = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, falgDayCount, 30];
+
+      const startOfBYear = new Date(y, 3, 14); // ১৪ এপ্রিল
+      if (date < startOfBYear) {
+        bYear = y - 594;
+        const prevStart = new Date(y - 1, 3, 14);
+        let diffDays = Math.floor((date - prevStart) / (1000 * 60 * 60 * 24));
+        
+        const prevFalg = isLeapYear(y) ? 30 : 29;
+        const prevDaysInBnMonths = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, prevFalg, 30];
+
+        for (let i = 0; i < 12; i++) {
+          if (diffDays < prevDaysInBnMonths[i]) {
+            bMonthIdx = i;
+            bDay = diffDays + 1;
+            break;
+          }
+          diffDays -= prevDaysInBnMonths[i];
+        }
+      } else {
+        let diffDays = Math.floor((date - startOfBYear) / (1000 * 60 * 60 * 24));
+        for (let i = 0; i < 12; i++) {
+          if (diffDays < daysInBnMonths[i]) {
+            bMonthIdx = i;
+            bDay = diffDays + 1;
+            break;
+          }
+          diffDays -= daysInBnMonths[i];
+        }
+      }
+
+      const bngPart = `${toBnNum(bDay)} ${bnMonths[bMonthIdx]} ${toBnNum(bYear)} বঙ্গাব্দ`;
+      return `${engPart} | ${bngPart} | রোজ ${dayName}`;
+    }
 
     window.showHome = function() {
       document.getElementById("editorPage").classList.add("page-hidden");
@@ -414,21 +483,45 @@
 
       if (template.inputFields && Array.isArray(template.inputFields)) {
         template.inputFields.forEach(f => {
-          textState[f.id] = f.placeholder || f.label;
+          textState[f.id] = f.placeholder || "";
 
           const fieldRow = document.createElement("div");
           fieldRow.className = "flex flex-col gap-1";
-          fieldRow.innerHTML = `
-            <label class="text-[11px] font-semibold text-slate-500">${f.label}</label>
-            <input type="text" data-id="${f.id}" value="${textState[f.id]}" 
-                   class="w-full text-xs px-3 py-2 border rounded-xl focus:ring-2 focus:ring-[#B91C1C] outline-none bg-slate-50 text-slate-800">
-          `;
-          const inputElem = fieldRow.querySelector("input");
-          inputElem.addEventListener("input", (e) => {
-            textState[f.id] = e.target.value;
-            const el = document.getElementById(`overlay_${f.id}`);
-            if (el) el.innerText = (f.prefix || "") + e.target.value;
-          });
+
+          if (f.id === "event_date" || f.type === "date") {
+            // ক্যালেন্ডার ইনপুট ফিল্ড
+            fieldRow.innerHTML = `
+              <label class="text-[11px] font-semibold text-slate-600 flex items-center justify-between">
+                <span>📅 ${f.label} (ক্যালেন্ডার থেকে নির্বাচন করুন)</span>
+              </label>
+              <input type="date" data-id="${f.id}" 
+                     class="w-full text-xs px-3 py-2 border rounded-xl focus:ring-2 focus:ring-[#B91C1C] outline-none bg-slate-50 text-slate-800">
+            `;
+            const dateInput = fieldRow.querySelector("input");
+            dateInput.addEventListener("change", (e) => {
+              const converted = formatDualDate(e.target.value);
+              textState[f.id] = converted;
+              const el = document.getElementById(`overlay_${f.id}`);
+              if (el) el.innerText = converted;
+            });
+          } else {
+            // সাধারণ টেক্সট ইনপুট ফিল্ড
+            fieldRow.innerHTML = `
+              <label class="text-[11px] font-semibold text-slate-600">${f.label}</label>
+              <input type="text" data-id="${f.id}" value="${textState[f.id]}" placeholder="${f.prefix || ''}লিখুন..." 
+                     class="w-full text-xs px-3 py-2 border rounded-xl focus:ring-2 focus:ring-[#B91C1C] outline-none bg-slate-50 text-slate-800">
+            `;
+            const inputElem = fieldRow.querySelector("input");
+            inputElem.addEventListener("input", (e) => {
+              textState[f.id] = e.target.value;
+              const el = document.getElementById(`overlay_${f.id}`);
+              if (el) {
+                // ইউজার না লিখলে শুধু প্রিফিক্স দেখাবে
+                el.innerText = (f.prefix || "") + (e.target.value ? e.target.value : "");
+              }
+            });
+          }
+
           inputContainer.appendChild(fieldRow);
 
           let alignClass = "-translate-x-1/2";
@@ -443,6 +536,8 @@
           overlaySpan.style.color = f.textColor || "#000000";
           overlaySpan.style.fontSize = `${Math.max(6, (f.fontSize || 16) * 0.45)}px`;
           overlaySpan.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
+          
+          // প্রাথমিক অবস্থায় শুধু লেবেল / প্রিফিক্স
           overlaySpan.innerText = (f.prefix || "") + textState[f.id];
           overlayContainer.appendChild(overlaySpan);
         });
@@ -477,7 +572,6 @@
       btn.innerText = "রেন্ডার হচ্ছে...";
       btn.disabled = true;
 
-      // ফন্টগুলো রেন্ডার হওয়ার আগে লোড নিশ্চিত করা
       await document.fonts.ready;
 
       const canvas = document.getElementById("exportCanvas");
@@ -516,17 +610,17 @@
           }
         }
 
-        // লেয়ার ২: মূল ফ্রেম
+        // লেয়ার ২: মূল স্বচ্ছ ফ্রেম
         ctx.drawImage(baseImg, 0, 0, origWidth, origHeight);
 
-        // লেয়ার ৩: টেক্সট ওভারলে (অটো-প্রিফিক্স, ফন্ট ও অ্যালাইনমেন্ট সহ)
+        // লেয়ার ৩: টেক্সট ওভারলে (অটো-প্রিফিক্স, ফন্ট ও সঠিক অ্যালাইনমেন্ট সহ)
         if (activeTemplate.inputFields) {
           const previewWidth = document.getElementById("editorCanvasWrapper").clientWidth || 360;
           const trueScaleRatio = origWidth / previewWidth;
 
           activeTemplate.inputFields.forEach(f => {
-            const rawText = textState[f.id] || f.placeholder || f.label;
-            const fullText = (f.prefix || "") + rawText;
+            const rawVal = textState[f.id] !== undefined ? textState[f.id] : (f.placeholder || "");
+            const fullText = (f.prefix || "") + rawVal;
 
             const posX = (origWidth * f.x) / 100;
             const posY = (origHeight * f.y) / 100;
