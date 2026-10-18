@@ -40,9 +40,18 @@
     .slide-item {
       transition: opacity 0.6s ease-in-out;
     }
+    #sitePreloader {
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+    }
   </style>
 </head>
 <body class="bg-[#F8F9FA] text-slate-800 antialiased pb-24">
+
+  <!-- প্রি-লোডার (সিম্পল লোডিং স্ক্রিন) -->
+  <div id="sitePreloader" class="fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center gap-3">
+    <div class="w-10 h-10 border-4 border-[#B91C1C] border-t-transparent rounded-full animate-spin"></div>
+    <span class="text-xs font-bold text-slate-700 animate-pulse">ব্যানার মেকার লোড হচ্ছে...</span>
+  </div>
 
   <header class="bg-[#B91C1C] text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
@@ -82,9 +91,7 @@
           <h2 class="text-base font-bold text-slate-900">ব্যানার ক্যাটাগরি</h2>
           <button onclick="filterTemplates('all')" class="text-xs font-semibold text-[#B91C1C] press-effect">সব দেখুন &rsaquo;</button>
         </div>
-        <div id="categoryContainer" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-          <div class="text-xs text-slate-400 py-3">ক্যাটাগরি লোড হচ্ছে...</div>
-        </div>
+        <div id="categoryContainer" class="flex gap-3 overflow-x-auto no-scrollbar pb-1"></div>
       </section>
 
       <section class="space-y-3">
@@ -92,9 +99,7 @@
           <h2 id="templateSectionTitle" class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
           <span id="templateCount" class="text-xs text-slate-400">০টি টেমপ্লেট</span>
         </div>
-        <div id="templateGrid" class="grid grid-cols-2 gap-3.5">
-          <div class="col-span-2 text-center py-10 text-xs text-slate-400">টেমপ্লেট লোড হচ্ছে...</div>
-        </div>
+        <div id="templateGrid" class="grid grid-cols-2 gap-3.5"></div>
       </section>
 
     </main>
@@ -208,26 +213,18 @@
       return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
     }
 
-    function formatDualDate(dateStr) {
-      if (!dateStr) return "";
-      const date = new Date(dateStr);
-      if (isNaN(date.getTime())) return dateStr;
+    function calculateDualDate(d, m, y) {
+      const date = new Date(y, m, d);
+      if (isNaN(date.getTime())) return "";
 
-      const d = date.getDate();
-      const m = date.getMonth(); // 0-based
-      const y = date.getFullYear();
       const dayName = bnDays[date.getDay()];
-
-      // ইংরেজি অংশ
       const engPart = `${toBnNum(d)} ${enMonthsBn[m]} ${toBnNum(y)} ইংরেজি`;
 
-      // বাংলা বঙ্গাব্দ ক্যালকুলেশন (সংশোধিত বাংলা একাডেমী ক্যালেন্ডার)
       let bYear = y - 593;
       let bMonthIdx = 0;
       let bDay = 1;
 
       const falgDayCount = isLeapYear(y) ? 30 : 29;
-      // ১৪ এপ্রিল থেকে নতুন বঙ্গাব্দ শুরু
       const daysInBnMonths = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, falgDayCount, 30];
 
       const startOfBYear = new Date(y, 3, 14); // ১৪ এপ্রিল
@@ -263,62 +260,73 @@
       return `${engPart} | ${bngPart} | রোজ ${dayName}`;
     }
 
+    function hidePreloader() {
+      const loader = document.getElementById("sitePreloader");
+      if (loader) {
+        loader.style.opacity = "0";
+        setTimeout(() => loader.style.display = "none", 300);
+      }
+    }
+
     window.showHome = function() {
       document.getElementById("editorPage").classList.add("page-hidden");
       document.getElementById("homePage").classList.remove("page-hidden");
     };
 
+    // স্লাইডার হ্যান্ডলিং (ক্যাশিং সহ)
     async function loadSliders() {
-      const sliderContent = document.getElementById("sliderContent");
-      const sliderDots = document.getElementById("sliderDots");
+      const cached = localStorage.getItem("bmp_sliders");
+      if (cached) {
+        renderSliderData(JSON.parse(cached));
+      }
 
       try {
         const snap = await db.collection("sliders").get();
         slidesData = [];
         snap.forEach(doc => slidesData.push({ id: doc.id, ...doc.data() }));
 
-        if (slidesData.length === 0) {
-          slidesData = [{
-            imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
-            title: "বিশ্ব শান্তি ও সম্প্রীতি দিবস",
-            subTitle: "হিংসা নয়, মানবতার জয় হোক...",
-            badge: "অফার"
-          }];
+        if (slidesData.length > 0) {
+          localStorage.setItem("bmp_sliders", JSON.stringify(slidesData));
+          renderSliderData(slidesData);
         }
-
-        sliderContent.innerHTML = "";
-        sliderDots.innerHTML = "";
-
-        slidesData.forEach((s, idx) => {
-          const slide = document.createElement("div");
-          slide.className = `slide-item absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
-          slide.id = `slide_${idx}`;
-          slide.innerHTML = `
-            <img src="${s.imageUrl}" class="w-full h-full object-cover opacity-80">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
-              ${s.badge ? `<span class="text-xs bg-red-600 font-bold px-2 py-0.5 rounded-full w-max mb-1">${s.badge}</span>` : ''}
-              <h3 class="text-base font-bold">${s.title || ''}</h3>
-              <p class="text-xs text-slate-200">${s.subTitle || ''}</p>
-            </div>
-          `;
-          sliderContent.appendChild(slide);
-
-          const dot = document.createElement("div");
-          dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-white w-4' : 'bg-white/50'}`;
-          dot.id = `dot_${idx}`;
-          sliderDots.appendChild(dot);
-        });
-
-        if (slidesData.length > 1) {
-          if (sliderTimer) clearInterval(sliderTimer);
-          sliderTimer = setInterval(() => {
-            const nextIdx = (currentSlideIdx + 1) % slidesData.length;
-            goToSlide(nextIdx);
-          }, 4500);
-        }
-
       } catch (e) {
-        console.error("Slider error:", e);
+        console.error("Slider fetch error:", e);
+      }
+    }
+
+    function renderSliderData(data) {
+      const sliderContent = document.getElementById("sliderContent");
+      const sliderDots = document.getElementById("sliderDots");
+
+      sliderContent.innerHTML = "";
+      sliderDots.innerHTML = "";
+
+      data.forEach((s, idx) => {
+        const slide = document.createElement("div");
+        slide.className = `slide-item absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`;
+        slide.id = `slide_${idx}`;
+        slide.innerHTML = `
+          <img src="${s.imageUrl}" class="w-full h-full object-cover opacity-80" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
+            ${s.badge ? `<span class="text-xs bg-red-600 font-bold px-2 py-0.5 rounded-full w-max mb-1">${s.badge}</span>` : ''}
+            <h3 class="text-base font-bold">${s.title || ''}</h3>
+            <p class="text-xs text-slate-200">${s.subTitle || ''}</p>
+          </div>
+        `;
+        sliderContent.appendChild(slide);
+
+        const dot = document.createElement("div");
+        dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-white w-4' : 'bg-white/50'}`;
+        dot.id = `dot_${idx}`;
+        sliderDots.appendChild(dot);
+      });
+
+      if (data.length > 1) {
+        if (sliderTimer) clearInterval(sliderTimer);
+        sliderTimer = setInterval(() => {
+          const nextIdx = (currentSlideIdx + 1) % data.length;
+          goToSlide(nextIdx);
+        }, 4500);
       }
     }
 
@@ -336,54 +344,30 @@
       document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white/50', 'bg-white');
     }
 
+    // স্মার্ট ডেটা হ্যান্ডলিং ও লোকাল ক্যাশ
     async function loadData() {
+      const cachedCats = localStorage.getItem("bmp_cats");
+      const cachedTemplates = localStorage.getItem("bmp_templates");
+
+      if (cachedCats && cachedTemplates) {
+        renderCategories(JSON.parse(cachedCats));
+        allTemplates = JSON.parse(cachedTemplates);
+        renderTemplates();
+        hidePreloader();
+      }
+
       try {
-        const catRes = await db.collection("categories").get();
-        const catContainer = document.getElementById("categoryContainer");
-        catContainer.innerHTML = "";
+        const [catRes, tempRes] = await Promise.all([
+          db.collection("categories").get(),
+          db.collection("templates").orderBy("createdAt", "desc").get()
+        ]);
 
-        const allCat = document.createElement("div");
-        allCat.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
-        allCat.onclick = () => filterTemplates("all");
-        allCat.innerHTML = `
-          <div id="cat_all" class="w-14 h-14 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center text-xl font-bold shadow-sm border-2 border-red-500">
-            সব
-          </div>
-          <span class="text-xs font-bold text-slate-800">সকল ব্যানার</span>
-        `;
-        catContainer.appendChild(allCat);
+        const catData = [];
+        catRes.forEach(doc => catData.push({ id: doc.id, ...doc.data() }));
+        localStorage.setItem("bmp_cats", JSON.stringify(catData));
+        renderCategories(catData);
 
-        const colors = [
-          { bg: 'bg-pink-100', text: 'text-pink-700' },
-          { bg: 'bg-amber-100', text: 'text-amber-700' },
-          { bg: 'bg-sky-100', text: 'text-sky-700' },
-          { bg: 'bg-purple-100', text: 'text-purple-700' },
-          { bg: 'bg-emerald-100', text: 'text-emerald-700' }
-        ];
-
-        let cIdx = 0;
-        catRes.forEach(doc => {
-          const d = doc.data();
-          const name = d.name || doc.id;
-          const icon = d.icon || "🏷️";
-          const theme = colors[cIdx % colors.length];
-          cIdx++;
-
-          const item = document.createElement("div");
-          item.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
-          item.onclick = () => filterTemplates(name);
-          item.innerHTML = `
-            <div id="cat_${name}" class="w-14 h-14 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-2xl shadow-sm border border-transparent">
-              ${icon}
-            </div>
-            <span class="text-xs font-semibold text-slate-700">${name}</span>
-          `;
-          catContainer.appendChild(item);
-        });
-
-        const tempRes = await db.collection("templates").orderBy("createdAt", "desc").get();
         allTemplates = [];
-
         tempRes.forEach(doc => {
           const data = doc.data();
           allTemplates.push({
@@ -400,11 +384,56 @@
           });
         });
 
+        localStorage.setItem("bmp_templates", JSON.stringify(allTemplates));
         renderTemplates();
-
       } catch (e) {
-        console.error("Data load error:", e);
+        console.error("Data fetch error:", e);
+      } finally {
+        hidePreloader();
       }
+    }
+
+    function renderCategories(catData) {
+      const catContainer = document.getElementById("categoryContainer");
+      catContainer.innerHTML = "";
+
+      const allCat = document.createElement("div");
+      allCat.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
+      allCat.onclick = () => filterTemplates("all");
+      allCat.innerHTML = `
+        <div id="cat_all" class="w-14 h-14 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center text-xl font-bold shadow-sm border-2 border-red-500">
+          সব
+        </div>
+        <span class="text-xs font-bold text-slate-800">সকল ব্যানার</span>
+      `;
+      catContainer.appendChild(allCat);
+
+      const colors = [
+        { bg: 'bg-pink-100', text: 'text-pink-700' },
+        { bg: 'bg-amber-100', text: 'text-amber-700' },
+        { bg: 'bg-sky-100', text: 'text-sky-700' },
+        { bg: 'bg-purple-100', text: 'text-purple-700' },
+        { bg: 'bg-emerald-100', text: 'text-emerald-700' }
+      ];
+
+      let cIdx = 0;
+      catData.forEach(d => {
+        const name = d.name || d.id;
+        const icon = d.icon || "🏷️";
+        const theme = colors[cIdx % colors.length];
+        cIdx++;
+
+        const item = document.createElement("div");
+        item.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
+        item.onclick = () => filterTemplates(name);
+        item.innerHTML = `
+          <div id="cat_${name}" class="w-14 h-14 rounded-2xl ${theme.bg} ${theme.text} flex items-center justify-center text-2xl shadow-sm border border-transparent">
+            ${icon}
+          </div>
+          <span class="text-xs font-semibold text-slate-700">${name}</span>
+        `;
+        catContainer.appendChild(item);
+      });
     }
 
     window.filterTemplates = function(category) {
@@ -441,7 +470,7 @@
         card.className = "bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 flex flex-col justify-between";
         card.innerHTML = `
           <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden">
-            <img src="${item.previewUrl}" class="w-full h-full object-cover">
+            <img src="${item.previewUrl}" class="w-full h-full object-cover" loading="lazy">
           </div>
           <div class="p-3 space-y-2">
             <h3 class="text-xs font-bold text-slate-800 truncate">${item.title}</h3>
@@ -488,24 +517,73 @@
           const fieldRow = document.createElement("div");
           fieldRow.className = "flex flex-col gap-1";
 
+          // ৩টি ড্রপডাউন সিলেক্টর (দিন | মাস | বছর)
           if (f.id === "event_date" || f.type === "date") {
-            // ক্যালেন্ডার ইনপুট ফিল্ড
+            const today = new Date();
+            const curDay = today.getDate();
+            const curMonth = today.getMonth();
+            const curYear = today.getFullYear();
+
             fieldRow.innerHTML = `
-              <label class="text-[11px] font-semibold text-slate-600 flex items-center justify-between">
-                <span>📅 ${f.label} (ক্যালেন্ডার থেকে নির্বাচন করুন)</span>
-              </label>
-              <input type="date" data-id="${f.id}" 
-                     class="w-full text-xs px-3 py-2 border rounded-xl focus:ring-2 focus:ring-[#B91C1C] outline-none bg-slate-50 text-slate-800">
+              <label class="text-[11px] font-semibold text-slate-600">📅 ${f.label} (দিন | মাস | বছর নির্বাচন করুন)</label>
+              <div class="grid grid-cols-3 gap-1.5">
+                <select id="date_day_${f.id}" class="text-xs px-2 py-2 border rounded-xl bg-slate-50 outline-none"></select>
+                <select id="date_month_${f.id}" class="text-xs px-2 py-2 border rounded-xl bg-slate-50 outline-none"></select>
+                <select id="date_year_${f.id}" class="text-xs px-2 py-2 border rounded-xl bg-slate-50 outline-none"></select>
+              </div>
             `;
-            const dateInput = fieldRow.querySelector("input");
-            dateInput.addEventListener("change", (e) => {
-              const converted = formatDualDate(e.target.value);
-              textState[f.id] = converted;
-              const el = document.getElementById(`overlay_${f.id}`);
-              if (el) el.innerText = converted;
+            inputContainer.appendChild(fieldRow);
+
+            const daySel = fieldRow.querySelector(`#date_day_${f.id}`);
+            const monthSel = fieldRow.querySelector(`#date_month_${f.id}`);
+            const yearSel = fieldRow.querySelector(`#date_year_${f.id}`);
+
+            // দিন (১-৩১)
+            for (let i = 1; i <= 31; i++) {
+              const opt = document.createElement("option");
+              opt.value = i;
+              opt.innerText = `${toBnNum(i)} তারিখ`;
+              if (i === curDay) opt.selected = true;
+              daySel.appendChild(opt);
+            }
+
+            // মাস (জানুয়ারি-ডিসেম্বর)
+            enMonthsBn.forEach((mName, idx) => {
+              const opt = document.createElement("option");
+              opt.value = idx;
+              opt.innerText = mName;
+              if (idx === curMonth) opt.selected = true;
+              monthSel.appendChild(opt);
             });
+
+            // বছর (যেমন: ২০২৬ ± ২০ বছর)
+            for (let y = curYear + 5; y >= curYear - 60; y--) {
+              const opt = document.createElement("option");
+              opt.value = y;
+              opt.innerText = `${toBnNum(y)} সাল`;
+              if (y === curYear) opt.selected = true;
+              yearSel.appendChild(opt);
+            }
+
+            const updateDateDual = () => {
+              const d = parseInt(daySel.value);
+              const m = parseInt(monthSel.value);
+              const y = parseInt(yearSel.value);
+              const resultStr = calculateDualDate(d, m, y);
+              textState[f.id] = resultStr;
+              const el = document.getElementById(`overlay_${f.id}`);
+              if (el) el.innerText = resultStr;
+            };
+
+            daySel.addEventListener("change", updateDateDual);
+            monthSel.addEventListener("change", updateDateDual);
+            yearSel.addEventListener("change", updateDateDual);
+
+            // ইনিশিয়াল ভ্যালু সেট
+            textState[f.id] = calculateDualDate(curDay, curMonth, curYear);
+
           } else {
-            // সাধারণ টেক্সট ইনপুট ফিল্ড
+            // সাধারণ টেক্সট ইনপুট
             fieldRow.innerHTML = `
               <label class="text-[11px] font-semibold text-slate-600">${f.label}</label>
               <input type="text" data-id="${f.id}" value="${textState[f.id]}" placeholder="${f.prefix || ''}লিখুন..." 
@@ -516,13 +594,11 @@
               textState[f.id] = e.target.value;
               const el = document.getElementById(`overlay_${f.id}`);
               if (el) {
-                // ইউজার না লিখলে শুধু প্রিফিক্স দেখাবে
                 el.innerText = (f.prefix || "") + (e.target.value ? e.target.value : "");
               }
             });
+            inputContainer.appendChild(fieldRow);
           }
-
-          inputContainer.appendChild(fieldRow);
 
           let alignClass = "-translate-x-1/2";
           if (f.align === "left") alignClass = "translate-x-0";
@@ -536,8 +612,6 @@
           overlaySpan.style.color = f.textColor || "#000000";
           overlaySpan.style.fontSize = `${Math.max(6, (f.fontSize || 16) * 0.45)}px`;
           overlaySpan.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
-          
-          // প্রাথমিক অবস্থায় শুধু লেবেল / প্রিফিক্স
           overlaySpan.innerText = (f.prefix || "") + textState[f.id];
           overlayContainer.appendChild(overlaySpan);
         });
