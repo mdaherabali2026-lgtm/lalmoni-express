@@ -39,7 +39,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">Fine D-Pad সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">এডিট সিস্টেম সক্রিয়</span>
     </div>
 
     <!-- ম্যানেজমেন্ট ট্যাব বার -->
@@ -53,13 +53,23 @@
 
   <main class="max-w-2xl mx-auto px-4 pt-4 space-y-6">
 
-    <!-- ================= ট্যাব ১: টেমপ্লেট মেকার ও ক্যানভাস এডিটর ================= -->
+    <!-- ================= ট্যাব ১: টেমপ্লেট বিল্ডার ================= -->
     <div id="view_templates" class="space-y-4">
       
+      <!-- এডিট মোড ব্যানার -->
+      <div id="editModeAlert" class="hidden p-3 bg-amber-500 text-white rounded-xl flex items-center justify-between shadow-sm">
+        <div class="text-xs font-bold flex items-center gap-1.5">
+          <span>⚠️</span> আপনি একটি সংরক্ষিত টেমপ্লেট এডিট করছেন
+        </div>
+        <button onclick="cancelEditMode()" class="text-[11px] bg-white text-amber-900 px-2.5 py-1 rounded-lg font-bold press-effect">
+          বাতিল করুন
+        </button>
+      </div>
+
       <!-- বেসিক ইনফো ও ডুয়াল ImgBB আপলোড -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b pb-2">
-          <span>📌</span> নতুন টেমপ্লেট কনফিগারেশন
+          <span>📌</span> টেমপ্লেট কনফিগারেশন
         </h2>
 
         <div class="grid grid-cols-2 gap-3">
@@ -75,7 +85,7 @@
           </div>
         </div>
 
-        <!-- ১. হোম পেজ প্রিভিউ ইমেজ আপলোড -->
+        <!-- ১. প্রিভিউ ইমেজ আপলোড -->
         <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-200/80 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-800">🖼️ ১. প্রিভিউ ইমেজ (হোম পেজ কার্ডের জন্য)</span>
@@ -88,7 +98,7 @@
             </label>
             <input type="url" id="previewImageUrl" placeholder="প্রিভিউ ছবির URL লিংক" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
-          <p class="text-[10px] text-slate-500">হোম পেজে দ্রুত লোড হওয়ার জন্য হালকা বা ডেমো পোস্টারের ছবি দিন।</p>
+          <p class="text-[10px] text-slate-500">হোম পেজে দ্রুত লোড হওয়ার হালকা ডেমো ছবি।</p>
         </div>
 
         <!-- ২. অরিজিনাল স্বচ্ছ ফ্রেম আপলোড -->
@@ -104,7 +114,7 @@
             </label>
             <input type="url" id="originalImageUrl" placeholder="অরিজিনাল স্বচ্ছ PNG URL" class="flex-1 text-xs px-3 py-2 border rounded-xl outline-none bg-white">
           </div>
-          <p class="text-[10px] text-slate-500">লেখা ও ছবিহীন স্বচ্ছ ফ্রেমটি এখানে দিন যা ক্যানভাসে লোড হবে।</p>
+          <p class="text-[10px] text-slate-500">মূল ফ্রেমের স্বচ্ছ PNG লিংক (যা হুবহু মূল সাইজে এক্সপোর্ট হবে)।</p>
         </div>
 
         <div class="pt-2 border-t flex items-center justify-between">
@@ -125,20 +135,17 @@
           <span class="text-[10px] text-slate-500">এলিমেন্টে ট্যাপ করে D-Pad ব্যবহার করুন</span>
         </div>
 
-        <!-- ক্যানভাস ভিউপোর্ট -->
         <div class="relative w-full rounded-2xl overflow-hidden shadow-inner border border-slate-300 bg-slate-50 aspect-[3/4] flex items-center justify-center select-none" id="adminCanvas">
           <img id="adminCanvasImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-10">
 
-          <!-- ফটো স্লট মেকার -->
           <div id="canvasPhotoSlot" class="absolute border-2 border-dashed border-amber-500 bg-amber-200/40 rounded-xl flex items-center justify-center text-[10px] font-bold text-amber-900 cursor-pointer hidden z-20" style="transform: translate(-50%, -50%);">
             ফটো স্লট
           </div>
 
-          <!-- টেক্সট ওভারলে লেয়ার -->
           <div id="canvasTextLayers" class="absolute inset-0 w-full h-full z-30 pointer-events-none"></div>
         </div>
 
-        <!-- D-Pad ও কন্ট্রোল -->
+        <!-- D-Pad ও সূক্ষ্ম কন্ট্রোলার -->
         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
           <span class="text-xs font-bold text-slate-800" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
           
@@ -156,7 +163,6 @@
             <div></div>
           </div>
 
-          <!-- ফন্ট সাইজ ও কালার কন্ট্রোল -->
           <div id="elementControls" class="w-full flex items-center justify-between gap-3 pt-2 border-t mt-1 hidden">
             <div class="flex-1">
               <label class="text-[10px] font-semibold text-slate-500">ফন্ট সাইজ (<span id="fontSizeDisplay">20</span>px)</label>
@@ -170,7 +176,7 @@
         </div>
       </div>
 
-      <!-- টেক্সট ফিল্ড ম্যানেজমেন্ট -->
+      <!-- টেক্সট ফিল্ডসমূহ -->
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b pb-2">
           <h2 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -242,7 +248,7 @@
       </div>
     </div>
 
-    <!-- ================= ট্যাব ৪: সংরক্ষিত টেমপ্লেট তালিকা ================= -->
+    <!-- ================= ট্যাব ৪: সংরক্ষিত টেমপ্লেট তালিকা (এডিট ও ডিলিট) ================= -->
     <div id="view_manage" class="hidden space-y-4">
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
         <h2 class="text-xs font-bold text-slate-700 border-b pb-2">📦 সংরক্ষিত টেমপ্লেটের তালিকা</h2>
@@ -255,7 +261,6 @@
   </main>
 
   <script>
-    // আপনার ImgBB API Key
     const IMGBB_API_KEY = "f58e7082c01a1f0e687721ebbbcff6da";
 
     const firebaseConfig = {
@@ -272,7 +277,8 @@
     }
     const db = firebase.firestore();
 
-    // ImgBB Upload Handler
+    let editingTemplateId = null; // বর্তমান এডিট মোডের আইডি
+
     async function uploadToImgBB(file, statusElement) {
       statusElement.innerText = "আপলোড হচ্ছে...";
       statusElement.className = "text-[10px] font-semibold text-amber-600";
@@ -302,18 +308,16 @@
       }
     }
 
-    // ১. প্রিভিউ ফাইল আপলোড হ্যান্ডলার
+    // প্রিভিউ ফাইল আপলোড
     document.getElementById("previewFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const statusEl = document.getElementById("previewUploadStatus");
       const url = await uploadToImgBB(file, statusEl);
-      if (url) {
-        document.getElementById("previewImageUrl").value = url;
-      }
+      if (url) document.getElementById("previewImageUrl").value = url;
     });
 
-    // ২. অরিজিনাল ফ্রেম ফাইল আপলোড হ্যান্ডলার (ক্যানভাসেও লোড হবে)
+    // অরিজিনাল ফ্রেম আপলোড
     document.getElementById("originalFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -325,24 +329,20 @@
       }
     });
 
-    // স্লাইডার ইমেজ আপলোড হ্যান্ডলার
+    // স্লাইডার ফাইল আপলোড
     document.getElementById("slideFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const statusEl = document.getElementById("slideUploadStatus");
       const url = await uploadToImgBB(file, statusEl);
-      if (url) {
-        document.getElementById("slideImageUrl").value = url;
-      }
+      if (url) document.getElementById("slideImageUrl").value = url;
     });
 
-    // অরিজিনাল ফ্রেম ম্যানুয়াল লিংক দিলে প্রিভিউ আপডেট
     document.getElementById("originalImageUrl").addEventListener("input", (e) => {
       document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
-    // প্রাথমিক টেক্সট ফিল্ড
-    let textFields = [
+    let defaultFields = [
       { id: "groom_name", label: "বরের নাম", placeholder: "মোঃ সিরাজুল ইসলাম", x: 26, y: 62, fontSize: 16, textColor: "#000000" },
       { id: "groom_father", label: "বরের পিতার নাম", placeholder: "মোঃ রফিকুল ইসলাম", x: 26, y: 65, fontSize: 13, textColor: "#000000" },
       { id: "groom_mother", label: "বরের মাতার নাম", placeholder: "মোছাঃ ফাতেমা বেগম", x: 26, y: 68, fontSize: 13, textColor: "#000000" },
@@ -353,6 +353,7 @@
       { id: "event_place", label: "স্থান", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000" }
     ];
 
+    let textFields = JSON.parse(JSON.stringify(defaultFields));
     let photoSlotData = { x: 50, y: 36, size: 45 };
     let selectedItem = null;
 
@@ -510,7 +511,6 @@
       }
     });
 
-    // D-Pad সূক্ষ্ম মুভমেন্ট ক্যালকুলেশন
     function moveSelected(dx, dy) {
       if (!selectedItem) return;
       if (selectedItem.type === 'photo') {
@@ -532,7 +532,7 @@
     document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.2, 0));
     document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.2, 0));
 
-    // ================= টেমপ্লেট সেভ (প্রিভিউ + অরিজিনাল সহ) =================
+    // ================= টেমপ্লেট সেভ / আপডেট =================
     document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
       const title = document.getElementById("tplTitle").value.trim() || "বিবাহ স্মরণিকা";
       const category = document.getElementById("tplCategorySelect").value;
@@ -545,33 +545,42 @@
       }
 
       const btn = document.getElementById("saveTemplateBtn");
-      btn.innerText = "সংরক্ষণ করা হচ্ছে...";
+      btn.innerText = editingTemplateId ? "আপডেট করা হচ্ছে..." : "সংরক্ষণ করা হচ্ছে...";
       btn.disabled = true;
 
-      try {
-        await db.collection("templates").add({
-          title,
-          category,
-          previewUrl: previewUrl || originalUrl,
-          fullImageUrl: originalUrl,
-          hasPhotoSlot: hasPhotoCheckbox.checked,
-          photoSlotX: photoSlotData.x,
-          photoSlotY: photoSlotData.y,
-          photoSlotSize: photoSlotData.size,
-          inputFields: textFields,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+      const templatePayload = {
+        title,
+        category,
+        previewUrl: previewUrl || originalUrl,
+        fullImageUrl: originalUrl,
+        hasPhotoSlot: hasPhotoCheckbox.checked,
+        photoSlotX: photoSlotData.x,
+        photoSlotY: photoSlotData.y,
+        photoSlotSize: photoSlotData.size,
+        inputFields: textFields,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
 
-        alert("টেমপ্লেট সফলভাবে সংরক্ষিত হয়েছে!");
+      try {
+        if (editingTemplateId) {
+          // এক্সিস্টিং টেমপ্লেট আপডেট
+          await db.collection("templates").doc(editingTemplateId).update(templatePayload);
+          alert("টেমপ্লেট সফলভাবে আপডেট করা হয়েছে!");
+        } else {
+          // নতুন টেমপ্লেট যোগ
+          templatePayload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection("templates").add(templatePayload);
+          alert("নতুন টেমপ্লেট সফলভাবে সংরক্ষণ করা হয়েছে!");
+        }
         window.location.reload();
       } catch (err) {
         alert("ত্রুটি: " + err.message);
-        btn.innerText = "💾 টেমপ্লেটটি সংরক্ষণ করুন";
+        btn.innerText = editingTemplateId ? "🔄 টেমপ্লেটটি আপডেট করুন" : "💾 টেমপ্লেটটি সংরক্ষণ করুন";
         btn.disabled = false;
       }
     });
 
-    // স্লাইডার
+    // ================= স্লাইডার মডিউল =================
     window.saveSlider = async function() {
       const title = document.getElementById("slideTitle").value.trim();
       const subTitle = document.getElementById("slideSubtitle").value.trim();
@@ -623,7 +632,7 @@
       }
     };
 
-    // ক্যাটাগরি
+    // ================= ক্যাটাগরি মডিউল =================
     window.saveCategory = async function() {
       const name = document.getElementById("newCatName").value.trim();
       const icon = document.getElementById("newCatIcon").value.trim() || "🏷️";
@@ -673,7 +682,7 @@
       }
     };
 
-    // সংরক্ষিত টেমপ্লেট তালিকা
+    // ================= সংরক্ষিত টেমপ্লেট তালিকা ও এডিট/মুছুন =================
     async function loadSavedTemplatesList() {
       const container = document.getElementById("savedTemplatesList");
       const snap = await db.collection("templates").orderBy("createdAt", "desc").get();
@@ -696,13 +705,88 @@
               <span class="text-[10px] bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">${d.category}</span>
             </div>
           </div>
-          <button onclick="deleteTemplate('${doc.id}')" class="text-xs text-red-600 font-bold press-effect bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg">
-            মুছুন
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="editTemplate('${doc.id}')" class="text-xs text-blue-600 font-bold press-effect bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
+              ✏️ এডিট
+            </button>
+            <button onclick="deleteTemplate('${doc.id}')" class="text-xs text-red-600 font-bold press-effect bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg">
+              মুছুন
+            </button>
+          </div>
         `;
         container.appendChild(item);
       });
     }
+
+    // এডিট মোড চালু করা
+    window.editTemplate = async function(id) {
+      try {
+        const doc = await db.collection("templates").doc(id).get();
+        if (!doc.exists) {
+          alert("টেমপ্লেটটি খুঁজে পাওয়া যায়নি!");
+          return;
+        }
+        const data = doc.data();
+        editingTemplateId = id;
+
+        // ফর্ম ফিল্ডগুলো পূর্ণ করা
+        document.getElementById("tplTitle").value = data.title || "";
+        document.getElementById("tplCategorySelect").value = data.category || "বিয়ে";
+        document.getElementById("previewImageUrl").value = data.previewUrl || "";
+        document.getElementById("originalImageUrl").value = data.fullImageUrl || "";
+        document.getElementById("adminCanvasImg").src = data.fullImageUrl || "";
+
+        // ফটো স্লট সেট
+        hasPhotoCheckbox.checked = !!data.hasPhotoSlot;
+        if (data.hasPhotoSlot) {
+          photoSlotData.x = data.photoSlotX !== undefined ? data.photoSlotX : 50;
+          photoSlotData.y = data.photoSlotY !== undefined ? data.photoSlotY : 36;
+          photoSlotData.size = data.photoSlotSize || 45;
+          canvasPhotoSlot.classList.remove("hidden");
+        } else {
+          canvasPhotoSlot.classList.add("hidden");
+        }
+
+        // টেক্সট ফিল্ড সেট
+        textFields = data.inputFields && data.inputFields.length ? JSON.parse(JSON.stringify(data.inputFields)) : JSON.parse(JSON.stringify(defaultFields));
+
+        renderFieldsList();
+        renderCanvasLayers();
+
+        // এডিট মোড ইউআই
+        document.getElementById("editModeAlert").classList.remove("hidden");
+        document.getElementById("saveTemplateBtn").innerText = "🔄 টেমপ্লেটটি আপডেট করুন";
+        document.getElementById("saveTemplateBtn").classList.replace("bg-[#B91C1C]", "bg-blue-600");
+        document.getElementById("saveTemplateBtn").classList.replace("hover:bg-red-800", "hover:bg-blue-700");
+
+        // টেমপ্লেট বিল্ডার ট্যাবে সুইচ
+        switchTab('templates');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      } catch (err) {
+        alert("এডিট লোড করতে সমস্যা: " + err.message);
+      }
+    };
+
+    window.cancelEditMode = function() {
+      editingTemplateId = null;
+      document.getElementById("editModeAlert").classList.add("hidden");
+      document.getElementById("tplTitle").value = "";
+      document.getElementById("previewImageUrl").value = "";
+      document.getElementById("originalImageUrl").value = "";
+      document.getElementById("adminCanvasImg").src = "";
+      hasPhotoCheckbox.checked = false;
+      canvasPhotoSlot.classList.add("hidden");
+
+      textFields = JSON.parse(JSON.stringify(defaultFields));
+      renderFieldsList();
+      renderCanvasLayers();
+
+      const btn = document.getElementById("saveTemplateBtn");
+      btn.innerText = "💾 টেমপ্লেটটি সংরক্ষণ করুন";
+      btn.classList.replace("bg-blue-600", "bg-[#B91C1C]");
+      btn.classList.replace("hover:bg-blue-700", "hover:bg-red-800");
+    };
 
     window.deleteTemplate = async function(id) {
       if (confirm("টেমপ্লেটটি ডাটাবেজ থেকে স্থায়ীভাবে মুছে ফেলতে চান?")) {
