@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- ফায়ারবেস কম্প্যাট লাইব্রেরি -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -41,7 +40,6 @@
 </head>
 <body class="bg-[#F8F9FA] text-slate-800 antialiased pb-24">
 
-  <!-- ================= ১. মোবাইল হেডার ================= -->
   <header class="bg-[#B91C1C] text-white sticky top-0 z-40 shadow-md">
     <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -57,34 +55,26 @@
         <button class="p-2 press-effect rounded-full hover:bg-white/10">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
         </button>
-        <div class="relative">
-          <button class="p-2 press-effect rounded-full hover:bg-white/10">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          </button>
-          <span class="absolute top-1.5 right-1.5 bg-white text-[#B91C1C] text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#B91C1C] shadow-sm">3</span>
-        </div>
       </div>
     </div>
   </header>
 
   <div class="max-w-md mx-auto">
 
-    <!-- ================= ২. হোম পেজ ভিউ ================= -->
+    <!-- হোম পেজ ভিউ -->
     <main id="homePage" class="page-view px-4 pt-4 space-y-6">
 
-      <!-- ডায়নামিক স্লাইডার ব্যানার -->
+      <!-- স্লাইডার -->
       <section class="relative overflow-hidden rounded-2xl shadow-sm bg-slate-900 aspect-[16/9]" id="sliderWrapper">
         <div id="sliderContent" class="w-full h-full relative">
-          <!-- লোডিং প্লেসহোল্ডার -->
           <div class="w-full h-full flex items-center justify-center text-xs text-slate-400">
             স্লাইডার লোড হচ্ছে...
           </div>
         </div>
-        <!-- ডট ইন্ডিকেটর -->
         <div id="sliderDots" class="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20"></div>
       </section>
 
-      <!-- ডায়নামিক ক্যাটাগরি -->
+      <!-- ক্যাটাগরি -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-base font-bold text-slate-900">ব্যানার ক্যাটাগরি</h2>
@@ -95,7 +85,7 @@
         </div>
       </section>
 
-      <!-- ডায়নামিক ও ফিল্টারড টেমপ্লেট গ্রিড -->
+      <!-- টেমপ্লেট গ্রিড -->
       <section class="space-y-3">
         <div class="flex justify-between items-center">
           <h2 id="templateSectionTitle" class="text-base font-bold text-slate-900">জনপ্রিয় টেমপ্লেট</h2>
@@ -108,7 +98,7 @@
 
     </main>
 
-    <!-- ================= ৩. পূর্ণাঙ্গ এডিটর স্ক্রিন ভিউ ================= -->
+    <!-- এডিটর স্ক্রিন -->
     <div id="editorPage" class="page-view page-hidden px-4 pt-3 space-y-4">
       
       <div class="flex items-center justify-between pb-2 border-b border-slate-200">
@@ -125,20 +115,17 @@
         </button>
       </div>
 
-      <!-- ইন্টারঅ্যাক্টিভ ব্যানার ক্যানভাস -->
-      <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-white aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
-        <!-- লেয়ার ১: ব্যবহারকারীর ছবি -->
+      <!-- ব্যানার ক্যানভাস প্রিভিউ কনটেইনার -->
+      <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-amber-50/30 aspect-[3/4] flex items-center justify-center" id="editorCanvasWrapper">
         <div id="userPhotoSlot" class="absolute overflow-hidden z-10 hidden" style="transform: translate(-50%, -50%);">
           <img id="userRenderedImg" class="w-full h-full object-cover">
         </div>
-        <!-- লেয়ার ২: মূল টেমপ্লেট ফ্রেম -->
         <img id="templateFrameImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-20">
-        <!-- লেয়ার ৩: টেক্সট ওভারলে -->
         <div id="textOverlayContainer" class="absolute inset-0 w-full h-full pointer-events-none z-30"></div>
       </div>
 
       <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-4">
-        <!-- ফটো আপলোড স্লট -->
+        <!-- ছবি আপলোড -->
         <div id="photoInputSection" class="hidden p-3 bg-amber-50/70 border border-amber-200/60 rounded-xl flex items-center justify-between">
           <div>
             <div class="text-xs font-bold text-amber-900">📷 নিজের ছবি যুক্ত করুন</div>
@@ -150,7 +137,7 @@
           </label>
         </div>
 
-        <!-- টেক্সট ফিল্ডসমূহ -->
+        <!-- টেক্সট ইনপুট ফিল্ড -->
         <div class="space-y-3">
           <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
             <span>✍️</span> ব্যানারের তথ্য পরিবর্তন করুন
@@ -163,7 +150,6 @@
 
   </div>
 
-  <!-- ================= ৪. ফিক্সড মোবাইল বটম ন্যাভ ================= -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200/80 px-6 py-2 z-40">
     <div class="max-w-md mx-auto flex justify-between items-center text-[11px] font-semibold text-slate-500">
       <button class="flex flex-col items-center gap-1 text-[#B91C1C] press-effect" onclick="showHome()">
@@ -175,10 +161,6 @@
         <span>আমার তৈরি</span>
       </button>
       <button class="flex flex-col items-center gap-1 press-effect hover:text-slate-800">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-        <span>সংরক্ষিত</span>
-      </button>
-      <button class="flex flex-col items-center gap-1 press-effect hover:text-slate-800">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <span>প্রোফাইল</span>
       </button>
@@ -188,7 +170,6 @@
   <canvas id="exportCanvas" class="hidden"></canvas>
 
   <script>
-    // নতুন ফায়ারবেস কনফিগারেশন
     const firebaseConfig = {
       apiKey: "AIzaSyANmFjDSGfdXhMfCUMgpurd1Jw_tVsrnWQ",
       authDomain: "banner-maker-pro.firebaseapp.com",
@@ -217,7 +198,7 @@
       document.getElementById("homePage").classList.remove("page-hidden");
     };
 
-    // ================= স্লাইডার ইঞ্জিন =================
+    // স্লাইডার
     async function loadSliders() {
       const sliderContent = document.getElementById("sliderContent");
       const sliderDots = document.getElementById("sliderDots");
@@ -227,16 +208,13 @@
         slidesData = [];
         snap.forEach(doc => slidesData.push({ id: doc.id, ...doc.data() }));
 
-        // ফায়ারবেসে স্লাইডার না থাকলে ডিফল্ট স্লাইডার দেখানো
         if (slidesData.length === 0) {
-          slidesData = [
-            {
-              imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
-              title: "বিশ্ব শান্তি ও সম্প্রীতি দিবস",
-              subTitle: "হিংসা নয়, মানবতার জয় হোক...",
-              badge: "অফার"
-            }
-          ];
+          slidesData = [{
+            imageUrl: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80",
+            title: "বিশ্ব শান্তি ও সম্প্রীতি দিবস",
+            subTitle: "হিংসা নয়, মানবতার জয় হোক...",
+            badge: "অফার"
+          }];
         }
 
         sliderContent.innerHTML = "";
@@ -256,14 +234,12 @@
           `;
           sliderContent.appendChild(slide);
 
-          // ডটস
           const dot = document.createElement("div");
           dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-white w-4' : 'bg-white/50'}`;
           dot.id = `dot_${idx}`;
           sliderDots.appendChild(dot);
         });
 
-        // অটো স্লাইড টাইমার
         if (slidesData.length > 1) {
           if (sliderTimer) clearInterval(sliderTimer);
           sliderTimer = setInterval(() => {
@@ -273,7 +249,7 @@
         }
 
       } catch (e) {
-        console.error("Slider fetch error:", e);
+        console.error("Slider error:", e);
       }
     }
 
@@ -291,15 +267,13 @@
       document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white/50', 'bg-white');
     }
 
-    // ================= ক্যাটাগরি ও টেমপ্লেট ডাটা =================
+    // ক্যাটাগরি ও টেমপ্লেট
     async function loadData() {
       try {
-        // ১. ক্যাটাগরি লোড
         const catRes = await db.collection("categories").get();
         const catContainer = document.getElementById("categoryContainer");
         catContainer.innerHTML = "";
 
-        // ডিফল্ট "সব" ক্যাটাগরি বাটন
         const allCat = document.createElement("div");
         allCat.className = "flex flex-col items-center gap-1.5 flex-shrink-0 press-effect cursor-pointer";
         allCat.onclick = () => filterTemplates("all");
@@ -339,7 +313,6 @@
           catContainer.appendChild(item);
         });
 
-        // ২. টেমপ্লেট লোড
         const tempRes = await db.collection("templates").orderBy("createdAt", "desc").get();
         allTemplates = [];
 
@@ -363,23 +336,18 @@
 
       } catch (e) {
         console.error("Data load error:", e);
-        document.getElementById("templateGrid").innerHTML = `<div class="col-span-2 text-center py-10 text-xs text-red-500">ডাটা লোড হতে সমস্যা হয়েছে।</div>`;
       }
     }
 
-    // ================= ক্যাটাগরি ফিল্টারিং =================
     window.filterTemplates = function(category) {
       currentCategory = category;
 
-      // ক্যাটাগরি বাটনের বর্ডার হাইলাইট
       document.querySelectorAll('#categoryContainer > div > div').forEach(el => {
         el.classList.remove('border-2', 'border-red-500');
         el.classList.add('border-transparent');
       });
       const activeBtn = document.getElementById(category === 'all' ? 'cat_all' : `cat_${category}`);
-      if (activeBtn) {
-        activeBtn.classList.add('border-2', 'border-red-500');
-      }
+      if (activeBtn) activeBtn.classList.add('border-2', 'border-red-500');
 
       document.getElementById("templateSectionTitle").innerText = category === 'all' ? 'জনপ্রিয় টেমপ্লেট' : `${category} ব্যানারসমূহ`;
       renderTemplates();
@@ -406,14 +374,11 @@
         card.innerHTML = `
           <div class="relative aspect-[3/4] bg-slate-100 overflow-hidden">
             <img src="${item.previewUrl}" class="w-full h-full object-cover">
-            <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
-              👁️ ৭ বার ব্যবহৃত
-            </span>
           </div>
           <div class="p-3 space-y-2">
             <h3 class="text-xs font-bold text-slate-800 truncate">${item.title}</h3>
             <button class="create-btn w-full bg-[#B91C1C] hover:bg-red-800 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm press-effect">
-              <span>✏️ Create</span>
+              <span>✏️ তৈরি করুন</span>
             </button>
           </div>
         `;
@@ -422,7 +387,6 @@
       });
     }
 
-    // ================= ব্যানার এডিটর লজিক =================
     function openEditor(template) {
       activeTemplate = template;
       textState = {};
@@ -474,7 +438,7 @@
           overlaySpan.style.left = `${f.x}%`;
           overlaySpan.style.top = `${f.y}%`;
           overlaySpan.style.color = f.textColor || "#000000";
-          overlaySpan.style.fontSize = `${Math.max(8, (f.fontSize || 20) * 0.45)}px`;
+          overlaySpan.style.fontSize = `${Math.max(6, (f.fontSize || 16) * 0.45)}px`;
           overlaySpan.innerText = textState[f.id];
           overlayContainer.appendChild(overlaySpan);
         });
@@ -503,7 +467,7 @@
       }
     });
 
-    // ================= এইচডি এক্সপোর্ট ও ডাউনলোড =================
+    // ================= নিখুঁত সাইজ ও পজিশনে ডাউনলোড ইঞ্জিন =================
     document.getElementById("downloadBannerBtn").addEventListener("click", async () => {
       const btn = document.getElementById("downloadBannerBtn");
       btn.innerText = "রেন্ডার হচ্ছে...";
@@ -517,38 +481,55 @@
       baseImg.src = activeTemplate.fullImageUrl || activeTemplate.previewUrl;
 
       baseImg.onload = () => {
-        canvas.width = baseImg.naturalWidth;
-        canvas.height = baseImg.naturalHeight;
+        const origWidth = baseImg.naturalWidth;
+        const origHeight = baseImg.naturalHeight;
 
-        // লেয়ার ১: ইউজারের ছবি
-        if (activeTemplate.hasPhotoSlot && userUploadedImageObj) {
-          const slotW = (canvas.width * (activeTemplate.photoSlotSize || 45)) / 100;
-          const slotH = slotW;
-          const slotX = (canvas.width * (activeTemplate.photoSlotX || 50)) / 100 - (slotW / 2);
-          const slotY = (canvas.height * (activeTemplate.photoSlotY || 35)) / 100 - (slotH / 2);
+        canvas.width = origWidth;
+        canvas.height = origHeight;
 
-          ctx.save();
-          ctx.beginPath();
-          ctx.rect(slotX, slotY, slotW, slotH);
-          ctx.clip();
-          ctx.drawImage(userUploadedImageObj, slotX, slotY, slotW, slotH);
-          ctx.restore();
+        // ছবির স্লটের অবস্থান গণনা
+        const slotW = (origWidth * (activeTemplate.photoSlotSize || 45)) / 100;
+        const slotH = slotW;
+        const slotX = (origWidth * (activeTemplate.photoSlotX || 50)) / 100 - (slotW / 2);
+        const slotY = (origHeight * (activeTemplate.photoSlotY || 35)) / 100 - (slotH / 2);
+
+        // লেয়ার ১: ইউজার ফটো অথবা ব্যাকগ্রাউন্ড ফিল (কালো ফ্রেম সমাধান)
+        if (activeTemplate.hasPhotoSlot) {
+          if (userUploadedImageObj) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(slotX, slotY, slotW, slotH);
+            ctx.clip();
+            ctx.drawImage(userUploadedImageObj, slotX, slotY, slotW, slotH);
+            ctx.restore();
+          } else {
+            // ছবি আপলোড না থাকলে সুন্দর ক্রিম/হোয়াইট গ্রেডিয়েন্ট দিয়ে ফিল হবে
+            ctx.save();
+            ctx.fillStyle = "#FFF9F2";
+            ctx.fillRect(slotX, slotY, slotW, slotH);
+            ctx.restore();
+          }
         }
 
-        // লেয়ার ২: ফ্রেম ব্যাকগ্রাউন্ড
-        ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
+        // লেয়ার ২: মূল অরিজিনাল স্বচ্ছ ফ্রেম
+        ctx.drawImage(baseImg, 0, 0, origWidth, origHeight);
 
-        // লেয়ার ৩: টেক্সট ওভারলে
+        // লেয়ার ৩: টেক্সট ওভারলে (সঠিক আনুপাতিক রেন্ডারিং)
         if (activeTemplate.inputFields) {
+          // প্রিভিউ কন্টেইনারের প্রস্থ এবং অরিজিনাল উইডথের প্রকৃত অনুপাত
+          const previewWidth = document.getElementById("editorCanvasWrapper").clientWidth || 360;
+          const trueScaleRatio = origWidth / previewWidth;
+
           activeTemplate.inputFields.forEach(f => {
             const text = textState[f.id] || f.placeholder || f.label;
-            const posX = (canvas.width * f.x) / 100;
-            const posY = (canvas.height * f.y) / 100;
+            const posX = (origWidth * f.x) / 100;
+            const posY = (origHeight * f.y) / 100;
 
-            const scaleFactor = canvas.width / 600;
-            const fontSize = (f.fontSize || 20) * scaleFactor;
+            // প্রিভিউ ফন্টের সাথে আসল হাই-রেজলুশন স্কেল লক
+            const displayFont = Math.max(6, (f.fontSize || 16) * 0.45);
+            const finalPx = displayFont * trueScaleRatio;
 
-            ctx.font = `bold ${fontSize}px 'Hind Siliguri', sans-serif`;
+            ctx.font = `bold ${finalPx}px 'Hind Siliguri', sans-serif`;
             ctx.fillStyle = f.textColor || "#000000";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -556,10 +537,9 @@
           });
         }
 
-        // ব্রাউজার ডাউনলোড
         const link = document.createElement("a");
-        link.download = `${activeTemplate.title || 'banner'}.png`;
-        link.href = canvas.toDataURL("image/png");
+        link.download = `${activeTemplate.title || 'banner'}_original.png`;
+        link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
 
         btn.innerHTML = `<span>ডাউনলোড</span><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>`;
@@ -567,7 +547,6 @@
       };
     });
 
-    // ইনিশিয়ালাইজেশন
     loadSliders();
     loadData();
   </script>
