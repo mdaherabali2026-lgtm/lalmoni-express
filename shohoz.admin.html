@@ -48,7 +48,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">৩ লাইন তারিখ সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">অটো-সোজা অ্যালাইন সক্রিয়</span>
     </div>
 
     <div class="max-w-2xl mx-auto px-4 flex border-t border-slate-800 text-xs text-slate-400 bg-slate-900/95 overflow-x-auto">
@@ -157,6 +157,16 @@
           </div>
         </div>
 
+        <!-- কুইক অ্যালাইনমেন্ট বাটন (এক ক্লিকে বর ও কনে সোজা করা) -->
+        <div class="flex gap-2">
+          <button onclick="alignGroup('groom')" class="flex-1 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs rounded-xl press-effect">
+            ⚖️ বরের ৩টি লাইন সোজা করো
+          </button>
+          <button onclick="alignGroup('bride')" class="flex-1 py-1.5 bg-pink-50 border border-pink-200 text-pink-700 font-bold text-xs rounded-xl press-effect">
+            ⚖️ কনের ৩টি লাইন সোজা করো
+          </button>
+        </div>
+
         <!-- D-Pad ও কন্ট্রোলার -->
         <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col items-center gap-2">
           <span class="text-xs font-bold text-slate-800" id="selectedElementName">কোনো এলিমেন্ট সিলেক্ট করা নেই</span>
@@ -199,7 +209,6 @@
               </div>
             </div>
 
-            <!-- ডুয়েল কালার পিকার: লেবেল কালার এবং টেক্সট কালার আলাদা -->
             <div class="grid grid-cols-2 gap-2 p-2 bg-slate-100 rounded-xl border border-slate-200">
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-700 block">লেবেল কালার (নামঃ/পিতাঃ)</span>
@@ -222,7 +231,6 @@
               </div>
             </div>
 
-            <!-- অ্যালাইনমেন্ট -->
             <div class="flex items-center justify-between pt-1">
               <div class="flex items-center gap-1.5">
                 <span class="text-[10px] font-semibold text-slate-500">অ্যালাইন:</span>
@@ -433,6 +441,7 @@
       document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
+    // সুনির্দিষ্ট ডিফল্ট ফিল্ডস: বর (১৮%) ও কনে (৫৮%) সমান সমান্তরালে
     let defaultFields = [
       { id: "groom_name", label: "বরের নাম", prefix: "নামঃ ", placeholder: "", x: 18, y: 62, fontSize: 22, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
       { id: "groom_father", label: "বরের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 18, y: 65.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
@@ -447,6 +456,29 @@
     let textFields = JSON.parse(JSON.stringify(defaultFields));
     let photoSlotData = { x: 50, y: 36, size: 45 };
     let selectedItem = null;
+
+    // এক ক্লিকে গ্রুপ অটো-অ্যালাইন (বর বা কনের ৩টি খাঁজ সোজা করা)
+    window.alignGroup = function(group) {
+      if (group === 'groom') {
+        const baseField = textFields.find(f => f.id === "groom_name");
+        const baseX = baseField ? baseField.x : 18;
+        ["groom_father", "groom_mother"].forEach(fid => {
+          const f = textFields.find(t => t.id === fid);
+          if (f) f.x = baseX;
+        });
+        alert(`বরের পিতা ও মাতার X পজিশন বরের নামের সাথে (${baseX}%) সমান করে সোজা করা হয়েছে!`);
+      } else if (group === 'bride') {
+        const baseField = textFields.find(f => f.id === "bride_name");
+        const baseX = baseField ? baseField.x : 58;
+        ["bride_father", "bride_mother"].forEach(fid => {
+          const f = textFields.find(t => t.id === fid);
+          if (f) f.x = baseX;
+        });
+        alert(`কনের পিতা ও মাতার X পজিশন কনের নামের সাথে (${baseX}%) সমান করে সোজা করা হয়েছে!`);
+      }
+      renderCanvasLayers();
+      renderFieldsList();
+    };
 
     let zoomScale = 1.0;
     let panX = 0;
@@ -629,7 +661,7 @@
         if (f.align === "left") alignClass = "translate-x-0";
         if (f.align === "right") alignClass = "-translate-x-full";
 
-        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-pre text-center cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold`;
+        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-pre cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold`;
         span.style.left = `${f.x}%`;
         span.style.top = `${f.y}%`;
         span.style.fontSize = `${Math.max(6, f.fontSize * 0.45)}px`;
@@ -664,7 +696,10 @@
         item.className = `p-3 rounded-xl border flex flex-col gap-2 ${selectedItem?.id === f.id ? 'border-red-500 bg-red-50/40' : 'border-slate-200 bg-slate-50'}`;
         item.innerHTML = `
           <div class="flex items-center justify-between">
-            <input type="text" value="${f.label}" class="font-bold text-xs bg-transparent border-b outline-none border-slate-300 w-1/2" oninput="updateFieldLabel('${f.id}', this.value)">
+            <div class="flex items-center gap-2">
+              <input type="text" value="${f.label}" class="font-bold text-xs bg-transparent border-b outline-none border-slate-300" oninput="updateFieldLabel('${f.id}', this.value)">
+              <span class="text-[10px] text-slate-400 font-mono">X:${f.x.toFixed(1)}%</span>
+            </div>
             <button onclick="removeField('${f.id}')" class="text-xs text-red-600 font-bold hover:underline">ডিলিট</button>
           </div>
           <div class="grid grid-cols-3 gap-2">
@@ -721,7 +756,7 @@
         controls.classList.add("hidden");
       } else {
         const f = textFields.find(t => t.id === id);
-        display.innerText = `সিলেক্টেড: ${f ? f.label : id}`;
+        display.innerText = `সিলেক্টেড: ${f ? f.label : id} (X: ${f.x.toFixed(1)}%)`;
         controls.classList.remove("hidden");
         document.getElementById("fontSizeSlider").value = f.fontSize || 18;
         document.getElementById("fontSizeDisplay").innerText = f.fontSize || 18;
@@ -763,9 +798,11 @@
         if (f) {
           f.x = Math.max(0, Math.min(100, f.x + dx));
           f.y = Math.max(0, Math.min(100, f.y + dy));
+          document.getElementById("selectedElementName").innerText = `সিলেক্টেড: ${f.label} (X: ${f.x.toFixed(1)}%)`;
         }
       }
       renderCanvasLayers();
+      renderFieldsList();
     }
 
     document.getElementById("moveUp").addEventListener("click", () => moveSelected(0, -0.2));
