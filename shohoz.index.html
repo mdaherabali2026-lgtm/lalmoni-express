@@ -47,7 +47,7 @@
 </head>
 <body class="bg-[#F8F9FA] text-slate-800 antialiased pb-24">
 
-  <!-- প্রি-লোডার (সিম্পল লোডিং স্ক্রিন) -->
+  <!-- প্রি-লোডার -->
   <div id="sitePreloader" class="fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center gap-3">
     <div class="w-10 h-10 border-4 border-[#B91C1C] border-t-transparent rounded-full animate-spin"></div>
     <span class="text-xs font-bold text-slate-700 animate-pulse">ব্যানার মেকার লোড হচ্ছে...</span>
@@ -199,7 +199,7 @@
     let currentSlideIdx = 0;
     let slidesData = [];
 
-    // ================= ইংরেজি তারিখ থেকে বঙ্গাব্দ ও বার কনভার্টার =================
+    // ================= ইংরেজি তারিখ থেকে বঙ্গাব্দ ও ৩-লাইন ফরম্যাট =================
     const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
     function toBnNum(n) {
       return n.toString().split('').map(d => bnNums[d] || d).join('');
@@ -218,7 +218,7 @@
       if (isNaN(date.getTime())) return "";
 
       const dayName = bnDays[date.getDay()];
-      const engPart = `${toBnNum(d)} ${enMonthsBn[m]} ${toBnNum(y)} ইংরেজি`;
+      const engPart = `${toBnNum(d)} ${enMonthsBn[m]} ${toBnNum(y)} ইংরেজি ,`;
 
       let bYear = y - 593;
       let bMonthIdx = 0;
@@ -256,8 +256,11 @@
         }
       }
 
-      const bngPart = `${toBnNum(bDay)} ${bnMonths[bMonthIdx]} ${toBnNum(bYear)} বঙ্গাব্দ`;
-      return `${engPart} | ${bngPart} | রোজ ${dayName}`;
+      const bngPart = `${toBnNum(bDay)} ${bnMonths[bMonthIdx]} ${toBnNum(bYear)} বঙ্গাব্দ ,`;
+      const dayPart = `রোজ ${dayName} ।`;
+
+      // ৩ লাইনে রিটার্ন (কমা ও দাঁড়ি সহ)
+      return `${engPart}\n${bngPart}\n${dayPart}`;
     }
 
     function hidePreloader() {
@@ -273,7 +276,6 @@
       document.getElementById("homePage").classList.remove("page-hidden");
     };
 
-    // স্লাইডার হ্যান্ডলিং (ক্যাশিং সহ)
     async function loadSliders() {
       const cached = localStorage.getItem("bmp_sliders");
       if (cached) {
@@ -344,7 +346,6 @@
       document.getElementById(`dot_${currentSlideIdx}`)?.classList.replace('bg-white/50', 'bg-white');
     }
 
-    // স্মার্ট ডেটা হ্যান্ডলিং ও লোকাল ক্যাশ
     async function loadData() {
       const cachedCats = localStorage.getItem("bmp_cats");
       const cachedTemplates = localStorage.getItem("bmp_templates");
@@ -531,12 +532,18 @@
                 <select id="date_month_${f.id}" class="text-xs px-2 py-2 border rounded-xl bg-slate-50 outline-none"></select>
                 <select id="date_year_${f.id}" class="text-xs px-2 py-2 border rounded-xl bg-slate-50 outline-none"></select>
               </div>
+              <!-- স্ক্রিনে ৩ লাইনের লাইভ প্রিভিউ বক্স -->
+              <div class="mt-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                <span class="text-[10px] text-slate-400 font-bold block mb-0.5">তারিখ প্রিভিউ:</span>
+                <div id="live_date_preview_${f.id}" class="text-xs font-bold text-slate-800 leading-relaxed whitespace-pre"></div>
+              </div>
             `;
             inputContainer.appendChild(fieldRow);
 
             const daySel = fieldRow.querySelector(`#date_day_${f.id}`);
             const monthSel = fieldRow.querySelector(`#date_month_${f.id}`);
             const yearSel = fieldRow.querySelector(`#date_year_${f.id}`);
+            const liveDateBox = fieldRow.querySelector(`#live_date_preview_${f.id}`);
 
             // দিন (১-৩১)
             for (let i = 1; i <= 31; i++) {
@@ -571,6 +578,11 @@
               const y = parseInt(yearSel.value);
               const resultStr = calculateDualDate(d, m, y);
               textState[f.id] = resultStr;
+
+              // ১. ইনপুট বক্সের নিচের প্রিভিউ
+              if (liveDateBox) liveDateBox.innerText = resultStr;
+
+              // ২. ক্যানভাস ওভারলে প্রিভিউ
               const valEl = document.getElementById(`val_overlay_${f.id}`);
               if (valEl) valEl.innerText = resultStr;
             };
@@ -579,10 +591,12 @@
             monthSel.addEventListener("change", updateDateDual);
             yearSel.addEventListener("change", updateDateDual);
 
-            textState[f.id] = calculateDualDate(curDay, curMonth, curYear);
+            const initialDateStr = calculateDualDate(curDay, curMonth, curYear);
+            textState[f.id] = initialDateStr;
+            if (liveDateBox) liveDateBox.innerText = initialDateStr;
 
           } else {
-            // সাধারণ টেক্সট ইনপুট (বাম দিক থেকে ফিক্সড থাকবে)
+            // সাধারণ টেক্সট ইনপুট (বামে ফিক্সড)
             fieldRow.innerHTML = `
               <label class="text-[11px] font-semibold text-slate-600">${f.label}</label>
               <input type="text" data-id="${f.id}" value="${textState[f.id]}" placeholder="${f.prefix || ''}লিখুন..." 
@@ -597,20 +611,19 @@
             inputContainer.appendChild(fieldRow);
           }
 
-          // বাম দিক থেকে শুরু হওয়া ফিক্সড অ্যাঙ্কর
           let alignClass = "-translate-x-1/2";
           if (f.align === "left") alignClass = "translate-x-0";
           if (f.align === "right") alignClass = "-translate-x-full";
 
           const overlaySpan = document.createElement("div");
           overlaySpan.id = `overlay_${f.id}`;
-          overlaySpan.className = `absolute font-bold pointer-events-none transform ${alignClass} -translate-y-1/2 whitespace-nowrap flex items-center gap-0.5`;
+          overlaySpan.className = `absolute font-bold pointer-events-none transform ${alignClass} -translate-y-1/2 whitespace-pre text-center`;
           overlaySpan.style.left = `${f.x}%`;
           overlaySpan.style.top = `${f.y}%`;
           overlaySpan.style.fontSize = `${Math.max(6, (f.fontSize || 16) * 0.45)}px`;
           overlaySpan.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
+          overlaySpan.style.lineHeight = "1.35";
 
-          // পৃথক রঙে লেবেল ও টেক্সট
           const prefixSpan = f.prefix ? `<span style="color: ${f.prefixColor || '#8B0000'};">${f.prefix}</span>` : '';
           const valSpan = `<span id="val_overlay_${f.id}" style="color: ${f.textColor || '#000000'};">${textState[f.id]}</span>`;
 
@@ -642,7 +655,7 @@
       }
     });
 
-    // ================= নিখুঁত সাইজ ও ডুয়েল কালারে ডাউনলোড ইঞ্জিন =================
+    // ================= নিখুঁত সাইজ ও ৩-লাইন তারিখে ডাউনলোড ইঞ্জিন =================
     document.getElementById("downloadBannerBtn").addEventListener("click", async () => {
       const btn = document.getElementById("downloadBannerBtn");
       btn.innerText = "রেন্ডার হচ্ছে...";
@@ -686,10 +699,10 @@
           }
         }
 
-        // লেয়ার ২: মূল স্বচ্ছ ফ্রেম
+        // লেয়ার ২: মূল ফ্রেম
         ctx.drawImage(baseImg, 0, 0, origWidth, origHeight);
 
-        // লেয়ার ৩: টেক্সট ওভারলে (লেবেল ও নামের ভিন্ন কালার এবং ফিক্সড অ্যালাইনমেন্ট)
+        // লেয়ার ৩: টেক্সট ওভারলে (৩ লাইন মাল্টি-লাইন তারিখ হ্যান্ডলিং সহ)
         if (activeTemplate.inputFields) {
           const previewWidth = document.getElementById("editorCanvasWrapper").clientWidth || 360;
           const trueScaleRatio = origWidth / previewWidth;
@@ -708,29 +721,46 @@
             ctx.font = `bold ${finalPx}px '${fontFam}', sans-serif`;
             ctx.textBaseline = "middle";
 
-            if (f.align === "left") {
-              // বামে ফিক্সড: লেবেল যেখান থেকে শুরু, নাম সেখান থেকেই ডান পাশে বিস্তার করবে
-              ctx.textAlign = "left";
-              if (prefixStr) {
-                ctx.fillStyle = f.prefixColor || "#8B0000";
-                ctx.fillText(prefixStr, posX, posY);
-                const prefixWidth = ctx.measureText(prefixStr).width;
-                posX += prefixWidth;
-              }
-              ctx.fillStyle = f.textColor || "#000000";
-              ctx.fillText(valueStr, posX, posY);
+            // যদি ৩ লাইনের তারিখ হয় (বা নিউলাইন থাকে)
+            if (valueStr.includes("\n")) {
+              const lines = valueStr.split("\n");
+              const lineGap = finalPx * 1.35;
+              const totalBlockHeight = (lines.length - 1) * lineGap;
+              let startY = posY - (totalBlockHeight / 2);
 
-            } else if (f.align === "center") {
-              ctx.textAlign = "center";
-              const fullText = prefixStr + valueStr;
+              ctx.textAlign = f.align || "center";
               ctx.fillStyle = f.textColor || "#000000";
-              ctx.fillText(fullText, posX, posY);
+
+              lines.forEach((lineText) => {
+                ctx.fillText(lineText.trim(), posX, startY);
+                startY += lineGap;
+              });
 
             } else {
-              ctx.textAlign = "right";
-              const fullText = prefixStr + valueStr;
-              ctx.fillStyle = f.textColor || "#000000";
-              ctx.fillText(fullText, posX, posY);
+              // সাধারণ সিঙ্গেল লাইন টেক্সট
+              if (f.align === "left") {
+                ctx.textAlign = "left";
+                if (prefixStr) {
+                  ctx.fillStyle = f.prefixColor || "#8B0000";
+                  ctx.fillText(prefixStr, posX, posY);
+                  const prefixWidth = ctx.measureText(prefixStr).width;
+                  posX += prefixWidth;
+                }
+                ctx.fillStyle = f.textColor || "#000000";
+                ctx.fillText(valueStr, posX, posY);
+
+              } else if (f.align === "center") {
+                ctx.textAlign = "center";
+                const fullText = prefixStr + valueStr;
+                ctx.fillStyle = f.textColor || "#000000";
+                ctx.fillText(fullText, posX, posY);
+
+              } else {
+                ctx.textAlign = "right";
+                const fullText = prefixStr + valueStr;
+                ctx.fillStyle = f.textColor || "#000000";
+                ctx.fillText(fullText, posX, posY);
+              }
             }
           });
         }
