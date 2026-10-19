@@ -48,7 +48,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">দ্বৈত কালার ও ফিক্সড অ্যাঙ্কর সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">৩ লাইন তারিখ সক্রিয়</span>
     </div>
 
     <div class="max-w-2xl mx-auto px-4 flex border-t border-slate-800 text-xs text-slate-400 bg-slate-900/95 overflow-x-auto">
@@ -201,7 +201,6 @@
 
             <!-- ডুয়েল কালার পিকার: লেবেল কালার এবং টেক্সট কালার আলাদা -->
             <div class="grid grid-cols-2 gap-2 p-2 bg-slate-100 rounded-xl border border-slate-200">
-              <!-- লেবেল কালার -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-700 block">লেবেল কালার (নামঃ/পিতাঃ)</span>
                 <div class="flex items-center gap-1.5">
@@ -212,7 +211,6 @@
                 </div>
               </div>
 
-              <!-- টেক্সট কালার -->
               <div class="space-y-1">
                 <span class="text-[10px] font-bold text-slate-700 block">নাম/মানের কালার</span>
                 <div class="flex items-center gap-1.5">
@@ -338,9 +336,8 @@
 
     let editingTemplateId = null;
     let isColorPickingMode = false;
-    let pickingTarget = 'text'; // 'prefix' বা 'text'
+    let pickingTarget = 'text';
 
-    // ক্লায়েন্ট-সাইড অটো ইমেজ কম্প্রেশন (প্রিভিউ ইমেজের জন্য)
     async function compressImage(file, maxWidth = 450, quality = 0.75) {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -401,19 +398,16 @@
       }
     }
 
-    // প্রিভিউ ইমেজ: অটো কম্প্রেশন কার্যকর
     document.getElementById("previewFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const statusEl = document.getElementById("previewUploadStatus");
       statusEl.innerText = "কম্প্রেস হচ্ছে...";
-      
       const compressedFile = await compressImage(file, 450, 0.75);
       const url = await uploadToImgBB(compressedFile, statusEl);
       if (url) document.getElementById("previewImageUrl").value = url;
     });
 
-    // অরিজিনাল স্বচ্ছ ফ্রেম: কোনো কম্প্রেশন ছাড়া ১০০% আসল কোয়ালিটিতে আপলোড
     document.getElementById("originalFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -425,7 +419,6 @@
       }
     });
 
-    // স্লাইডার ইমেজ কম্প্রেশন
     document.getElementById("slideFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -440,7 +433,6 @@
       document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
-    // সুনির্দিষ্ট ফিল্ডস: লেবেল কালার এবং টেক্সট কালার আলাদা ফিল্ড সহ ও বামে ফিক্সড অ্যালাইন
     let defaultFields = [
       { id: "groom_name", label: "বরের নাম", prefix: "নামঃ ", placeholder: "", x: 18, y: 62, fontSize: 22, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
       { id: "groom_father", label: "বরের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 18, y: 65.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
@@ -448,8 +440,8 @@
       { id: "bride_name", label: "কনের নাম", prefix: "নামঃ ", placeholder: "", x: 58, y: 62, fontSize: 22, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
       { id: "bride_father", label: "কনের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 58, y: 65.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
       { id: "bride_mother", label: "কনের মাতা", prefix: "মাতাঃ ", placeholder: "", x: 58, y: 68.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "event_date", label: "তারিখ", prefix: "", placeholder: "১০ এপ্রিল ২০২৪ ইংরেজি | ১৫ ফাল্গুন ১৪৩০ বঙ্গাব্দ | রোজ শুক্রবার", x: 50, y: 77, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "date" },
-      { id: "event_place", label: "স্থান", prefix: "", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "text" }
+      { id: "event_date", label: "তারিখ", prefix: "", placeholder: "১০ এপ্রিল ২০২৪ ইংরেজি ,\n১৫ ফাল্গুন ১৪৩০ বঙ্গাব্দ ,\nরোজ শুক্রবার ।", x: 50, y: 77, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "date" },
+      { id: "event_place", label: "স্থান", prefix: "", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 86, fontSize: 14, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "text" }
     ];
 
     let textFields = JSON.parse(JSON.stringify(defaultFields));
@@ -484,7 +476,6 @@
       updateZoomTransform();
     });
 
-    // ক্যানভাস টাচ কালার স্যাম্পলার (লেবেল ও টেক্সট উভয়ের জন্য পৃথক)
     window.startColorPicking = function(target) {
       if (!selectedItem || selectedItem.type !== 'text') {
         alert("আগে যে লেখার রং পরিবর্তন করবেন, সেটি সিলেক্ট করুন!");
@@ -638,13 +629,13 @@
         if (f.align === "left") alignClass = "translate-x-0";
         if (f.align === "right") alignClass = "-translate-x-full";
 
-        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold flex items-center gap-0.5`;
+        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-pre text-center cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold`;
         span.style.left = `${f.x}%`;
         span.style.top = `${f.y}%`;
         span.style.fontSize = `${Math.max(6, f.fontSize * 0.45)}px`;
         span.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
+        span.style.lineHeight = "1.35";
 
-        // লেবেল ও টেক্সট আলাদা কালারে রেন্ডার
         const prefixHtml = f.prefix ? `<span style="color: ${f.prefixColor || '#8B0000'};">${f.prefix}</span>` : '';
         const valueHtml = `<span style="color: ${f.textColor || '#000000'};">${f.placeholder || f.label}</span>`;
         span.innerHTML = prefixHtml + valueHtml;
@@ -681,7 +672,7 @@
               <input type="text" value="${f.prefix || ''}" placeholder="প্রিফিক্স" title="যেমন: নামঃ " class="text-[11px] px-2 py-1 w-full bg-white border rounded-lg outline-none" oninput="updateFieldPrefix('${f.id}', this.value)">
             </div>
             <div class="col-span-2">
-              <input type="text" value="${f.placeholder}" placeholder="ডিফল্ট মান (ফাঁকা রাখতে পারেন)" class="text-[11px] px-2 py-1 w-full bg-white border rounded-lg outline-none" oninput="updateFieldPlaceholder('${f.id}', this.value)">
+              <input type="text" value="${f.placeholder}" placeholder="ডিফল্ট মান" class="text-[11px] px-2 py-1 w-full bg-white border rounded-lg outline-none" oninput="updateFieldPlaceholder('${f.id}', this.value)">
             </div>
           </div>
           <button onclick="selectElement('text', '${f.id}')" class="text-[11px] bg-slate-800 text-white rounded-lg py-1 font-bold press-effect">পজিশন ও ফন্ট শৈলী এডিট</button>
@@ -782,7 +773,6 @@
     document.getElementById("moveLeft").addEventListener("click", () => moveSelected(-0.2, 0));
     document.getElementById("moveRight").addEventListener("click", () => moveSelected(0.2, 0));
 
-    // সংরক্ষণ ও আপডেট
     document.getElementById("saveTemplateBtn").addEventListener("click", async () => {
       const title = document.getElementById("tplTitle").value.trim() || "বিবাহ স্মরণিকা";
       const category = document.getElementById("tplCategorySelect").value;
@@ -828,7 +818,6 @@
       }
     });
 
-    // স্লাইডার
     window.saveSlider = async function() {
       const title = document.getElementById("slideTitle").value.trim();
       const subTitle = document.getElementById("slideSubtitle").value.trim();
@@ -879,7 +868,6 @@
       }
     };
 
-    // ক্যাটাগরি
     window.saveCategory = async function() {
       const name = document.getElementById("newCatName").value.trim();
       const icon = document.getElementById("newCatIcon").value.trim() || "🏷️";
@@ -929,7 +917,6 @@
       }
     };
 
-    // সংরক্ষিত টেমপ্লেট তালিকা
     async function loadSavedTemplatesList() {
       const container = document.getElementById("savedTemplatesList");
       const snap = await db.collection("templates").orderBy("createdAt", "desc").get();
