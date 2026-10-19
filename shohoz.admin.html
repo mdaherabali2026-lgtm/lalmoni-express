@@ -48,7 +48,7 @@
         <span class="text-xl">🛠️</span>
         <h1 class="text-sm font-bold tracking-tight">ব্যানার মেকার - সুপার অ্যাডমিন</h1>
       </div>
-      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">অটো-কম্প্রেশন সক্রিয়</span>
+      <span class="text-[11px] bg-emerald-600/90 text-white px-2.5 py-0.5 rounded-full font-medium">দ্বৈত কালার ও ফিক্সড অ্যাঙ্কর সক্রিয়</span>
     </div>
 
     <div class="max-w-2xl mx-auto px-4 flex border-t border-slate-800 text-xs text-slate-400 bg-slate-900/95 overflow-x-auto">
@@ -106,10 +106,10 @@
           </div>
         </div>
 
-        <!-- অরিজিনাল ফ্রেম আপলোড (১০০% অরিজিনাল কোয়ালিটি) -->
+        <!-- অরিজিনাল ফ্রেম আপলোড (১০০% অপরিবর্তিত স্বচ্ছ PNG) -->
         <div class="p-3 bg-red-50/70 rounded-xl border border-red-200/80 space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-800">🎯 ২. অরিজিনাল ফ্রেম (অক্ষত স্বচ্ছ PNG)</span>
+            <span class="text-xs font-bold text-slate-800">🎯 ২. অরিজিনাল ফ্রেম (স্বচ্ছ PNG)</span>
             <span id="originalUploadStatus" class="text-[10px] font-semibold text-slate-500"></span>
           </div>
           <div class="flex items-center gap-2">
@@ -144,6 +144,7 @@
           </div>
         </div>
 
+        <!-- জুম ভিউপোর্ট কনটেইনার -->
         <div class="relative w-full overflow-hidden rounded-2xl border border-slate-300 bg-slate-200 aspect-[3/4] flex items-center justify-center select-none" id="zoomViewport">
           <div id="zoomTransformContainer" class="relative w-full h-full origin-center transition-transform duration-75">
             <img id="adminCanvasImg" class="absolute inset-0 w-full h-full object-contain pointer-events-none z-10" crossorigin="anonymous">
@@ -174,7 +175,7 @@
             <div></div>
           </div>
 
-          <!-- ফন্ট সাইজ, বাংলা ফন্ট, কালার ও অ্যালাইনমেন্ট -->
+          <!-- ফন্ট সাইজ, বাংলা ফন্ট, ডুয়েল কালার ও অ্যালাইনমেন্ট -->
           <div id="elementControls" class="w-full space-y-3 pt-2 border-t mt-1 hidden">
             
             <div class="grid grid-cols-2 gap-3">
@@ -198,23 +199,40 @@
               </div>
             </div>
 
+            <!-- ডুয়েল কালার পিকার: লেবেল কালার এবং টেক্সট কালার আলাদা -->
+            <div class="grid grid-cols-2 gap-2 p-2 bg-slate-100 rounded-xl border border-slate-200">
+              <!-- লেবেল কালার -->
+              <div class="space-y-1">
+                <span class="text-[10px] font-bold text-slate-700 block">লেবেল কালার (নামঃ/পিতাঃ)</span>
+                <div class="flex items-center gap-1.5">
+                  <input type="color" id="prefixColorPicker" value="#8B0000" class="w-7 h-7 rounded-lg cursor-pointer block border">
+                  <button onclick="startColorPicking('prefix')" class="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[10px] font-bold press-effect">
+                    পিকার
+                  </button>
+                </div>
+              </div>
+
+              <!-- টেক্সট কালার -->
+              <div class="space-y-1">
+                <span class="text-[10px] font-bold text-slate-700 block">নাম/মানের কালার</span>
+                <div class="flex items-center gap-1.5">
+                  <input type="color" id="elementColorPicker" value="#000000" class="w-7 h-7 rounded-lg cursor-pointer block border">
+                  <button onclick="startColorPicking('text')" class="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-[10px] font-bold press-effect">
+                    পিকার
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- অ্যালাইনমেন্ট -->
             <div class="flex items-center justify-between pt-1">
               <div class="flex items-center gap-1.5">
                 <span class="text-[10px] font-semibold text-slate-500">অ্যালাইন:</span>
                 <div class="flex border rounded-lg overflow-hidden bg-white">
-                  <button onclick="setTextAlign('left')" id="align_left" class="px-2.5 py-1 text-xs hover:bg-slate-100 font-bold">L</button>
-                  <button onclick="setTextAlign('center')" id="align_center" class="px-2.5 py-1 text-xs hover:bg-slate-100 font-bold bg-slate-200">C</button>
+                  <button onclick="setTextAlign('left')" id="align_left" class="px-2.5 py-1 text-xs hover:bg-slate-100 font-bold bg-slate-200">L (ফিক্সড)</button>
+                  <button onclick="setTextAlign('center')" id="align_center" class="px-2.5 py-1 text-xs hover:bg-slate-100 font-bold">C</button>
                   <button onclick="setTextAlign('right')" id="align_right" class="px-2.5 py-1 text-xs hover:bg-slate-100 font-bold">R</button>
                 </div>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <input type="color" id="elementColorPicker" value="#000000" class="w-8 h-8 rounded-lg cursor-pointer block border">
-                <span id="currentColorHex" class="text-xs font-mono font-bold text-slate-700">#000000</span>
-                <button id="startColorPickBtn" class="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold text-xs flex items-center gap-1 shadow-sm press-effect">
-                  <span>💉</span>
-                  <span class="text-[10px]">পিকার</span>
-                </button>
               </div>
             </div>
 
@@ -320,8 +338,9 @@
 
     let editingTemplateId = null;
     let isColorPickingMode = false;
+    let pickingTarget = 'text'; // 'prefix' বা 'text'
 
-    // ক্লায়েন্ট-সাইড স্মার্ট ইমেজ কম্প্রেশন লজিক (প্রিভিউয়ের জন্য)
+    // ক্লায়েন্ট-সাইড অটো ইমেজ কম্প্রেশন (প্রিভিউ ইমেজের জন্য)
     async function compressImage(file, maxWidth = 450, quality = 0.75) {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -394,7 +413,7 @@
       if (url) document.getElementById("previewImageUrl").value = url;
     });
 
-    // অরিজিনাল স্বচ্ছ ফ্রেম: সম্পূর্ণ অক্ষত ও কোনো কম্প্রেশন ছাড়া আপলোড
+    // অরিজিনাল স্বচ্ছ ফ্রেম: কোনো কম্প্রেশন ছাড়া ১০০% আসল কোয়ালিটিতে আপলোড
     document.getElementById("originalFileInput").addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -421,15 +440,16 @@
       document.getElementById("adminCanvasImg").src = e.target.value;
     });
 
+    // সুনির্দিষ্ট ফিল্ডস: লেবেল কালার এবং টেক্সট কালার আলাদা ফিল্ড সহ ও বামে ফিক্সড অ্যালাইন
     let defaultFields = [
-      { id: "groom_name", label: "বরের নাম", prefix: "নামঃ ", placeholder: "", x: 18, y: 62, fontSize: 22, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "groom_father", label: "বরের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 18, y: 65.5, fontSize: 13, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "groom_mother", label: "বরের মাতা", prefix: "মাতাঃ ", placeholder: "", x: 18, y: 68.5, fontSize: 13, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "bride_name", label: "কনের নাম", prefix: "নামঃ ", placeholder: "", x: 58, y: 62, fontSize: 22, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "bride_father", label: "কনের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 58, y: 65.5, fontSize: 13, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "bride_mother", label: "কনের মাতা", prefix: "মাতাঃ ", placeholder: "", x: 58, y: 68.5, fontSize: 13, textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
-      { id: "event_date", label: "তারিখ", prefix: "", placeholder: "১০ এপ্রিল ২০২৪ ইংরেজি | ১৫ ফাল্গুন ১৪৩০ বঙ্গাব্দ | রোজ শুক্রবার", x: 50, y: 77, fontSize: 13, textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "date" },
-      { id: "event_place", label: "স্থান", prefix: "", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "text" }
+      { id: "groom_name", label: "বরের নাম", prefix: "নামঃ ", placeholder: "", x: 18, y: 62, fontSize: 22, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "groom_father", label: "বরের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 18, y: 65.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "groom_mother", label: "বরের মাতা", prefix: "মাতাঃ ", placeholder: "", x: 18, y: 68.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "bride_name", label: "কনের নাম", prefix: "নামঃ ", placeholder: "", x: 58, y: 62, fontSize: 22, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "bride_father", label: "কনের পিতা", prefix: "পিতাঃ ", placeholder: "", x: 58, y: 65.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "bride_mother", label: "কনের মাতা", prefix: "মাতাঃ ", placeholder: "", x: 58, y: 68.5, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" },
+      { id: "event_date", label: "তারিখ", prefix: "", placeholder: "১০ এপ্রিল ২০২৪ ইংরেজি | ১৫ ফাল্গুন ১৪৩০ বঙ্গাব্দ | রোজ শুক্রবার", x: 50, y: 77, fontSize: 13, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "date" },
+      { id: "event_place", label: "স্থান", prefix: "", placeholder: "উত্তরা কমিউনিকেশন হল, ঢাকা", x: 50, y: 85, fontSize: 14, prefixColor: "#8B0000", textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "text" }
     ];
 
     let textFields = JSON.parse(JSON.stringify(defaultFields));
@@ -464,16 +484,19 @@
       updateZoomTransform();
     });
 
-    // ক্যানভাস টাচ কালার স্যাম্পলার
-    document.getElementById("startColorPickBtn").addEventListener("click", () => {
+    // ক্যানভাস টাচ কালার স্যাম্পলার (লেবেল ও টেক্সট উভয়ের জন্য পৃথক)
+    window.startColorPicking = function(target) {
       if (!selectedItem || selectedItem.type !== 'text') {
         alert("আগে যে লেখার রং পরিবর্তন করবেন, সেটি সিলেক্ট করুন!");
         return;
       }
+      pickingTarget = target;
       isColorPickingMode = true;
       zoomViewport.classList.add("picking-active");
-      document.getElementById("colorPickerNotice").classList.remove("hidden");
-    });
+      const notice = document.getElementById("colorPickerNotice");
+      notice.innerText = target === 'prefix' ? "লেবেলের জন্য রং ছুঁয়ে বাছুন" : "নামের জন্য রং ছুঁয়ে বাছুন";
+      notice.classList.remove("hidden");
+    };
 
     zoomViewport.addEventListener("click", (e) => {
       if (!isColorPickingMode) return;
@@ -507,24 +530,36 @@
       const pixel = ctx.getImageData(targetX, targetY, 1, 1).data;
       const hex = "#" + ((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1);
 
-      applyColorToSelected(hex);
+      applyColorToSelected(hex, pickingTarget);
 
       isColorPickingMode = false;
       zoomViewport.classList.remove("picking-active");
       document.getElementById("colorPickerNotice").classList.add("hidden");
     }
 
-    function applyColorToSelected(colorHex) {
+    function applyColorToSelected(colorHex, target) {
       if (selectedItem?.type === 'text') {
         const f = textFields.find(t => t.id === selectedItem.id);
         if (f) {
-          f.textColor = colorHex;
-          document.getElementById("elementColorPicker").value = colorHex;
-          document.getElementById("currentColorHex").innerText = colorHex.toUpperCase();
+          if (target === 'prefix') {
+            f.prefixColor = colorHex;
+            document.getElementById("prefixColorPicker").value = colorHex;
+          } else {
+            f.textColor = colorHex;
+            document.getElementById("elementColorPicker").value = colorHex;
+          }
           renderCanvasLayers();
         }
       }
     }
+
+    document.getElementById("prefixColorPicker").addEventListener("input", (e) => {
+      applyColorToSelected(e.target.value, 'prefix');
+    });
+
+    document.getElementById("elementColorPicker").addEventListener("input", (e) => {
+      applyColorToSelected(e.target.value, 'text');
+    });
 
     window.setTextAlign = function(align) {
       if (selectedItem?.type === 'text') {
@@ -603,13 +638,16 @@
         if (f.align === "left") alignClass = "translate-x-0";
         if (f.align === "right") alignClass = "-translate-x-full";
 
-        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold`;
+        span.className = `absolute transform ${alignClass} -translate-y-1/2 whitespace-nowrap cursor-pointer px-1 py-0.5 rounded border pointer-events-auto font-bold flex items-center gap-0.5`;
         span.style.left = `${f.x}%`;
         span.style.top = `${f.y}%`;
         span.style.fontSize = `${Math.max(6, f.fontSize * 0.45)}px`;
-        span.style.color = f.textColor;
         span.style.fontFamily = `'${f.fontFamily || "Hind Siliguri"}', sans-serif`;
-        span.innerText = (f.prefix || "") + (f.placeholder || f.label);
+
+        // লেবেল ও টেক্সট আলাদা কালারে রেন্ডার
+        const prefixHtml = f.prefix ? `<span style="color: ${f.prefixColor || '#8B0000'};">${f.prefix}</span>` : '';
+        const valueHtml = `<span style="color: ${f.textColor || '#000000'};">${f.placeholder || f.label}</span>`;
+        span.innerHTML = prefixHtml + valueHtml;
 
         if (selectedItem?.id === f.id) {
           span.classList.add("border-red-500", "bg-red-50/80");
@@ -676,7 +714,7 @@
 
     document.getElementById("addTextFieldBtn").addEventListener("click", () => {
       const newId = `field_${Date.now()}`;
-      textFields.push({ id: newId, label: "নতুন ফিল্ড", prefix: "", placeholder: "", x: 50, y: 50, fontSize: 16, textColor: "#000000", align: "center", fontFamily: "Hind Siliguri", type: "text" });
+      textFields.push({ id: newId, label: "নতুন ফিল্ড", prefix: "", placeholder: "", x: 50, y: 50, fontSize: 16, prefixColor: "#8B0000", textColor: "#000000", align: "left", fontFamily: "Hind Siliguri", type: "text" });
       selectElement('text', newId);
       renderFieldsList();
       renderCanvasLayers();
@@ -696,8 +734,8 @@
         controls.classList.remove("hidden");
         document.getElementById("fontSizeSlider").value = f.fontSize || 18;
         document.getElementById("fontSizeDisplay").innerText = f.fontSize || 18;
+        document.getElementById("prefixColorPicker").value = f.prefixColor || "#8B0000";
         document.getElementById("elementColorPicker").value = f.textColor || "#000000";
-        document.getElementById("currentColorHex").innerText = (f.textColor || "#000000").toUpperCase();
         document.getElementById("fontFamilySelect").value = f.fontFamily || "Hind Siliguri";
         updateAlignButtons(f.align || "left");
       }
@@ -721,12 +759,6 @@
           document.getElementById("fontSizeDisplay").innerText = f.fontSize;
           renderCanvasLayers();
         }
-      }
-    });
-
-    document.getElementById("elementColorPicker").addEventListener("input", (e) => {
-      if (selectedItem?.type === 'text') {
-        applyColorToSelected(e.target.value);
       }
     });
 
