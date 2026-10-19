@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>লালমনি এক্সপ্রেস - ওয়েব অ্যাডমিন ড্যাশবোর্ড (Lalmoni Express Admin)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#1e3a8a',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              800: '#1e3a8a',
+              900: '#0f172a'
+            },
+            accent: {
+              teal: '#0d9488',
+              rose: '#e11d48',
+              amber: '#d97706',
+              emerald: '#059669'
+            }
+          },
+          fontFamily: {
+            sans: ['Hind Siliguri', 'Noto Sans Bengali', 'system-ui', '-apple-system', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Hind Siliguri for elegant Bengali typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons (CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Firebase v10 Compat SDK (Universal Standalone Execution) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      font-family: 'Hind Siliguri', system-ui, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Top Real-time Status & Header Bar -->
+  <header class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo & Branding -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center shadow-md font-bold text-white text-xl">
+            ⚡
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-lg sm:text-xl tracking-tight">লালমনি এক্সপ্রেস</span>
+              <span class="bg-amber-400/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-400/30 font-medium">Web Admin</span>
+            </div>
+            <p class="text-xs text-blue-200 hidden sm:block">Lalmoni Express - Real-Time Serverless Control Dashboard</p>
+          </div>
+        </div>
+
+        <!-- Real-time Status Indicator -->
+        <div class="flex items-center space-x-3">
+          <div id="connectionStatusBadge" class="flex items-center space-x-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-medium">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="connectionStatusText">লাইভ সিঙ্ক সক্রিয় (Firestore onSnapshot)</span>
+          </div>
+
+          <!-- User Profile / Auth Area -->
+          <div id="authHeaderArea" class="flex items-center space-x-2">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Auth Guard State: Logged Out View -->
+    <div id="loggedOutSection" class="hidden max-w-lg mx-auto my-12 bg-white rounded-2xl shadow-xl border border-slate-200 p-8 text-center">
+      <div class="w-20 h-20 mx-auto rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5 text-3xl shadow-inner">
+        🛡️
+      </div>
+      <h2 class="text-2xl font-bold text-slate-900 mb-2">লালমনি এক্সপ্রেস অ্যাডমিন প্যানেল</h2>
+      <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+        এই ড্যাশবোর্ডটি সরাসরি ফায়ারবেস প্রজেক্ট (<code class="bg-slate-100 text-blue-700 px-1.5 py-0.5 rounded font-mono text-xs">lalmoniexpress-2c176</code>) এর সাথে যুক্ত। ড্যাশবোর্ডে প্রবেশ করতে আপনার অনুমোদিত গুগল একাউন্ট দিয়ে লগইন করুন।
+      </p>
+
+      <button id="btnGoogleSignIn" onclick="handleGoogleSignIn()" class="w-full flex items-center justify-center space-x-3 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 px-4 rounded-xl border border-slate-300 shadow-sm transition duration-150 transform hover:-translate-y-0.5">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Google দিয়ে অ্যাডমিন লগইন করুন</span>
+      </button>
+
+      <div class="mt-6 pt-6 border-t border-slate-100 text-xs text-slate-500">
+        <p>লগইন সমস্যা হলে ফায়ারবেস কনসোলের <strong>Authentication &gt; Authorized Domains</strong> এ আপনার বর্তমান ডোমেন যুক্ত আছে কিনা নিশ্চিত করুন।</p>
+      </div>
+    </div>
+
+    <!-- Logged In Admin Dashboard View -->
+    <div id="loggedInDashboard" class="hidden space-y-6">
+
+      <!-- Admin Authority Notice Banner (if not verified in 'admins/{uid}') -->
+      <div id="adminNoticeBanner" class="hidden bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 text-amber-500 text-xl mr-3">⚠️</div>
+          <div class="flex-1">
+            <h3 class="text-sm font-bold text-amber-900">অ্যাডমিন অনুমতি সম্পর্কিত তথ্য</h3>
+            <p class="text-xs text-amber-700 mt-1">
+              আপনার Google একাউন্ট দিয়ে সফলভাবে লগইন হয়েছে। তবে Firestore সিকিউরিটি রুলস অনুযায়ী ডাটা এন্ট্রি ও ডিলিট করার জন্য আপনার UID-টি 
+              <code class="bg-amber-100 text-amber-900 px-1 rounded font-mono font-bold">admins</code> কালেকশনে নিবন্ধিত থাকতে হবে।
+            </p>
+            <div class="mt-2 flex items-center space-x-2">
+              <span class="text-xs text-amber-900 font-semibold">আপনার UID:</span>
+              <code id="userUidBadge" class="bg-white border border-amber-300 text-amber-950 px-2 py-0.5 rounded text-xs font-mono select-all"></code>
+              <button onclick="copyAdminUid()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition">কপি করুন</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2">
+        <nav class="flex flex-wrap gap-2" aria-label="Tabs">
+          <button onclick="switchTab('overview')" id="tabBtn-overview" class="tab-button active-tab flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition">
+            <span>📊</span>
+            <span>ওভারভিউ</span>
+          </button>
+          
+          <button onclick="switchTab('news')" id="tabBtn-news" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span>📰</span>
+            <span>লালমনি বার্তা</span>
+            <span id="badgePendingNews" class="hidden ml-1 px-2 py-0.5 text-xs font-bold bg-rose-600 text-white rounded-full">0</span>
+          </button>
+
+          <button onclick="switchTab('community')" id="tabBtn-community" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span>💬</span>
+            <span>জনমঞ্চ</span>
+            <span id="badgePendingCommunity" class="hidden ml-1 px-2 py-0.5 text-xs font-bold bg-amber-600 text-white rounded-full">0</span>
+          </button>
+
+          <button onclick="switchTab('marketplace')" id="tabBtn-marketplace" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span>🛒</span>
+            <span>ডিজিটাল হাট-বাজার</span>
+            <span id="badgeMarketTotal" class="hidden ml-1 px-2 py-0.5 text-xs font-bold bg-blue-600 text-white rounded-full">0</span>
+          </button>
+
+          <button onclick="switchTab('directories')" id="tabBtn-directories" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span>📂</span>
+            <span>৮টি ডিরেক্টরি এন্ট্রি</span>
+          </button>
+
+          <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100 ml-auto">
+            <span>⚙️</span>
+            <span>সেটআপ গাইড</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 1: OVERVIEW & STATS -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-overview" class="tab-content space-y-6">
+        
+        <!-- Stats Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Pending News -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং সংবাদ</p>
+              <h3 id="statCountPendingNews" class="text-3xl font-bold text-rose-600 mt-1">0</h3>
+              <p class="text-xs text-slate-500 mt-1">লালমনি বার্তা যাচাইয়ের অপেক্ষায়</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl">
+              📰
+            </div>
+          </div>
+
+          <!-- Pending Community Posts -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং জনমঞ্চ পোস্ট</p>
+              <h3 id="statCountPendingCommunity" class="text-3xl font-bold text-amber-600 mt-1">0</h3>
+              <p class="text-xs text-slate-500 mt-1">নাগরিক পোস্ট মডারেশন</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl">
+              💬
+            </div>
+          </div>
+
+          <!-- Active Marketplace Items -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট হাট-বাজার পণ্য</p>
+              <h3 id="statCountMarketTotal" class="text-3xl font-bold text-blue-600 mt-1">0</h3>
+              <p class="text-xs text-slate-500 mt-1">বেচাকেনা মার্কেটপ্লেস আইটেম</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl">
+              🛒
+            </div>
+          </div>
+
+          <!-- Total Directory Entries -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট ডিরেক্টরি ডাটা</p>
+              <h3 id="statCountDirectoryTotal" class="text-3xl font-bold text-emerald-600 mt-1">0</h3>
+              <p class="text-xs text-slate-500 mt-1">৮টি ক্যাটাগরির লাইভ সেবা</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+              📂
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action & Architecture Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Sync & Realtime Status Box -->
+          <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-2xl p-6 shadow-md">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <span class="text-2xl">⚡</span>
+                <div>
+                  <h3 class="text-lg font-bold">দ্বৈত নিয়ন্ত্রণ ও জিরো-লেটেন্সি সিঙ্ক্রোনাইজেশন</h3>
+                  <p class="text-xs text-blue-200">Android App এবং Web Dashboard উভয় স্থান থেকেই সম্পূর্ণ ডেটা রিয়েল-টাইমে আপডেট হয়</p>
+                </div>
+              </div>
+              <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-full font-semibold">Active Sync</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-blue-900/60 text-xs text-slate-300">
+              <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                <span class="text-blue-400 font-semibold block mb-1">১. অ্যাপ ও ওয়েব সমতা:</span>
+                অ্যান্ড্রয়েড অ্যাপে ইউজার কোনো নিউজ বা পোস্ট দিলে সাথে সাথে এই স্ক্রিনে কোনো রিফ্রেশ ছাড়াই তা ভেসে উঠবে।
+              </div>
+              <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                <span class="text-emerald-400 font-semibold block mb-1">২. ইনস্ট্যান্ট একশন:</span>
+                ওয়েব থেকে "Approve" বা "Reject" চাপলে অ্যাপের ইউজারের স্ক্রিন ও ফিডে সঙ্গে সঙ্গে আপডেট হবে।
+              </div>
+              <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                <span class="text-amber-400 font-semibold block mb-1">৩. ৮টি ডিরেক্টরি ফিল্ড:</span>
+                জরুরি নাম্বার, ডাক্তার, গাড়ি, মেকানিক, কৃষক, বাবুর্চি ও কোচিংয়ের ডেটা মডেল অ্যান্ড্রয়েড কোডের সাথে হুবহু ১০০% মিল রেখে তৈরি।
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Panel -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 mb-2">দ্রুত মডারেশন জাম্প</h3>
+              <p class="text-xs text-slate-500 mb-4">এক ক্লিকে পেন্ডিং আইটেমগুলো যাচাই করতে নিচের বাটনে চাপ দিন:</p>
+              
+              <div class="space-y-2.5">
+                <button onclick="switchTab('news'); filterNews('pending');" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 transition text-sm font-medium">
+                  <span class="flex items-center space-x-2">
+                    <span>📰</span>
+                    <span>পেন্ডিং নিউজ যাচাই করুন</span>
+                  </span>
+                  <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold" id="quickBadgeNews">0</span>
+                </button>
+
+                <button onclick="switchTab('community'); filterCommunity('pending');" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-700 border border-slate-200 transition text-sm font-medium">
+                  <span class="flex items-center space-x-2">
+                    <span>💬</span>
+                    <span>জনমঞ্চ পোস্ট মডারেশন</span>
+                  </span>
+                  <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold" id="quickBadgeCommunity">0</span>
+                </button>
+
+                <button onclick="switchTab('directories')" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 transition text-sm font-medium">
+                  <span class="flex items-center space-x-2">
+                    <span>📂</span>
+                    <span>নতুন ডিরেক্টরি এন্ট্রি যোগ করুন</span>
+                  </span>
+                  <span>➕</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
+              <span>Firebase Project:</span>
+              <span class="font-mono text-slate-600">lalmoniexpress-2c176</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 2: LOCAL NEWS MODERATION ("লালমনি বার্তা") -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-news" class="tab-content hidden space-y-6">
+        
+        <!-- Header & Action Row -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+              <span>📰</span>
+              <span>"লালমনি বার্তা" - সংবাদ মডারেশন ও ম্যানেজমেন্ট</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">local_news</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <button onclick="openCreateNewsModal()" class="flex-1 sm:flex-none flex items-center justify-center space-x-2 bg-rose-600 hover:bg-rose-700 text-white font-medium px-4 py-2 rounded-xl text-sm shadow transition">
+              <span>✍️</span>
+              <span>নতুন অফিসিয়াল সংবাদ প্রকাশ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Chips Bar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
+          <button onclick="filterNews('pending')" id="btnNewsFilter-pending" class="news-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 text-white shadow-sm transition">
+            ⏳ পেন্ডিং নিউজ (<span id="countNewsFilterPending">0</span>)
+          </button>
+          <button onclick="filterNews('approved')" id="btnNewsFilter-approved" class="news-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🟢 অনুমোদিত (<span id="countNewsFilterApproved">0</span>)
+          </button>
+          <button onclick="filterNews('rejected')" id="btnNewsFilter-rejected" class="news-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🔴 বাতিলকৃত (<span id="countNewsFilterRejected">0</span>)
+          </button>
+          <button onclick="filterNews('all')" id="btnNewsFilter-all" class="news-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🌐 সকল সংবাদ (<span id="countNewsFilterAll">0</span>)
+          </button>
+        </div>
+
+        <!-- News Cards Container -->
+        <div id="newsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Dynamically populated via Firestore onSnapshot -->
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-rose-600 rounded-full mb-2"></div>
+            <p class="text-sm">লালমনি বার্তা ডেটা লোড হচ্ছে...</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 3: COMMUNITY MODERATION ("জনমঞ্চ") -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-community" class="tab-content hidden space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+              <span>💬</span>
+              <span>"জনমঞ্চ" - কমিউনিটি পোস্ট মডারেশন</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">community_posts</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
+          </div>
+        </div>
+
+        <!-- Filter Chips Bar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
+          <button onclick="filterCommunity('pending')" id="btnCommFilter-pending" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white shadow-sm transition">
+            ⏳ পেন্ডিং পোস্ট (<span id="countCommFilterPending">0</span>)
+          </button>
+          <button onclick="filterCommunity('approved')" id="btnCommFilter-approved" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🟢 অনুমোদিত (<span id="countCommFilterApproved">0</span>)
+          </button>
+          <button onclick="filterCommunity('all')" id="btnCommFilter-all" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🌐 সকল পোস্ট (<span id="countCommFilterAll">0</span>)
+          </button>
+        </div>
+
+        <!-- Community Posts Container -->
+        <div id="communityListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Dynamically populated via Firestore onSnapshot -->
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-amber-600 rounded-full mb-2"></div>
+            <p class="text-sm">জনমঞ্চ পোস্ট লোড হচ্ছে...</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 4: MARKETPLACE ("ডিজিটাল হাট-বাজার") -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-marketplace" class="tab-content hidden space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+              <span>🛒</span>
+              <span>"ডিজিটাল হাট-বাজার" - পণ্য ও বিজ্ঞাপন ম্যানেজমেন্ট</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">items</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="w-full sm:w-72">
+            <input type="text" id="marketSearchInput" oninput="renderMarketplaceCards()" placeholder="পণ্য, বিক্রেতা বা ফোন দিয়ে খুঁজুন..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <!-- Filter Chips Bar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
+          <button onclick="filterMarket('all')" id="btnMarketFilter-all" class="market-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm transition">
+            🌐 সকল পণ্য (<span id="countMarketFilterAll">0</span>)
+          </button>
+          <button onclick="filterMarket('pending')" id="btnMarketFilter-pending" class="market-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            ⏳ পেন্ডিং (<span id="countMarketFilterPending">0</span>)
+          </button>
+          <button onclick="filterMarket('approved')" id="btnMarketFilter-approved" class="market-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            🟢 অনুমোদিত (<span id="countMarketFilterApproved">0</span>)
+          </button>
+        </div>
+
+        <!-- Marketplace Items Grid -->
+        <div id="marketListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <!-- Dynamically populated via Firestore onSnapshot -->
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-blue-600 rounded-full mb-2"></div>
+            <p class="text-sm">হাট-বাজার পণ্য লোড হচ্ছে...</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 5: DIRECTORY DATA ENTRY (8 CATEGORIES) -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-directories" class="tab-content hidden space-y-6">
+        
+        <!-- Directory Category Selector Tabs -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+              <span>📂</span>
+              <span>৮টি ডিরেক্টরি ক্যাটাগরি ডাটা এন্ট্রি ও পরিচালনা</span>
+            </h2>
+            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-medium">100% Android Field Parity</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+            <button onclick="switchDirectorySubTab('emergency')" id="subTabBtn-emergency" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition active-dir-subtab">
+              <span class="text-lg block">📞</span>
+              <span class="text-xs font-semibold block mt-1 truncate">১. জরুরী নাম্বার</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('doctors')" id="subTabBtn-doctors" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🩺</span>
+              <span class="text-xs font-semibold block mt-1 truncate">২. ডাক্তার ও হাসপাতাল</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('vehicles')" id="subTabBtn-vehicles" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🚗</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৩. যানবাহন ও চালক</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('mechanics')" id="subTabBtn-mechanics" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🔧</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৪. মেকানিক ও মিস্ত্রি</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('farmers')" id="subTabBtn-farmers" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🌾</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৫. কৃষক ও ফসল</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('restaurants')" id="subTabBtn-restaurants" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🍽️</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৬. রেস্টুরেন্ট ও বাবুর্চি</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('coaching')" id="subTabBtn-coaching" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🎓</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৭. কোচিং ও টিউটর</span>
+            </button>
+
+            <button onclick="switchDirectorySubTab('official')" id="subTabBtn-official" class="dir-subtab-btn p-2.5 rounded-xl border border-slate-200 text-center hover:bg-blue-50 transition">
+              <span class="text-lg block">🏛️</span>
+              <span class="text-xs font-semibold block mt-1 truncate">৮. নাগরিক সেবা</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Form + Realtime Table Container Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Entry Form (5 cols on lg) -->
+          <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <h3 id="dirFormTitle" class="font-bold text-slate-900 text-base flex items-center space-x-2">
+                <span>➕</span>
+                <span>নতুন এন্ট্রি যোগ করুন</span>
+              </h3>
+              <span id="dirFormCollectionBadge" class="text-[11px] font-mono bg-blue-50 text-blue-700 px-2 py-0.5 rounded">emergency_numbers</span>
+            </div>
+
+            <form id="directoryEntryForm" onsubmit="handleDirectoryFormSubmit(event)" class="space-y-4 text-xs">
+              
+              <!-- Hidden ID for edit mode -->
+              <input type="hidden" id="dirFormEditId" value="">
+
+              <!-- Field 1: Title / Name -->
+              <div>
+                <label id="dirLabelName" class="block font-semibold text-slate-700 mb-1">সেবার নাম / প্রতিষ্ঠানের নাম *</label>
+                <input type="text" id="dirInputName" required placeholder="যেমন: হাতীবান্ধা থানা পুলিশ বা ডা. মোঃ রফিকুল ইসলাম" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+
+              <!-- Field 2: Category / Specialty / Subtitle -->
+              <div id="dirGroupCategory">
+                <label id="dirLabelCategory" class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি বা ধরণ *</label>
+                <!-- Rendered dynamically as select or input depending on active subtab -->
+                <div id="dirCategoryFieldWrapper"></div>
+              </div>
+
+              <!-- Field 3: Upazila Selection -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">উপজেলা নির্বাচন *</label>
+                <select id="dirSelectUpazila" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                  <option value="পুরো লালমনিরহাট">পুরো লালমনিরহাট (সকলের জন্য)</option>
+                  <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
+                  <option value="আদিতমারী">আদিতমারী</option>
+                  <option value="কালীগঞ্জ">কালীগঞ্জ</option>
+                  <option value="হাতীবান্ধা">হাতীবান্ধা</option>
+                  <option value="পাটগ্রাম">পাটগ্রাম</option>
+                </select>
+              </div>
+
+              <!-- Field 4: Contact / Phone Number -->
+              <div>
+                <label class="block font-semibold text-slate-700 mb-1">যোগাযোগের মোবাইল নম্বর *</label>
+                <input type="tel" id="dirInputPhone" required placeholder="যেমন: 01712345678 বা 019..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+
+              <!-- Field 5: Details / Address / Chamber / Market -->
+              <div>
+                <label id="dirLabelAddress" class="block font-semibold text-slate-700 mb-1">ঠিকানা / চেম্বার সময় / অবস্থান *</label>
+                <textarea id="dirInputAddress" rows="3" placeholder="বাজারের নাম, রোড, দোকান নম্বর বা চেম্বারের সময়সূচি..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+              </div>
+
+              <!-- Extra field for Coaching subjects if applicable -->
+              <div id="dirGroupExtra" class="hidden">
+                <label id="dirLabelExtra" class="block font-semibold text-slate-700 mb-1">পড়ানোর বিষয় ও শ্রেণি</label>
+                <input type="text" id="dirInputExtra" placeholder="যেমন: গণিত ও বিজ্ঞান (ক্লাস ৯-১০)" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+
+              <!-- Submit Buttons -->
+              <div class="pt-2 flex items-center space-x-2">
+                <button type="submit" id="btnSubmitDirForm" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow transition duration-150 flex items-center justify-center space-x-2">
+                  <span>💾</span>
+                  <span id="btnSubmitDirFormText">সংরক্ষণ করুন</span>
+                </button>
+                <button type="button" onclick="resetDirectoryForm()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 py-2.5 px-3.5 rounded-xl transition">
+                  রিসেট
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Real-time Live Directory List (7 cols on lg) -->
+          <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 id="dirListTitle" class="font-bold text-slate-900 text-base">লাইভ এন্ট্রি তালিকা</h3>
+                <p class="text-xs text-slate-500">রিয়েল-টাইম ফায়ারস্টোর লাইভ ভিউ</p>
+              </div>
+              <div class="w-full sm:w-56">
+                <input type="text" id="dirListSearchInput" oninput="renderDirectoryList()" placeholder="নাম বা ফোন দিয়ে খুঁজুন..." class="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+            </div>
+
+            <!-- Scrollable list of entries -->
+            <div id="directoryEntriesContainer" class="flex-1 overflow-y-auto max-h-[600px] space-y-3 custom-scrollbar pr-1">
+              <div class="py-12 text-center text-slate-400 text-xs">
+                ডাটা লোড হচ্ছে...
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 6: SETUP & GUIDE -->
+      <!-- ========================================================================= -->
+      <section id="tabContent-settings" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="flex items-center space-x-3 pb-4 border-b border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+              ⚙️
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">ফায়ারবেস সংযোগ ও ওয়েব অ্যাডমিন সেটআপ গাইড</h2>
+              <p class="text-xs text-slate-500">Google Play Store রিলিজ ও লাইভ ফায়ারবেস ডেটাবেসের সাথে সংযুক্ত করার নিয়মাবলী</p>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div class="flex items-start space-x-4">
+            <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">১</span>
+            <div class="space-y-1">
+              <h4 class="text-sm font-bold text-slate-900">Google Sign-In ও Authorized Domains সক্রিয়করণ</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                ১. <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 underline font-semibold">Firebase Console</a>-এ গিয়ে প্রজেক্ট <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">lalmoniexpress-2c176</code> নির্বাচন করুন।<br>
+                ২. বামদিকের মেনু থেকে <strong>Build &gt; Authentication &gt; Sign-in method</strong>-এ যান এবং <strong>Google</strong> প্রোভাইডার সক্রিয় (Enabled) রাখুন।<br>
+                ৩. একই পেজে নিচে <strong>Authorized domains</strong> সেকশনে আপনার ডোমেইন যোগ করুন (যেমন: <code class="bg-slate-100 px-1 rounded font-mono">localhost</code>, <code class="bg-slate-100 px-1 rounded font-mono">127.0.0.1</code>, বা আপনার হোস্টিং লিংক)।
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex items-start space-x-4">
+            <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">২</span>
+            <div class="space-y-1">
+              <h4 class="text-sm font-bold text-slate-900">অ্যাডমিন পারমিশন সেটআপ (admins/{uid})</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                এই ড্যাশবোর্ডে লগইন করার পর উপরে আপনার <strong>UID</strong> দেখতে পাবেন।<br>
+                ১. ফায়ারবেস কনসোলে <strong>Firestore Database</strong> ট্যাবে যান।<br>
+                ২. <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono font-bold">admins</code> নামে একটি কালেকশন তৈরি করুন (যদি না থাকে)।<br>
+                ৩. Document ID হিসেবে আপনার <strong>UID</strong> দিন এবং একটি ফিল্ড যোগ করুন: <code class="bg-slate-100 px-1 rounded font-mono">active: true</code> (Boolean)।<br>
+                এর ফলে আপনার একাউন্টটি অ্যান্ড্রয়েড মোবাইল অ্যাপ এবং ওয়েব ড্যাশবোর্ড উভয়ের জন্য ভেরিফাইড অ্যাডমিন হয়ে যাবে।
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex items-start space-x-4">
+            <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">৩</span>
+            <div class="space-y-1">
+              <h4 class="text-sm font-bold text-slate-900">যেভাবে ড্যাশবোর্ডটি চালাবেন (How to Run)</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                এই <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono font-bold">admin.html</code> ফাইলটি সম্পূর্ণ সার্ভারলেস ও সিঙ্গেল-ফাইল।<br>
+                • <strong>লোকালি:</strong> ফাইলটি আপনার কম্পিউটারে যেকোনো ব্রাউজারে (Chrome, Edge, Firefox) ডাবল-ক্লিক করলেই সরাসরি চলবে।<br>
+                • <strong>হোস্টিংয়ে:</strong> আপনি চাইলে এটি Firebase Hosting, GitHub Pages, বা যেকোনো সাধারণ ওয়েব হোস্টিংয়ে সরাসরি আপলোড করে ২৪ ঘণ্টা লাইভ ব্যবহার করতে পারেন।
+              </p>
+            </div>
+          </div>
+
+          <!-- Current Active Config Box -->
+          <div class="p-4 rounded-xl bg-slate-900 text-slate-200 text-xs font-mono">
+            <div class="flex items-center justify-between text-slate-400 mb-2 font-sans font-semibold">
+              <span>সক্রিয় ফায়ারবেস কনফিগারেশন:</span>
+              <span class="text-emerald-400">● কানেক্টেড</span>
+            </div>
+            <pre class="overflow-x-auto text-[11px] leading-relaxed custom-scrollbar">const firebaseConfig = {
+  apiKey: "AIzaSyDA9alHFInImn_CcMebJtkA7Rya4HVKVuI",
+  authDomain: "lalmoniexpress-2c176.firebaseapp.com",
+  projectId: "lalmoniexpress-2c176",
+  storageBucket: "lalmoniexpress-2c176.firebasestorage.app",
+  messagingSenderId: "432722675545",
+  appId: "1:432722675545:web:75490e13b5b0c8df032e48"
+};</pre>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================================= -->
+
+  <!-- Create Official News Modal -->
+  <div id="modalCreateNews" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>✍️</span>
+          <span>নতুন অফিসিয়াল সংবাদ প্রকাশ</span>
+        </h3>
+        <button onclick="closeCreateNewsModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="createNewsForm" onsubmit="handleCreateNewsSubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">সংবাদের শিরোনাম *</label>
+          <input type="text" id="newsFormTitle" required placeholder="আকর্ষণীয় ও সঠিক শিরোনাম লিখুন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">উপজেলা *</label>
+            <select id="newsFormUpazila" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
+              <option value="আদিতমারী">আদিতমারী</option>
+              <option value="কালীগঞ্জ">কালীগঞ্জ</option>
+              <option value="হাতীবান্ধা">হাতীবান্ধা</option>
+              <option value="পাটগ্রাম">পাটগ্রাম</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি *</label>
+            <select id="newsFormCategory" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="উন্নয়ন ও প্রশাসন">উন্নয়ন ও প্রশাসন</option>
+              <option value="তিস্তা ও নদী">তিস্তা ও নদী</option>
+              <option value="সীমান্ত ও অপরাধ">সীমান্ত ও অপরাধ</option>
+              <option value="কৃষি ও গ্রামীণ">কৃষি ও গ্রামীণ</option>
+              <option value="শিক্ষা ও সমাজ">শিক্ষা ও সমাজ</option>
+              <option value="খেলাধুলা">খেলাধুলা</option>
+              <option value="জরুরি ঘোষণা">জরুরি ঘোষণা</option>
+              <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">সংবাদের ছবির লিংক (Image URL)</label>
+          <input type="url" id="newsFormImageUrl" placeholder="https://... (ImgBB বা যেকোনো ডিরেক্ট ইমেজ লিংক)" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">বিস্তারিত সংবাদ *</label>
+          <textarea id="newsFormDescription" rows="5" required placeholder="সংবাদের পূর্ণাঙ্গ বিবরণ লিখুন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+        </div>
+
+        <div class="flex items-center space-x-2 bg-rose-50 p-3 rounded-xl border border-rose-200 text-rose-800">
+          <input type="checkbox" id="newsFormIsOfficial" checked class="w-4 h-4 text-rose-600 rounded">
+          <label for="newsFormIsOfficial" class="text-xs font-semibold">অফিসিয়াল নিউজ হিসেবে প্রকাশ ও তাৎক্ষণিক অনুমোদন</label>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeCreateNewsModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitNewsForm" class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow">প্রকাশ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden transform transition duration-300 ease-in-out bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-xs">
+    <span id="toastIcon">ℹ️</span>
+    <span id="toastMessage">বিজ্ঞপ্তি বার্তা</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: FIREBASE ARCHITECTURE & ZERO-LATENCY ONSNAPSHOT LISTENERS -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Official Lalmoni Express Firebase Credentials
+    const firebaseConfig = {
+      apiKey: "AIzaSyDA9alHFInImn_CcMebJtkA7Rya4HVKVuI",
+      authDomain: "lalmoniexpress-2c176.firebaseapp.com",
+      projectId: "lalmoniexpress-2c176",
+      storageBucket: "lalmoniexpress-2c176.firebasestorage.app",
+      messagingSenderId: "432722675545",
+      appId: "1:432722675545:web:75490e13b5b0c8df032e48"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Global State
+    let currentUser = null;
+    let isVerifiedAdmin = false;
+    let activeTab = 'overview';
+    let activeDirectorySubTab = 'emergency';
+
+    // Realtime Raw Data Stores
+    let rawNews = [];
+    let rawCommunity = [];
+    let rawMarket = [];
+    let rawDirectory = [];
+
+    // Filter states
+    let currentNewsFilter = 'pending';
+    let currentCommunityFilter = 'pending';
+    let currentMarketFilter = 'all';
+
+    // Active Snapshot Listener Registrations (for clean unsubscription if needed)
+    let unsubNews = null;
+    let unsubCommunity = null;
+    let unsubMarket = null;
+    let unsubDirectory = null;
+
+    // Toast helper
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      toastIcon.textContent = icons[type] || 'ℹ️';
+      toastMsg.textContent = message;
+      toast.classList.remove('hidden');
+
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    // Copy Admin UID helper
+    function copyAdminUid() {
+      if (currentUser) {
+        navigator.clipboard.writeText(currentUser.uid).then(() => {
+          showToast('UID সফলভাবে কপি করা হয়েছে!', 'success');
+        });
+      }
+    }
+
+    // =========================================================================
+    // AUTHENTICATION FLOW
+    // =========================================================================
+    function handleGoogleSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          showToast(`স্বাগতম, ${result.user.displayName || 'অ্যাডমিন'}!`, 'success');
+        })
+        .catch((error) => {
+          console.error("Sign-in error:", error);
+          showToast(`লগইন ব্যর্থ: ${error.message}`, 'error');
+        });
+    }
+
+    function handleSignOut() {
+      auth.signOut().then(() => {
+        showToast('সফলভাবে লগআউট হয়েছেন।', 'info');
+      });
+    }
+
+    // Auth State Observer
+    auth.onAuthStateChanged(async (user) => {
+      currentUser = user;
+      const loggedOutSec = document.getElementById('loggedOutSection');
+      const loggedInSec = document.getElementById('loggedInDashboard');
+      const authHeaderArea = document.getElementById('authHeaderArea');
+
+      if (user) {
+        // Render user in header
+        authHeaderArea.innerHTML = `
+          <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/15 px-2.5 py-1 rounded-full">
+            <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'Admin')}" class="w-6 h-6 rounded-full border border-white/30" alt="Avatar">
+            <span class="text-xs font-semibold text-white max-w-[120px] truncate hidden sm:inline">${user.displayName || 'অ্যাডমিন'}</span>
+            <button onclick="handleSignOut()" title="লগআউট" class="text-white/70 hover:text-rose-400 text-xs px-1 font-bold">✕</button>
+          </div>
+        `;
+
+        loggedOutSec.classList.add('hidden');
+        loggedInSec.classList.remove('hidden');
+
+        // Verify Admin Authority in Firestore
+        document.getElementById('userUidBadge').textContent = user.uid;
+        try {
+          const adminDoc = await db.collection('admins').doc(user.uid).get();
+          if (adminDoc.exists && adminDoc.data().active !== false) {
+            isVerifiedAdmin = true;
+            document.getElementById('adminNoticeBanner').classList.add('hidden');
+          } else {
+            isVerifiedAdmin = false;
+            document.getElementById('adminNoticeBanner').classList.remove('hidden');
+          }
+        } catch (e) {
+          console.warn("Notice: admin collection check:", e);
+          document.getElementById('adminNoticeBanner').classList.remove('hidden');
+        }
+
+        // Attach Realtime Firestore onSnapshot Listeners
+        attachRealtimeListeners();
+
+      } else {
+        // Logged out
+        authHeaderArea.innerHTML = `
+          <button onclick="handleGoogleSignIn()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full transition shadow">
+            লগইন
+          </button>
+        `;
+        loggedOutSec.classList.remove('hidden');
+        loggedInSec.classList.add('hidden');
+
+        // Detach listeners
+        detachRealtimeListeners();
+      }
+    });
+
+    // =========================================================================
+    // REAL-TIME FIRESTORE ONSNAPSHOT LISTENERS (ZERO-LATENCY)
+    // =========================================================================
+    function attachRealtimeListeners() {
+      detachRealtimeListeners(); // ensure no duplicates
+
+      // 1. Listen to Local News ("local_news")
+      unsubNews = db.collection('local_news')
+        .onSnapshot((snapshot) => {
+          rawNews = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            rawNews.push({
+              id: doc.id,
+              title: data.title || '',
+              description: data.description || '',
+              category: data.category || 'অন্যান্য',
+              upazila: data.upazila || 'লালমনিরহাট সদর',
+              imageUrl: data.imageUrl || data.image_url || '',
+              authorName: data.authorName || data.author_name || 'নাগরিক প্রতিবেদক',
+              status: (data.status || 'pending').toLowerCase(),
+              createdAt: data.createdAt || 0,
+              isAdminOfficial: data.isAdminOfficial || false,
+              likes: data.likes || [],
+              commentCount: data.commentCount || 0
+            });
+          });
+
+          // Sort by createdAt descending
+          rawNews.sort((a, b) => b.createdAt - a.createdAt);
+
+          updateNewsStats();
+          renderNewsCards();
+        }, (error) => {
+          console.error("News snapshot error:", error);
+          showToast(`নিউজ সিঙ্ক এরর: ${error.message}`, 'error');
+        });
+
+      // 2. Listen to Community Posts ("community_posts")
+      unsubCommunity = db.collection('community_posts')
+        .onSnapshot((snapshot) => {
+          rawCommunity = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            rawCommunity.push({
+              id: doc.id,
+              userId: data.userId || '',
+              authorName: data.authorName || 'নাগরিক',
+              authorPhotoUrl: data.authorPhotoUrl || '',
+              title: data.title || '',
+              tag: data.tag || 'সাধারণ জিজ্ঞাসা',
+              description: data.description || '',
+              imageUrl: data.imageUrl || '',
+              status: (data.status || 'pending').toLowerCase(),
+              createdAt: data.createdAt || 0,
+              likes: data.likes || [],
+              commentCount: data.commentCount || 0
+            });
+          });
+
+          rawCommunity.sort((a, b) => b.createdAt - a.createdAt);
+
+          updateCommunityStats();
+          renderCommunityCards();
+        }, (error) => {
+          console.error("Community snapshot error:", error);
+        });
+
+      // 3. Listen to Marketplace ("items")
+      unsubMarket = db.collection('items')
+        .onSnapshot((snapshot) => {
+          rawMarket = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const statusRaw = (data.status || 'pending').toString().toLowerCase();
+            rawMarket.push({
+              id: doc.id,
+              title: data.title || 'পণ্য',
+              price: data.price || '0',
+              category: data.category || 'সাধারণ',
+              subcategory: data.subcategory || '',
+              location: data.location || 'লালমনিরহাট',
+              imageUrl: data.imageUrl || data.image_url || '',
+              sellerName: data.sellerName || data.seller_name || 'নাগরিক বিক্রেতা',
+              sellerPhone: data.sellerPhone || data.seller_phone || '',
+              description: data.description || '',
+              status: statusRaw,
+              isFeatured: data.isFeatured || data.is_featured || false,
+              createdAt: data.createdAt || data.created_at || 0
+            });
+          });
+
+          rawMarket.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+          updateMarketStats();
+          renderMarketplaceCards();
+        }, (error) => {
+          console.error("Marketplace snapshot error:", error);
+        });
+
+      // 4. Initial load of active directory subtab
+      loadDirectorySubTab(activeDirectorySubTab);
+    }
+
+    function detachRealtimeListeners() {
+      if (unsubNews) { unsubNews(); unsubNews = null; }
+      if (unsubCommunity) { unsubCommunity(); unsubCommunity = null; }
+      if (unsubMarket) { unsubMarket(); unsubMarket = null; }
+      if (unsubDirectory) { unsubDirectory(); unsubDirectory = null; }
+    }
+
+    // =========================================================================
+    // STATS UPDATERS
+    // =========================================================================
+    function updateNewsStats() {
+      const pendingCount = rawNews.filter(n => n.status === 'pending').length;
+      const approvedCount = rawNews.filter(n => n.status === 'approved').length;
+      const rejectedCount = rawNews.filter(n => n.status === 'rejected').length;
+
+      document.getElementById('statCountPendingNews').textContent = pendingCount;
+      document.getElementById('quickBadgeNews').textContent = pendingCount;
+      document.getElementById('countNewsFilterPending').textContent = pendingCount;
+      document.getElementById('countNewsFilterApproved').textContent = approvedCount;
+      document.getElementById('countNewsFilterRejected').textContent = rejectedCount;
+      document.getElementById('countNewsFilterAll').textContent = rawNews.length;
+
+      const badge = document.getElementById('badgePendingNews');
+      if (pendingCount > 0) {
+        badge.textContent = pendingCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function updateCommunityStats() {
+      const pendingCount = rawCommunity.filter(c => c.status === 'pending').length;
+      const approvedCount = rawCommunity.filter(c => c.status === 'approved').length;
+
+      document.getElementById('statCountPendingCommunity').textContent = pendingCount;
+      document.getElementById('quickBadgeCommunity').textContent = pendingCount;
+      document.getElementById('countCommFilterPending').textContent = pendingCount;
+      document.getElementById('countCommFilterApproved').textContent = approvedCount;
+      document.getElementById('countCommFilterAll').textContent = rawCommunity.length;
+
+      const badge = document.getElementById('badgePendingCommunity');
+      if (pendingCount > 0) {
+        badge.textContent = pendingCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function updateMarketStats() {
+      const pendingCount = rawMarket.filter(m => m.status === 'pending').length;
+      const approvedCount = rawMarket.filter(m => m.status === 'approved').length;
+
+      document.getElementById('statCountMarketTotal').textContent = rawMarket.length;
+      document.getElementById('countMarketFilterAll').textContent = rawMarket.length;
+      document.getElementById('countMarketFilterPending').textContent = pendingCount;
+      document.getElementById('countMarketFilterApproved').textContent = approvedCount;
+
+      const badge = document.getElementById('badgeMarketTotal');
+      if (rawMarket.length > 0) {
+        badge.textContent = rawMarket.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    // =========================================================================
+    // TAB SWITCHING LOGIC
+    // =========================================================================
+    function switchTab(tabId) {
+      activeTab = tabId;
+
+      // Update Tab Buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active-tab', 'bg-blue-600', 'text-white', 'shadow');
+        btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+      });
+
+      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active-tab', 'bg-blue-600', 'text-white', 'shadow');
+        activeBtn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+      }
+
+      // Update Tab Contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+
+      const activeContent = document.getElementById(`tabContent-${tabId}`);
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+      }
+    }
+
+    // =========================================================================
+    // LOCAL NEWS RENDERING & ACTIONS
+    // =========================================================================
+    function filterNews(filterType) {
+      currentNewsFilter = filterType;
+      document.querySelectorAll('.news-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-rose-600', 'text-white');
+        btn.classList.add('bg-slate-200', 'text-slate-700');
+      });
+      const activeBtn = document.getElementById(`btnNewsFilter-${filterType}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-rose-600', 'text-white');
+        activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+      }
+      renderNewsCards();
+    }
+
+    function renderNewsCards() {
+      const container = document.getElementById('newsListContainer');
+      let filtered = rawNews;
+
+      if (currentNewsFilter !== 'all') {
+        filtered = rawNews.filter(n => n.status === currentNewsFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+            <span class="text-4xl block mb-2">📰</span>
+            <h4 class="text-slate-700 font-bold text-sm">কোনো সংবাদ পাওয়া যায়নি</h4>
+            <p class="text-slate-400 text-xs mt-1">নির্বাচিত ফিল্টারে এই মুহূর্তে কোনো সংবাদ নেই।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(news => {
+        const dateStr = news.createdAt ? new Date(news.createdAt).toLocaleString('bn-BD', {
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        }) : 'তারিখ নেই';
+
+        const statusBadges = {
+          pending: '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">⏳ যাচাইয়ের অপেক্ষায়</span>',
+          approved: '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 অনুমোদিত</span>',
+          rejected: '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200">🔴 বাতিল</span>'
+        };
+
+        const imageHtml = news.imageUrl ? `
+          <div class="h-44 w-full bg-slate-100 relative overflow-hidden rounded-t-2xl">
+            <img src="${news.imageUrl}" class="w-full h-full object-cover transition duration-300 hover:scale-105" alt="News Image" onerror="this.src='https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600'">
+            <div class="absolute top-2 left-2 flex items-center space-x-1.5">
+              <span class="bg-slate-900/80 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-semibold">${news.category}</span>
+              <span class="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-semibold">${news.upazila}</span>
+            </div>
+          </div>
+        ` : `
+          <div class="h-28 w-full bg-gradient-to-r from-blue-900 to-indigo-900 flex items-center justify-between p-4 rounded-t-2xl text-white">
+            <span class="text-xs font-semibold bg-white/20 px-2.5 py-1 rounded-full">${news.category}</span>
+            <span class="text-xs font-semibold bg-amber-400 text-slate-900 px-2 py-0.5 rounded-full">${news.upazila}</span>
+          </div>
+        `;
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden hover:shadow-md transition">
+            <div>
+              ${imageHtml}
+              <div class="p-4 space-y-2">
+                <div class="flex items-center justify-between">
+                  ${statusBadges[news.status] || ''}
+                  <span class="text-[11px] text-slate-400">${dateStr}</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2">${news.title}</h4>
+                <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">${news.description}</p>
+                <div class="pt-2 flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100">
+                  <span class="flex items-center space-x-1">
+                    <span>✍️</span>
+                    <span class="font-medium text-slate-700">${news.authorName}</span>
+                  </span>
+                  <span>❤️ ${news.likes.length} • 💬 ${news.commentCount}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 pt-0 bg-white flex items-center gap-2">
+              ${news.status !== 'approved' ? `
+                <button onclick="updateNewsStatus('${news.id}', 'approved')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                  <span>✅</span>
+                  <span>অনুমোদন</span>
+                </button>
+              ` : ''}
+              ${news.status !== 'rejected' ? `
+                <button onclick="updateNewsStatus('${news.id}', 'rejected')" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-1">
+                  <span>❌</span>
+                  <span>বাতিল</span>
+                </button>
+              ` : ''}
+              <button onclick="deleteNews('${news.id}')" title="ডিলিট করুন" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-2 rounded-xl transition text-xs font-bold">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateNewsStatus(newsId, newStatus) {
+      try {
+        await db.collection('local_news').doc(newsId).update({
+          status: newStatus
+        });
+        showToast(`নিউজ সফলভাবে ${newStatus === 'approved' ? 'অনুমোদিত' : 'বাতিল'} করা হয়েছে!`, 'success');
+      } catch (e) {
+        console.error("Error updating news status:", e);
+        showToast(`স্ট্যাটাস আপডেট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    async function deleteNews(newsId) {
+      if (!confirm('আপনি কি নিশ্চিতভাবে এই সংবাদটি মুছে ফেলতে চান?')) return;
+      try {
+        await db.collection('local_news').doc(newsId).delete();
+        showToast('সংবাদটি মুছে ফেলা হয়েছে।', 'info');
+      } catch (e) {
+        console.error("Error deleting news:", e);
+        showToast(`ডিলিট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    // Modal controls for news creation
+    function openCreateNewsModal() {
+      document.getElementById('modalCreateNews').classList.remove('hidden');
+    }
+    function closeCreateNewsModal() {
+      document.getElementById('modalCreateNews').classList.add('hidden');
+      document.getElementById('createNewsForm').reset();
+    }
+
+    async function handleCreateNewsSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('newsFormTitle').value.trim();
+      const upazila = document.getElementById('newsFormUpazila').value;
+      const category = document.getElementById('newsFormCategory').value;
+      const imageUrl = document.getElementById('newsFormImageUrl').value.trim();
+      const description = document.getElementById('newsFormDescription').value.trim();
+      const isOfficial = document.getElementById('newsFormIsOfficial').checked;
+
+      const btn = document.getElementById('btnSubmitNewsForm');
+      btn.disabled = true;
+      btn.textContent = 'পোস্ট হচ্ছে...';
+
+      try {
+        const newDocRef = db.collection('local_news').doc();
+        await newDocRef.set({
+          id: newDocRef.id,
+          title: title,
+          description: description,
+          category: category,
+          upazila: upazila,
+          imageUrl: imageUrl,
+          authorId: currentUser ? currentUser.uid : 'admin_web',
+          authorName: currentUser ? (currentUser.displayName || 'লালমনি বার্তা অফিসিয়াল') : 'লালমনি বার্তা অফিসিয়াল',
+          authorPhotoUrl: currentUser ? (currentUser.photoURL || '') : '',
+          isAdminOfficial: isOfficial,
+          status: 'approved', // Admin posts are approved by default
+          createdAt: Date.now(),
+          likes: [],
+          commentCount: 0
+        });
+
+        showToast('অফিসিয়াল সংবাদ সফলভাবে প্রকাশিত হয়েছে!', 'success');
+        closeCreateNewsModal();
+      } catch (err) {
+        console.error("Error creating official news:", err);
+        showToast(`সংবাদ প্রকাশ ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'প্রকাশ করুন';
+      }
+    }
+
+    // =========================================================================
+    // COMMUNITY POSTS RENDERING & ACTIONS
+    // =========================================================================
+    function filterCommunity(filterType) {
+      currentCommunityFilter = filterType;
+      document.querySelectorAll('.comm-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-amber-600', 'text-white');
+        btn.classList.add('bg-slate-200', 'text-slate-700');
+      });
+      const activeBtn = document.getElementById(`btnCommFilter-${filterType}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-amber-600', 'text-white');
+        activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+      }
+      renderCommunityCards();
+    }
+
+    function renderCommunityCards() {
+      const container = document.getElementById('communityListContainer');
+      let filtered = rawCommunity;
+
+      if (currentCommunityFilter !== 'all') {
+        filtered = rawCommunity.filter(c => c.status === currentCommunityFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+            <span class="text-4xl block mb-2">💬</span>
+            <h4 class="text-slate-700 font-bold text-sm">কোনো জনমঞ্চ পোস্ট পাওয়া যায়নি</h4>
+            <p class="text-slate-400 text-xs mt-1">নির্বাচিত ফিল্টারে এই মুহূর্তে কোনো পোস্ট নেই।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(post => {
+        const dateStr = post.createdAt ? new Date(post.createdAt).toLocaleString('bn-BD', {
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        }) : 'আজ';
+
+        const statusBadges = {
+          pending: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">⏳ পেন্ডিং</span>',
+          approved: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 লাইভ</span>',
+          rejected: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">🔴 বাতিল</span>'
+        };
+
+        const imageHtml = post.imageUrl ? `
+          <div class="h-36 w-full bg-slate-100 overflow-hidden rounded-xl mb-3">
+            <img src="${post.imageUrl}" class="w-full h-full object-cover" alt="Post Image">
+          </div>
+        ` : '';
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
+            <div>
+              <!-- Author header -->
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2.5">
+                  <img src="${post.authorPhotoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.authorName || 'Citizen')}" class="w-8 h-8 rounded-full border border-slate-200" alt="Author">
+                  <div>
+                    <h5 class="font-bold text-slate-800 text-xs leading-none">${post.authorName}</h5>
+                    <span class="text-[10px] text-slate-400">${dateStr}</span>
+                  </div>
+                </div>
+                ${statusBadges[post.status] || ''}
+              </div>
+
+              <!-- Tag -->
+              <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100 mb-2">
+                ${post.tag}
+              </span>
+
+              <!-- Content -->
+              ${post.title ? `<h4 class="font-bold text-slate-900 text-xs mb-1">${post.title}</h4>` : ''}
+              <p class="text-xs text-slate-600 line-clamp-4 leading-relaxed mb-3">${post.description}</p>
+              ${imageHtml}
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <span class="text-[11px] text-slate-400">❤️ ${post.likes.length} • 💬 ${post.commentCount}</span>
+              <div class="flex items-center space-x-1.5">
+                ${post.status !== 'approved' ? `
+                  <button onclick="updateCommunityStatus('${post.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded-lg text-xs transition">
+                    অনুমোদন
+                  </button>
+                ` : ''}
+                <button onclick="deleteCommunityPost('${post.id}')" title="ডিলিট করুন" class="bg-rose-50 hover:bg-rose-100 text-rose-600 py-1.5 px-2.5 rounded-lg text-xs font-bold transition">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateCommunityStatus(postId, newStatus) {
+      try {
+        await db.collection('community_posts').doc(postId).update({
+          status: newStatus
+        });
+        showToast('পোস্ট সফলভাবে আপডেট হয়েছে।', 'success');
+      } catch (e) {
+        console.error("Error updating community post:", e);
+        showToast(`আপডেট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    async function deleteCommunityPost(postId) {
+      if (!confirm('আপনি কি নিশ্চিতভাবে এই পোস্টটি মুছে ফেলতে চান?')) return;
+      try {
+        await db.collection('community_posts').doc(postId).delete();
+        showToast('পোস্টটি মুছে ফেলা হয়েছে।', 'info');
+      } catch (e) {
+        console.error("Error deleting post:", e);
+        showToast(`ডিলিট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    // =========================================================================
+    // MARKETPLACE (ডিজিটাল হাট-বাজার) RENDERING & ACTIONS
+    // =========================================================================
+    function filterMarket(filterType) {
+      currentMarketFilter = filterType;
+      document.querySelectorAll('.market-filter-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-slate-200', 'text-slate-700');
+      });
+      const activeBtn = document.getElementById(`btnMarketFilter-${filterType}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+        activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+      }
+      renderMarketplaceCards();
+    }
+
+    function renderMarketplaceCards() {
+      const container = document.getElementById('marketListContainer');
+      const searchTerm = (document.getElementById('marketSearchInput').value || '').trim().toLowerCase();
+
+      let filtered = rawMarket;
+
+      if (currentMarketFilter !== 'all') {
+        filtered = filtered.filter(m => m.status === currentMarketFilter);
+      }
+
+      if (searchTerm) {
+        filtered = filtered.filter(m => 
+          (m.title && m.title.toLowerCase().includes(searchTerm)) ||
+          (m.sellerName && m.sellerName.toLowerCase().includes(searchTerm)) ||
+          (m.sellerPhone && m.sellerPhone.includes(searchTerm)) ||
+          (m.category && m.category.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+            <span class="text-4xl block mb-2">🛒</span>
+            <h4 class="text-slate-700 font-bold text-sm">কোনো পণ্য পাওয়া যায়নি</h4>
+            <p class="text-slate-400 text-xs mt-1">ফিল্টারে কোনো আইটেম মিলেনি।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const imageSrc = item.imageUrl || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500';
+
+        const statusBadges = {
+          pending: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">⏳ পেন্ডিং</span>',
+          approved: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 সক্রিয়</span>',
+          rejected: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">🔴 বাতিল</span>'
+        };
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden hover:shadow-md transition">
+            <div>
+              <div class="h-36 w-full bg-slate-100 relative overflow-hidden">
+                <img src="${imageSrc}" class="w-full h-full object-cover" alt="Item Image" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?w=500'">
+                <div class="absolute top-2 right-2">
+                  ${statusBadges[item.status] || ''}
+                </div>
+                ${item.isFeatured ? `
+                  <div class="absolute bottom-2 left-2 bg-amber-400 text-slate-900 px-2 py-0.5 rounded text-[10px] font-bold shadow">
+                    ⭐ ফিচার্ড
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="p-3.5 space-y-1.5">
+                <div class="flex items-baseline justify-between">
+                  <span class="text-xs font-semibold text-blue-700 truncate">${item.category}</span>
+                  <span class="text-sm font-bold text-emerald-600">৳ ${item.price}</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-xs leading-snug line-clamp-1">${item.title}</h4>
+                <p class="text-[11px] text-slate-500 truncate">📍 ${item.location}</p>
+                <div class="pt-2 border-t border-slate-100 text-[11px] flex items-center justify-between">
+                  <span class="text-slate-700 font-medium truncate">${item.sellerName}</span>
+                  <a href="tel:${item.sellerPhone}" class="text-blue-600 font-semibold hover:underline">${item.sellerPhone}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 pt-0 flex items-center gap-1.5">
+              ${item.status !== 'approved' ? `
+                <button onclick="updateMarketStatus('${item.id}', 'approved')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-2 rounded-lg text-xs transition">
+                  অনুমোদন
+                </button>
+              ` : `
+                <button onclick="toggleMarketFeatured('${item.id}', ${!item.isFeatured})" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 px-2 rounded-lg text-xs transition">
+                  ${item.isFeatured ? 'আনফিচার্ড' : '⭐ ফিচার্ড'}
+                </button>
+              `}
+              <button onclick="deleteMarketItem('${item.id}')" title="ডিলিট করুন" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-1.5 rounded-lg text-xs font-bold transition">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateMarketStatus(itemId, newStatus) {
+      try {
+        await db.collection('items').doc(itemId).update({
+          status: newStatus
+        });
+        showToast('পণ্যের স্ট্যাটাস আপডেট হয়েছে।', 'success');
+      } catch (e) {
+        console.error("Error updating item status:", e);
+        showToast(`আপডেট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    async function toggleMarketFeatured(itemId, isFeaturedState) {
+      try {
+        await db.collection('items').doc(itemId).update({
+          isFeatured: isFeaturedState,
+          is_featured: isFeaturedState
+        });
+        showToast(`ফিচার্ড স্ট্যাটাস আপডেট হয়েছে।`, 'success');
+      } catch (e) {
+        showToast(`ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    async function deleteMarketItem(itemId) {
+      if (!confirm('আপনি কি নিশ্চিতভাবে এই পণ্যটি মুছে ফেলতে চান?')) return;
+      try {
+        await db.collection('items').doc(itemId).delete();
+        showToast('পণ্যটি সফলভাবে মুছে ফেলা হয়েছে।', 'info');
+      } catch (e) {
+        showToast(`ডিলিট ব্যর্থ: ${e.message}`, 'error');
+      }
+    }
+
+    // =========================================================================
+    // 8 DIRECTORY CATEGORIES MANAGEMENT (PARITY WITH KOTLIN DATA MODELS)
+    // =========================================================================
+    const DIRECTORY_CONFIGS = {
+      emergency: {
+        title: "জরুরী নাম্বার (Emergency Numbers)",
+        collection: "emergency_numbers",
+        nameLabel: "সেবার নাম / প্রতিষ্ঠানের নাম *",
+        namePlaceholder: "যেমন: হাতীবান্ধা থানা পুলিশ, লালমনিরহাট ফায়ার সার্ভিস",
+        addressLabel: "ঠিকানা / বিশেষ বিবরণ",
+        hasCategorySelect: false,
+        categoryOptions: []
+      },
+      doctors: {
+        title: "ডাক্তার ও হাসপাতাল (Doctors & Hospitals)",
+        collection: "doctors_hospitals",
+        nameLabel: "ডাক্তার বা হাসপাতালের নাম *",
+        namePlaceholder: "যেমন: ডা. মোঃ রফিকুল ইসলাম বা জেনারেল হাসপাতাল",
+        addressLabel: "চেম্বার ঠিকানা ও রোগী দেখার সময় *",
+        hasCategorySelect: true,
+        categoryOptions: ["মেডিসিন বিশেষজ্ঞ", "শিশু বিশেষজ্ঞ", "গাইনি ও প্রসূতি", "জেনারেল হাসপাতাল", "সার্জারি বিশেষজ্ঞ", "দন্ত চিকিৎসক", "চক্ষু বিশেষজ্ঞ", "অন্যান্য"]
+      },
+      vehicles: {
+        title: "যানবাহন ও চালক (Vehicles & Drivers)",
+        collection: "vehicles_drivers",
+        nameLabel: "চালক বা এজেন্সির নাম *",
+        namePlaceholder: "যেমন: মোঃ আব্দুল জলিল (অ্যাম্বুলেন্স চালক)",
+        addressLabel: "গাড়ির স্ট্যান্ড / অবস্থান *",
+        hasCategorySelect: true,
+        categoryOptions: ["অ্যাম্বুলেন্স", "প্রাইভেট কার ও নোয়া", "মাইক্রোবাস", "পিকআপ ও ট্রাক", "সিএনজি ও অটো", "অন্যান্য"]
+      },
+      mechanics: {
+        title: "মেকানিক ও টেকনিশিয়ান (Mechanics & Technicians)",
+        collection: "mechanics_technicians",
+        nameLabel: "টেকনিশিয়ান বা মেকানিকের নাম *",
+        namePlaceholder: "যেমন: সোহেল রানা (ইলেকট্রিশিয়ান)",
+        addressLabel: "দোকান বা বাজারের ঠিকানা *",
+        hasCategorySelect: true,
+        categoryOptions: ["ইলেকট্রিশিয়ান", "ফ্রিজ ও এসি মিস্ত্রি", "মোটরসাইকেল মেকানিক", "টিভি ও ইলেকট্রনিক্স", "প্লাম্বার ও স্যানিটারি", "অন্যান্য"]
+      },
+      farmers: {
+        title: "কৃষক ও ফসল (Farmers & Crops)",
+        collection: "farmers_crops",
+        nameLabel: "নাম বা প্রতিষ্ঠানের নাম *",
+        namePlaceholder: "যেমন: মেসার্স ভাই ভাই ট্রেডার্স বা কৃষক সমিতি",
+        addressLabel: "বাজারের নাম, ইউনিয়ন বা আড়ত *",
+        hasCategorySelect: true,
+        categoryOptions: ["কৃষি কর্মকর্তা / পরামর্শ", "সার ও কীটনাশক ডিলার", "ভুট্টা ও ফসলের আড়ৎ", "কৃষি যন্ত্রপাতি ও সেচ", "অন্যান্য"]
+      },
+      restaurants: {
+        title: "রেস্টুরেন্ট ও বাবুর্চি (Restaurants & Chefs)",
+        collection: "restaurants_chefs",
+        nameLabel: "রেস্টুরেন্ট বা প্রধান বাবুর্চির নাম *",
+        namePlaceholder: "যেমন: ধানসিঁড়ি রেস্টুরেন্ট বা উস্তাদ জামাল বাবুর্চি",
+        addressLabel: "বাজার, রোড বা এলাকার নাম *",
+        hasCategorySelect: true,
+        categoryOptions: ["রেস্টুরেন্ট ও ক্যাফে", "অভিজ্ঞ বাবুর্চি", "মিষ্টির দোকান ও বেকারি", "ক্যাটারিং সার্ভিস", "অন্যান্য"]
+      },
+      coaching: {
+        title: "কোচিং ও গৃহশিক্ষক (Coaching & Home Tutors)",
+        collection: "coaching_tutors",
+        nameLabel: "শিক্ষক বা কোচিং সেন্টারের নাম *",
+        namePlaceholder: "যেমন: মেরিট কোচিং সেন্টার বা মোঃ কামরুল হাসান (টিউটর)",
+        addressLabel: "ঠিকানা, এলাকা বা প্রতিষ্ঠানের অবস্থান *",
+        hasCategorySelect: true,
+        categoryOptions: ["গৃহশিক্ষক / টিউটর", "কোচিং সেন্টার", "মাদ্রাসা / হেফজখানা", "স্কিল ও কম্পিউটার ট্রেনিং", "অন্যান্য"],
+        hasExtra: true,
+        extraLabel: "পড়ানোর বিষয় ও শ্রেণি"
+      },
+      official: {
+        title: "নাগরিক সেবা ও প্রশাসন (Citizen Directory)",
+        collection: "directory",
+        nameLabel: "দপ্তর বা কর্মকর্তার নাম *",
+        namePlaceholder: "যেমন: জেলা প্রশাসক কার্যালয় বা পল্লী বিদ্যুৎ অভিযোগ কেন্দ্র",
+        addressLabel: "বিস্তারিত ঠিকানা ও বিবরণ",
+        hasCategorySelect: true,
+        categoryOptions: ["জরুরি সেবা", "প্রশাসন ও সরকারি দপ্তর", "শিক্ষা প্রতিষ্ঠান", "ব্যাংক ও আর্থিক প্রতিষ্ঠান", "এনজিও ও সেবামূলক", "অন্যান্য"]
+      }
+    };
+
+    function switchDirectorySubTab(subTabKey) {
+      activeDirectorySubTab = subTabKey;
+
+      // Update button styling
+      document.querySelectorAll('.dir-subtab-btn').forEach(btn => {
+        btn.classList.remove('active-dir-subtab', 'bg-blue-600', 'text-white', 'border-blue-600');
+        btn.classList.add('border-slate-200');
+      });
+
+      const activeBtn = document.getElementById(`subTabBtn-${subTabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active-dir-subtab', 'bg-blue-600', 'text-white', 'border-blue-600');
+        activeBtn.classList.remove('border-slate-200');
+      }
+
+      loadDirectorySubTab(subTabKey);
+    }
+
+    function loadDirectorySubTab(subTabKey) {
+      const config = DIRECTORY_CONFIGS[subTabKey];
+      if (!config) return;
+
+      // Update Form Titles & Labels
+      document.getElementById('dirFormTitle').innerHTML = `<span>➕</span> <span>${config.title} এন্ট্রি</span>`;
+      document.getElementById('dirFormCollectionBadge').textContent = config.collection;
+      document.getElementById('dirLabelName').textContent = config.nameLabel;
+      document.getElementById('dirInputName').placeholder = config.namePlaceholder;
+      document.getElementById('dirLabelAddress').textContent = config.addressLabel;
+      document.getElementById('dirListTitle').textContent = `${config.title} তালিকা`;
+
+      // Category / Specialty Field Render
+      const categoryWrapper = document.getElementById('dirCategoryFieldWrapper');
+      if (config.hasCategorySelect) {
+        categoryWrapper.innerHTML = `
+          <select id="dirInputCategory" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            ${config.categoryOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+          </select>
+        `;
+        document.getElementById('dirGroupCategory').classList.remove('hidden');
+      } else {
+        categoryWrapper.innerHTML = `<input type="hidden" id="dirInputCategory" value="জরুরী সেবা">`;
+        document.getElementById('dirGroupCategory').classList.add('hidden');
+      }
+
+      // Extra field (for coaching)
+      const extraGroup = document.getElementById('dirGroupExtra');
+      if (config.hasExtra) {
+        extraGroup.classList.remove('hidden');
+      } else {
+        extraGroup.classList.add('hidden');
+      }
+
+      // Reset form
+      resetDirectoryForm();
+
+      // Detach previous directory listener and attach to current collection
+      if (unsubDirectory) {
+        unsubDirectory();
+        unsubDirectory = null;
+      }
+
+      unsubDirectory = db.collection(config.collection)
+        .onSnapshot(snapshot => {
+          rawDirectory = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            rawDirectory.push({
+              id: doc.id,
+              name: data.name || data.serviceName || data.title || '',
+              category: data.categoryBadge || data.category || data.specialty || data.serviceType || data.vehicleType || '',
+              upazila: data.upazila || 'লালমনিরহাট সদর',
+              phone: data.phoneNumber || data.contactNumber || data.phone || '',
+              address: data.marketAddress || data.chamberAddressAndTime || data.standLocation || data.noteOrAddress || data.locationAddress || data.details || '',
+              extra: data.subjectsAndClasses || '',
+              createdAt: data.createdAt || 0
+            });
+          });
+
+          // Sort by name or createdAt
+          rawDirectory.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+          // Update total directory stats
+          document.getElementById('statCountDirectoryTotal').textContent = rawDirectory.length;
+
+          renderDirectoryList();
+        }, error => {
+          console.error("Directory listener error:", error);
+          showToast(`ডিরেক্টরি ডাটা লোড ব্যর্থ: ${error.message}`, 'error');
+        });
+    }
+
+    function renderDirectoryList() {
+      const container = document.getElementById('directoryEntriesContainer');
+      const searchTerm = (document.getElementById('dirListSearchInput').value || '').trim().toLowerCase();
+
+      let filtered = rawDirectory;
+      if (searchTerm) {
+        filtered = filtered.filter(item => 
+          (item.name && item.name.toLowerCase().includes(searchTerm)) ||
+          (item.phone && item.phone.includes(searchTerm)) ||
+          (item.category && item.category.toLowerCase().includes(searchTerm)) ||
+          (item.upazila && item.upazila.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-400">
+            <span class="text-3xl block mb-2">📂</span>
+            <p class="text-xs">কোনো এন্ট্রি পাওয়া যায়নি।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        return `
+          <div class="bg-slate-50 hover:bg-white p-3.5 rounded-xl border border-slate-200 transition flex items-center justify-between gap-3 shadow-sm">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center space-x-2 mb-1">
+                <span class="font-bold text-slate-900 text-xs truncate">${item.name}</span>
+                ${item.category ? `<span class="bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded font-semibold truncate">${item.category}</span>` : ''}
+              </div>
+              <div class="text-[11px] text-slate-500 space-y-0.5">
+                <p class="truncate">📍 <span class="font-medium text-slate-700">${item.upazila}</span> • ${item.address}</p>
+                ${item.extra ? `<p class="truncate text-teal-700 font-medium">📚 ${item.extra}</p>` : ''}
+                <p>📞 <a href="tel:${item.phone}" class="text-blue-600 font-semibold hover:underline">${item.phone}</a></p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-1">
+              <button onclick="editDirectoryItem('${item.id}')" title="এডিট করুন" class="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs transition">
+                ✏️
+              </button>
+              <button onclick="deleteDirectoryItem('${item.id}')" title="ডিলিট করুন" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs transition">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Form Submit (Create & Update) with 100% Kotlin Parity
+    async function handleDirectoryFormSubmit(e) {
+      e.preventDefault();
+      const config = DIRECTORY_CONFIGS[activeDirectorySubTab];
+      if (!config) return;
+
+      const editId = document.getElementById('dirFormEditId').value;
+      const name = document.getElementById('dirInputName').value.trim();
+      const category = (document.getElementById('dirInputCategory')?.value || '').trim();
+      const upazila = document.getElementById('dirSelectUpazila').value;
+      const phone = document.getElementById('dirInputPhone').value.trim();
+      const address = document.getElementById('dirInputAddress').value.trim();
+      const extra = (document.getElementById('dirInputExtra')?.value || '').trim();
+
+      const btn = document.getElementById('btnSubmitDirForm');
+      btn.disabled = true;
+
+      try {
+        const docRef = editId ? db.collection(config.collection).doc(editId) : db.collection(config.collection).doc();
+        const docId = docRef.id;
+        const now = Date.now();
+
+        // Construct document matching Kotlin Model specification exactly
+        let docData = {
+          id: docId,
+          createdAt: now
+        };
+
+        if (activeDirectorySubTab === 'emergency') {
+          docData = {
+            ...docData,
+            serviceName: name,
+            title: name,
+            upazila: upazila,
+            phoneNumber: phone,
+            phone: phone,
+            noteOrAddress: address,
+            details: address
+          };
+        } else if (activeDirectorySubTab === 'doctors') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            specialty: category,
+            designationOrSub: category,
+            upazila: upazila,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone,
+            chamberAddressAndTime: address,
+            details: address
+          };
+        } else if (activeDirectorySubTab === 'vehicles') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            vehicleType: category,
+            specialty: category,
+            upazila: upazila,
+            standLocation: address,
+            location: address,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone
+          };
+        } else if (activeDirectorySubTab === 'mechanics') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            serviceType: category,
+            specialty: category,
+            trade: category,
+            upazila: upazila,
+            marketAddress: address,
+            location: address,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone
+          };
+        } else if (activeDirectorySubTab === 'farmers') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            categoryBadge: category,
+            category: category,
+            serviceType: category,
+            upazila: upazila,
+            marketAddress: address,
+            location: address,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone
+          };
+        } else if (activeDirectorySubTab === 'restaurants') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            categoryBadge: category,
+            category: category,
+            upazila: upazila,
+            marketAddress: address,
+            location: address,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone
+          };
+        } else if (activeDirectorySubTab === 'coaching') {
+          docData = {
+            ...docData,
+            name: name,
+            title: name,
+            teacherName: name,
+            categoryBadge: category,
+            category: category,
+            subjectsAndClasses: extra,
+            upazila: upazila,
+            locationAddress: address,
+            location: address,
+            contactNumber: phone,
+            phoneNumber: phone,
+            phone: phone
+          };
+        } else if (activeDirectorySubTab === 'official') {
+          docData = {
+            ...docData,
+            title: name,
+            designationOrSub: category,
+            category: category,
+            upazila: upazila,
+            phone: phone,
+            details: address,
+            isVerified: true
+          };
+        }
+
+        await docRef.set(docData, { merge: true });
+        showToast(editId ? 'এন্ট্রি সফলভাবে আপডেট হয়েছে!' : 'নতুন এন্ট্রি সংরক্ষিত হয়েছে!', 'success');
+        resetDirectoryForm();
+      } catch (err) {
+        console.error("Directory save error:", err);
+        showToast(`সংরক্ষণ ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function editDirectoryItem(itemId) {
+      const item = rawDirectory.find(d => d.id === itemId);
+      if (!item) return;
+
+      document.getElementById('dirFormEditId').value = item.id;
+      document.getElementById('dirInputName').value = item.name;
+      if (document.getElementById('dirInputCategory')) {
+        document.getElementById('dirInputCategory').value = item.category;
+      }
+      document.getElementById('dirSelectUpazila').value = item.upazila || 'পুরো লালমনিরহাট';
+      document.getElementById('dirInputPhone').value = item.phone;
+      document.getElementById('dirInputAddress').value = item.address;
+      if (document.getElementById('dirInputExtra')) {
+        document.getElementById('dirInputExtra').value = item.extra || '';
+      }
+
+      document.getElementById('btnSubmitDirFormText').textContent = 'আপডেট করুন';
+      document.getElementById('dirFormTitle').innerHTML = `<span>✏️</span> <span>এন্ট্রি সম্পাদনা</span>`;
+
+      // Scroll to form smoothly
+      document.getElementById('directoryEntryForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function deleteDirectoryItem(itemId) {
+      const config = DIRECTORY_CONFIGS[activeDirectorySubTab];
+      if (!config) return;
+
+      if (!confirm('আপনি কি নিশ্চিতভাবে এই এন্ট্রিটি মুছে ফেলতে চান?')) return;
+
+      try {
+        await db.collection(config.collection).doc(itemId).delete();
+        showToast('এন্ট্রিটি মুছে ফেলা হয়েছে।', 'info');
+      } catch (err) {
+        console.error("Delete directory item error:", err);
+        showToast(`ডিলিট ব্যর্থ: ${err.message}`, 'error');
+      }
+    }
+
+    function resetDirectoryForm() {
+      document.getElementById('dirFormEditId').value = '';
+      document.getElementById('directoryEntryForm').reset();
+      document.getElementById('btnSubmitDirFormText').textContent = 'সংরক্ষণ করুন';
+      const config = DIRECTORY_CONFIGS[activeDirectorySubTab];
+      if (config) {
+        document.getElementById('dirFormTitle').innerHTML = `<span>➕</span> <span>${config.title} এন্ট্রি</span>`;
+      }
+    }
+
+    // Initialize UI on DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      switchTab('overview');
+      switchDirectorySubTab('emergency');
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+</body>
+</html>
