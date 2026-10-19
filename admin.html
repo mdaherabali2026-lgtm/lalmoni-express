@@ -7,7 +7,7 @@
   <!-- Tailwind CSS & FontAwesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Firebase App & Firestore SDKs -->
+  <!-- Firebase App, Auth & Firestore SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -19,40 +19,44 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- ================= AUTH CONTAINER ================= -->
+  <!-- ================= 1. DIRECT GOOGLE AUTH CONTAINER ================= -->
   <div id="authContainer" class="flex items-center justify-center min-h-screen px-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-200">
-      <div class="text-center mb-6">
-        <h1 class="text-3xl font-extrabold text-red-600 tracking-tight">লালমনি এক্সপ্রেস</h1>
-        <p class="text-sm text-gray-500 mt-1">অ্যাডমিন কন্ট্রোল প্যানেল লগইন</p>
+    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-gray-100 text-center">
+      <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-inner">
+        <i class="fa-solid fa-shield-halved"></i>
       </div>
-      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">অ্যাডমিন ইমেইল</label>
-          <input type="email" id="adminEmail" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="admin@lalmoni.com">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">পাসওয়ার্ড</label>
-          <input type="password" id="adminPassword" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="••••••••">
-        </div>
-        <button type="submit" id="loginBtn" class="w-full bg-red-600 text-white py-2.5 rounded-xl font-bold hover:bg-red-700 transition">
-          ড্যাশবোর্ডে প্রবেশ করুন
-        </button>
-      </form>
+      <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">লালমনি এক্সপ্রেস</h1>
+      <p class="text-sm text-gray-500 mt-1 mb-8">সুপার অ্যাডমিন কন্ট্রোল প্যানেল</p>
+
+      <!-- ডাইরেক্ট গুগল সাইন ইন বাটন -->
+      <button onclick="handleGoogleLogin()" id="googleLoginBtn" class="w-full flex items-center justify-center space-x-3 bg-white border border-gray-300 py-3.5 px-4 rounded-2xl font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-400 shadow-sm transition active:scale-95">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span id="googleBtnText">গুগল দিয়ে প্রবেশ করুন</span>
+      </button>
+
+      <p class="text-xs text-gray-400 mt-6">শুধুমাত্র অনুমোদিত অ্যাডমিন গুগল অ্যাকাউন্টের জন্য সংরক্ষিত।</p>
     </div>
   </div>
 
-  <!-- ================= DASHBOARD MAIN ================= -->
+  <!-- ================= 2. DASHBOARD MAIN ================= -->
   <div id="dashboardContainer" class="hidden">
     <!-- Top Navbar -->
     <header class="bg-white shadow-sm border-b px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-30">
       <div class="flex items-center space-x-3">
         <span class="text-2xl font-black text-red-600">লালমনি এক্সপ্রেস</span>
-        <span class="text-xs bg-red-100 text-red-700 font-semibold px-2 py-0.5 rounded-full">Web Admin Panel</span>
+        <span class="text-xs bg-red-100 text-red-700 font-semibold px-2.5 py-0.5 rounded-full">Web Admin Panel</span>
       </div>
       <div class="flex items-center space-x-4 mt-2 sm:mt-0">
-        <span id="userStatus" class="text-xs sm:text-sm text-gray-600 font-medium"></span>
-        <button onclick="handleLogout()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm px-3 py-1.5 rounded-lg transition">
+        <div class="flex items-center space-x-2">
+          <img id="userAvatar" src="" class="w-8 h-8 rounded-full border border-gray-200 object-cover hidden">
+          <span id="userStatus" class="text-xs sm:text-sm text-gray-700 font-medium"></span>
+        </div>
+        <button onclick="handleLogout()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm px-3.5 py-1.5 rounded-xl font-medium transition">
           <i class="fa-solid fa-right-from-bracket mr-1"></i> লগআউট
         </button>
       </div>
@@ -60,7 +64,7 @@
 
     <div class="flex flex-col md:flex-row">
       <!-- Sidebar Navigation -->
-      <aside class="w-full md:w-64 bg-white md:min-h-screen border-r p-4 space-y-1">
+      <aside class="w-full md:w-64 bg-white md:min-h-screen border-r p-4 space-y-1.5">
         <button onclick="switchTab('newsTab')" id="btn_newsTab" class="nav-btn tab-active w-full text-left px-4 py-3 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
           <i class="fa-regular fa-newspaper w-5"></i>
           <span>লালমনি বার্তা (নিউজ)</span>
@@ -82,11 +86,14 @@
       <!-- Main Content Area -->
       <main class="flex-1 p-6">
 
-        <!-- 1. NEWS TAB (লালমনি বার্তা) -->
+        <!-- TAB 1: NEWS MODERATION (লালমনি বার্তা) -->
         <section id="newsTab" class="tab-content">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-gray-800">স্থানীয় সংবাদ (লালমনি বার্তা) মডারেশন</h2>
-            <button onclick="fetchPendingNews()" class="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-100">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">স্থানীয় সংবাদ (লালমনি বার্তা) মডারেশন</h2>
+              <p class="text-xs text-gray-500">ইউজারদের পাঠানো খবর অনুমোদন বা বাতিল করুন</p>
+            </div>
+            <button onclick="fetchPendingNews()" class="text-sm bg-red-50 text-red-600 px-3.5 py-1.5 rounded-xl border border-red-200 hover:bg-red-100 font-semibold transition">
               <i class="fa-solid fa-arrows-rotate mr-1"></i> রিফ্রেশ
             </button>
           </div>
@@ -95,11 +102,14 @@
           </div>
         </section>
 
-        <!-- 2. JONOMANCHO TAB (জনমঞ্চ মডারেশন) -->
+        <!-- TAB 2: JONOMANCHO COMMUNITY POSTS -->
         <section id="jonomanchoTab" class="tab-content hidden">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-gray-800">জনমঞ্চ কমিউনিটি পোস্ট পর্যবেক্ষণ</h2>
-            <button onclick="fetchJonomanchoPosts()" class="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-100">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">জনমঞ্চ কমিউনিটি পোস্ট পর্যবেক্ষণ</h2>
+              <p class="text-xs text-gray-500">ইউজারদের সার্বজনীন পোস্ট ও আপত্তিকর কন্টেন্ট মুছে ফেলুন</p>
+            </div>
+            <button onclick="fetchJonomanchoPosts()" class="text-sm bg-red-50 text-red-600 px-3.5 py-1.5 rounded-xl border border-red-200 hover:bg-red-100 font-semibold transition">
               <i class="fa-solid fa-arrows-rotate mr-1"></i> রিফ্রেশ
             </button>
           </div>
@@ -108,11 +118,14 @@
           </div>
         </section>
 
-        <!-- 3. MARKET TAB (ডিজিটাল হাট-বাজার) -->
+        <!-- TAB 3: DIGITAL HAAT-BAZAR -->
         <section id="marketTab" class="tab-content hidden">
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-gray-800">ডিজিটাল হাট-বাজার (পণ্য কেনাবেচা ম্যানেজমেন্ট)</h2>
-            <button onclick="fetchMarketPosts()" class="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg border border-blue-200 hover:bg-blue-100">
+            <div>
+              <h2 class="text-xl font-bold text-gray-800">ডিজিটাল হাট-বাজার ম্যানেজমেন্ট</h2>
+              <p class="text-xs text-gray-500">কেনাবেচার পণ্যের বিজ্ঞাপন পর্যবেক্ষণ ও ডিলিট করুন</p>
+            </div>
+            <button onclick="fetchMarketPosts()" class="text-sm bg-red-50 text-red-600 px-3.5 py-1.5 rounded-xl border border-red-200 hover:bg-red-100 font-semibold transition">
               <i class="fa-solid fa-arrows-rotate mr-1"></i> রিফ্রেশ
             </button>
           </div>
@@ -121,14 +134,17 @@
           </div>
         </section>
 
-        <!-- 4. DIRECTORIES TAB (৮টি ক্যাটাগরি তথ্য ইনপুট) -->
+        <!-- TAB 4: DIRECTORIES DATA ENTRY -->
         <section id="directoriesTab" class="tab-content hidden">
-          <h2 class="text-xl font-bold text-gray-800 mb-6">৮টি ক্যাটাগরিতে নতুন ডাটা যুক্ত করুন</h2>
-          <div class="bg-white p-6 rounded-2xl shadow-sm border max-w-xl">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-gray-800">৮টি ক্যাটাগরিতে নতুন ডাটা যুক্ত করুন</h2>
+            <p class="text-xs text-gray-500">এখানে এন্ট্রি করলে সরাসরি অ্যাপের নির্দিষ্ট ক্যাটাগরিতে চলে যাবে</p>
+          </div>
+          <div class="bg-white p-6 rounded-3xl shadow-sm border max-w-xl">
             <form onsubmit="handleDirectorySubmit(event)" class="space-y-4">
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">ক্যাটাগরি নির্বাচন করুন</label>
-                <select id="dirCategory" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ক্যাটাগরি নির্বাচন করুন</label>
+                <select id="dirCategory" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" required>
                   <option value="emergency_contacts">জরুরী নাম্বার</option>
                   <option value="doctors_hospitals">ডাক্তার ও হাসপাতাল</option>
                   <option value="vehicles_drivers">যানবাহন ও চালক</option>
@@ -140,8 +156,8 @@
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">উপজেলা / থানা</label>
-                <select id="dirUpazila" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">উপজেলা / থানা</label>
+                <select id="dirUpazila" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" required>
                   <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
                   <option value="আদিতমারী">আদিতমারী</option>
                   <option value="কালীগঞ্জ">কালীগঞ্জ</option>
@@ -151,26 +167,26 @@
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">নাম / শিরোনাম</label>
-                <input type="text" id="dirName" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="উদা: ডাক্তার রফিকুল ইসলাম বা কাচ্চি ডাইন" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">নাম / শিরোনাম</label>
+                <input type="text" id="dirName" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" placeholder="উদা: ডাক্তার রফিকুল ইসলাম বা কাচ্চি ডাইন" required>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">পদবি / ক্যাটাগরি ব্যাজ</label>
-                <input type="text" id="dirSubcategory" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="উদা: মেডিসিন বিশেষজ্ঞ বা প্রধান বাবুর্চি" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">পদবি / ক্যাটাগরি ব্যাজ</label>
+                <input type="text" id="dirSubcategory" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" placeholder="উদা: মেডিসিন বিশেষজ্ঞ বা প্রধান বাবুর্চি" required>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">মোবাইল নম্বর (সরাসরি কলের জন্য)</label>
-                <input type="tel" id="dirPhone" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="017xxxxxxxx" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">মোবাইল নম্বর (সরাসরি কলের জন্য)</label>
+                <input type="tel" id="dirPhone" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" placeholder="017xxxxxxxx" required>
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1">ঠিকানা / এলাকা</label>
-                <input type="text" id="dirLocation" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none" placeholder="উদা: মিশন মোড়, সদর" required>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">ঠিকানা / এলাকা</label>
+                <input type="text" id="dirLocation" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm" placeholder="উদা: মিশন মোড়, সদর" required>
               </div>
 
-              <button type="submit" id="dirSubmitBtn" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl hover:bg-red-700 transition">
+              <button type="submit" id="dirSubmitBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition active:scale-95 text-sm">
                 অ্যাপে সরাসরি সেভ করুন
               </button>
             </form>
@@ -181,9 +197,9 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- ================= 3. JAVASCRIPT LOGIC ================= -->
   <script>
-    // 1. Firebase Config Setup from your google-services.json
+    // ফায়ারবেস কনফিগারেশন (আপনার google-services.json থেকে নেওয়া)
     const firebaseConfig = {
       apiKey: "AIzaSyDA9alHFInImn_CcMebJtkA7Rya4HVKVuI",
       authDomain: "lalmoniexpress-2c176.firebaseapp.com",
@@ -195,12 +211,36 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // 2. Authentication Listener
+    // ডাইরেক্ট গুগল সাইন ইন হ্যান্ডলার
+    async function handleGoogleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const btn = document.getElementById('googleLoginBtn');
+      const btnText = document.getElementById('googleBtnText');
+
+      try {
+        btn.disabled = true;
+        btnText.textContent = "গুগল কানেক্ট হচ্ছে...";
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        alert("গুগল লগইন ব্যর্থ হয়েছে: " + err.message);
+        btn.disabled = false;
+        btnText.textContent = "গুগল দিয়ে প্রবেশ করুন";
+      }
+    }
+
+    // অথেনটিকেশন স্টেট মনিটর
     auth.onAuthStateChanged(user => {
       if (user) {
         document.getElementById('authContainer').classList.add('hidden');
         document.getElementById('dashboardContainer').classList.remove('hidden');
-        document.getElementById('userStatus').textContent = user.email;
+        document.getElementById('userStatus').textContent = user.displayName || user.email;
+        
+        if (user.photoURL) {
+          const avatar = document.getElementById('userAvatar');
+          avatar.src = user.photoURL;
+          avatar.classList.remove('hidden');
+        }
+
         fetchPendingNews();
       } else {
         document.getElementById('authContainer').classList.remove('hidden');
@@ -208,31 +248,12 @@
       }
     });
 
-    // Login Action
-    async function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('adminEmail').value.trim();
-      const pass = document.getElementById('adminPassword').value.trim();
-      const btn = document.getElementById('loginBtn');
-
-      try {
-        btn.disabled = true;
-        btn.textContent = "লগইন হচ্ছে...";
-        await auth.signInWithEmailAndPassword(email, pass);
-      } catch (err) {
-        alert("লগইন ব্যর্থ হয়েছে: " + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "ড্যাশবোর্ডে প্রবেশ করুন";
-      }
-    }
-
-    // Logout Action
+    // লগআউট
     function handleLogout() {
       auth.signOut();
     }
 
-    // Switch Tabs
+    // ট্যাব স্যুইচিং
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('tab-active'));
@@ -245,7 +266,7 @@
       if (tabId === 'marketTab') fetchMarketPosts();
     }
 
-    // 3. FETCH PENDING NEWS (লালমনি বার্তা)
+    // ১. নিউজ ফেচ ও মডারেশন (লালমনি বার্তা)
     async function fetchPendingNews() {
       const container = document.getElementById('pendingNewsList');
       container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-6">পেন্ডিং নিউজ লোড হচ্ছে...</div>';
@@ -256,7 +277,7 @@
           .get();
 
         if (snap.empty) {
-          container.innerHTML = '<div class="col-span-full text-center text-green-600 font-semibold py-8 bg-green-50 rounded-xl border border-green-200">কোনো পেন্ডিং নিউজ নেই! সব অনুমোদিত আছে।</div>';
+          container.innerHTML = '<div class="col-span-full text-center text-green-600 font-semibold py-8 bg-green-50 rounded-2xl border border-green-200">কোনো পেন্ডিং নিউজ নেই! সব অনুমোদিত আছে।</div>';
           return;
         }
 
@@ -270,17 +291,17 @@
               ${data.imageUrl ? `<img src="${data.imageUrl}" class="w-full h-40 object-cover rounded-xl mb-3" />` : ''}
               <div class="flex justify-between items-center mb-2">
                 <span class="text-xs bg-red-100 text-red-600 px-2.5 py-0.5 rounded-full font-bold">${data.upazila || 'লালমনিরহাট'}</span>
-                <span class="text-xs text-gray-400">${data.category || 'সাধারণ'}</span>
+                <span class="text-xs text-gray-400 font-medium">${data.category || 'সাধারণ'}</span>
               </div>
               <h3 class="font-bold text-gray-800 text-base mb-1">${data.title || 'শিরোনাম নেই'}</h3>
               <p class="text-sm text-gray-600 mb-4 line-clamp-3">${data.description || ''}</p>
               <div class="text-xs text-gray-400 mb-4">রিপোর্টার: ${data.authorName || 'নামহীন'}</div>
             </div>
             <div class="flex space-x-2 border-t pt-3">
-              <button onclick="approveNews('${doc.id}')" class="flex-1 bg-green-600 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-green-700 transition">
+              <button onclick="approveNews('${doc.id}')" class="flex-1 bg-green-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-green-700 transition">
                 <i class="fa-solid fa-check mr-1"></i> Approve
               </button>
-              <button onclick="rejectNews('${doc.id}')" class="flex-1 bg-red-600 text-white py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition">
+              <button onclick="rejectNews('${doc.id}')" class="flex-1 bg-red-600 text-white py-2 rounded-xl text-xs font-bold hover:bg-red-700 transition">
                 <i class="fa-solid fa-trash mr-1"></i> Delete
               </button>
             </div>
@@ -304,7 +325,7 @@
       fetchPendingNews();
     }
 
-    // 4. FETCH JONOMANCHO POSTS
+    // ২. জনমঞ্চ পোস্ট মডারেশন
     async function fetchJonomanchoPosts() {
       const container = document.getElementById('jonomanchoList');
       container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-6">পোস্ট লোড হচ্ছে...</div>';
@@ -331,7 +352,7 @@
               <p class="text-sm text-gray-700 mb-3">${data.content || data.description || ''}</p>
               ${data.imageUrl ? `<img src="${data.imageUrl}" class="w-full h-44 object-cover rounded-xl mb-3" />` : ''}
             </div>
-            <button onclick="deleteCommunityPost('${doc.id}')" class="w-full bg-red-50 text-red-600 border border-red-200 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition mt-2">
+            <button onclick="deleteCommunityPost('${doc.id}')" class="w-full bg-red-50 text-red-600 border border-red-200 py-2 rounded-xl text-xs font-bold hover:bg-red-100 transition mt-2">
               <i class="fa-solid fa-trash mr-1"></i> পোস্ট ডিলিট করুন
             </button>
           `;
@@ -348,7 +369,7 @@
       fetchJonomanchoPosts();
     }
 
-    // 5. FETCH MARKET POSTS
+    // ৩. ডিজিটাল হাট-বাজার
     async function fetchMarketPosts() {
       const container = document.getElementById('marketList');
       container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-6">বিজ্ঞাপন লোড হচ্ছে...</div>';
@@ -374,7 +395,7 @@
               <p class="text-xs text-gray-500 mb-2">${data.description || ''}</p>
               <div class="text-xs text-blue-600 font-semibold mb-3"><i class="fa-solid fa-phone mr-1"></i> ${data.contactPhone || 'ফোন নম্বর নেই'}</div>
             </div>
-            <button onclick="deleteMarketPost('${doc.id}')" class="w-full bg-red-50 text-red-600 border border-red-200 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition">
+            <button onclick="deleteMarketPost('${doc.id}')" class="w-full bg-red-50 text-red-600 border border-red-200 py-2 rounded-xl text-xs font-bold hover:bg-red-100 transition">
               <i class="fa-solid fa-trash mr-1"></i> বিজ্ঞাপন মুছুন
             </button>
           `;
@@ -391,7 +412,7 @@
       fetchMarketPosts();
     }
 
-    // 6. DIRECTORY SUBMIT (৮টি ক্যাটাগরির ডাটা এন্ট্রি)
+    // ৪. ডিরেক্টরি সাবমিট (৮টি ক্যাটাগরি)
     async function handleDirectorySubmit(e) {
       e.preventDefault();
       const colName = document.getElementById('dirCategory').value;
