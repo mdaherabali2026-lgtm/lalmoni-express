@@ -183,6 +183,12 @@
             <span id="badgeMarketTotal" class="hidden ml-1 px-2 py-0.5 text-xs font-bold bg-blue-600 text-white rounded-full">0</span>
           </button>
 
+          <button onclick="switchTab('users')" id="tabBtn-users" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+            <span>👥</span>
+            <span>ইউজার লিস্ট & অ্যাক্টিভিটি</span>
+            <span id="badgeUsersTotal" class="ml-1 px-2 py-0.5 text-xs font-bold bg-slate-700 text-white rounded-full">0</span>
+          </button>
+
           <button onclick="switchTab('directories')" id="tabBtn-directories" class="tab-button flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium text-sm transition text-slate-600 hover:text-slate-900 hover:bg-slate-100">
             <span>📂</span>
             <span>৮টি ডিরেক্টরি এন্ট্রি</span>
@@ -195,72 +201,73 @@
         </nav>
       </div>
 
-      <!-- ========================================================================= -->
       <!-- TAB 1: OVERVIEW & STATS -->
-      <!-- ========================================================================= -->
       <section id="tabContent-overview" class="tab-content space-y-6">
         
-        <!-- Stats Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <!-- Pending News -->
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং সংবাদ</p>
-              <h3 id="statCountPendingNews" class="text-3xl font-bold text-rose-600 mt-1">0</h3>
-              <p class="text-xs text-slate-500 mt-1">লালমনি বার্তা যাচাইয়ের অপেক্ষায়</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং সংবাদ</p>
+              <h3 id="statCountPendingNews" class="text-2xl font-bold text-rose-600 mt-0.5">0</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">লালমনি বার্তা</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
               📰
             </div>
           </div>
 
-          <!-- Pending Community Posts -->
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং জনমঞ্চ পোস্ট</p>
-              <h3 id="statCountPendingCommunity" class="text-3xl font-bold text-amber-600 mt-1">0</h3>
-              <p class="text-xs text-slate-500 mt-1">নাগরিক পোস্ট মডারেশন</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">জনমঞ্চ পোস্ট</p>
+              <h3 id="statCountPendingCommunity" class="text-2xl font-bold text-amber-600 mt-0.5">0</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">কমিউনিটি বার্তা</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
               💬
             </div>
           </div>
 
-          <!-- Active Marketplace Items -->
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট হাট-বাজার পণ্য</p>
-              <h3 id="statCountMarketTotal" class="text-3xl font-bold text-blue-600 mt-1">0</h3>
-              <p class="text-xs text-slate-500 mt-1">বেচাকেনা মার্কেটপ্লেস আইটেম</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">হাট-বাজার পণ্য</p>
+              <h3 id="statCountMarketTotal" class="text-2xl font-bold text-blue-600 mt-0.5">0</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">ডিজিটাল মার্কেট</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
               🛒
             </div>
           </div>
 
-          <!-- Total Directory Entries -->
-          <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট ডিরেক্টরি ডাটা</p>
-              <h3 id="statCountDirectoryTotal" class="text-3xl font-bold text-emerald-600 mt-1">0</h3>
-              <p class="text-xs text-slate-500 mt-1">৮টি ক্যাটাগরির লাইভ সেবা</p>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">মোট নিবন্ধিত ইউজার</p>
+              <h3 id="statCountUsersTotal" class="text-2xl font-bold text-indigo-600 mt-0.5">0</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">অ্যাপ ও ওয়েব নাগরিক</p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+              👥
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">ডিরেক্টরি সেবা</p>
+              <h3 id="statCountDirectoryTotal" class="text-2xl font-bold text-emerald-600 mt-0.5">0</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">৮টি লাইভ ক্যাটাগরি</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
               📂
             </div>
           </div>
         </div>
 
-        <!-- Quick Action & Architecture Cards -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- Sync & Realtime Status Box -->
           <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-2xl p-6 shadow-md">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-3">
                 <span class="text-2xl">⚡</span>
                 <div>
-                  <h3 class="text-lg font-bold">দ্বৈত নিয়ন্ত্রণ ও জিরো-লেটেন্সি সিঙ্ক্রোনাইজেশন</h3>
+                  <h3 class="text-lg font-bold">দ্বৈত নিয়ন্ত্রণ ও রিয়েলটাইম সিঙ্ক্রোনাইজেশন</h3>
                   <p class="text-xs text-blue-200">Android App এবং Web Dashboard উভয় স্থান থেকেই সম্পূর্ণ ডেটা রিয়েল-টাইমে আপডেট হয়</p>
                 </div>
               </div>
@@ -269,49 +276,56 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-blue-900/60 text-xs text-slate-300">
               <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-                <span class="text-blue-400 font-semibold block mb-1">১. অ্যাপ ও ওয়েব সমতা:</span>
-                অ্যান্ড্রয়েড অ্যাপে ইউজার কোনো নিউজ বা পোস্ট দিলে সাথে সাথে এই স্ক্রিনে কোনো রিফ্রেশ ছাড়াই তা ভেসে উঠবে।
+                <span class="text-blue-400 font-semibold block mb-1">১. সরাসরি পোস্ট প্রকাশ:</span>
+                ওয়েব অ্যাডমিন থেকে সংবাদ, জনমঞ্চ পোস্ট ও হাট-বাজার পণ্য সরাসরি পোস্ট করলে অ্যাপে তাৎক্ষণিক লাইভ হবে।
               </div>
               <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-                <span class="text-emerald-400 font-semibold block mb-1">২. ইনস্ট্যান্ট একশন:</span>
-                ওয়েব থেকে "Approve" বা "Reject" চাপলে অ্যাপের ইউজারের স্ক্রিন ও ফিডে সঙ্গে সঙ্গে আপডেট হবে।
+                <span class="text-emerald-400 font-semibold block mb-1">২. পূর্ণাঙ্গ এডিট ও ডিলেট:</span>
+                সংবাদ, জনমঞ্চ, ও মার্কেটপ্লেসের যেকোনো পোস্ট ওয়েব অ্যাডমিন প্যানেল থেকে ১-ক্লিকে এডিট বা মুছে ফেলা যায়।
               </div>
               <div class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-                <span class="text-amber-400 font-semibold block mb-1">৩. ৮টি ডিরেক্টরি ফিল্ড:</span>
-                জরুরি নাম্বার, ডাক্তার, গাড়ি, মেকানিক, কৃষক, বাবুর্চি ও কোচিংয়ের ডেটা মডেল অ্যান্ড্রয়েড কোডের সাথে হুবহু ১০০% মিল রেখে তৈরি।
+                <span class="text-amber-400 font-semibold block mb-1">৩. ইউজার অ্যাক্টিভিটি ট্র্যাকিং:</span>
+                যেকোনো ইউজারের প্রোফাইলে ক্লিক করে তার নিজস্ব সকল বিজ্ঞাপন, জনমঞ্চ পোস্ট ও সংবাদ একনজরে দেখা যায়।
               </div>
             </div>
           </div>
 
-          <!-- Quick Navigation Panel -->
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
-              <h3 class="text-base font-bold text-slate-900 mb-2">দ্রুত মডারেশন জাম্প</h3>
-              <p class="text-xs text-slate-500 mb-4">এক ক্লিকে পেন্ডিং আইটেমগুলো যাচাই করতে নিচের বাটনে চাপ দিন:</p>
+              <h3 class="text-base font-bold text-slate-900 mb-2">দ্রুত কুইক অ্যাকশন</h3>
+              <p class="text-xs text-slate-500 mb-4">এক ক্লিকে কনটেন্ট তৈরি বা মডারেশন প্যানেলে যান:</p>
               
               <div class="space-y-2.5">
-                <button onclick="switchTab('news'); filterNews('pending');" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 transition text-sm font-medium">
+                <button onclick="openCreateNewsModal()" class="w-full flex items-center justify-between p-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 transition text-xs font-semibold">
                   <span class="flex items-center space-x-2">
-                    <span>📰</span>
-                    <span>পেন্ডিং নিউজ যাচাই করুন</span>
-                  </span>
-                  <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold" id="quickBadgeNews">0</span>
-                </button>
-
-                <button onclick="switchTab('community'); filterCommunity('pending');" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-700 hover:text-amber-700 border border-slate-200 transition text-sm font-medium">
-                  <span class="flex items-center space-x-2">
-                    <span>💬</span>
-                    <span>জনমঞ্চ পোস্ট মডারেশন</span>
-                  </span>
-                  <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold" id="quickBadgeCommunity">0</span>
-                </button>
-
-                <button onclick="switchTab('directories')" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 transition text-sm font-medium">
-                  <span class="flex items-center space-x-2">
-                    <span>📂</span>
-                    <span>নতুন ডিরেক্টরি এন্ট্রি যোগ করুন</span>
+                    <span>✍️</span>
+                    <span>নতুন অফিসিয়াল সংবাদ প্রকাশ</span>
                   </span>
                   <span>➕</span>
+                </button>
+
+                <button onclick="openCreateCommunityModal()" class="w-full flex items-center justify-between p-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition text-xs font-semibold">
+                  <span class="flex items-center space-x-2">
+                    <span>💬</span>
+                    <span>নতুন জনমঞ্চ পোস্ট লিখুন</span>
+                  </span>
+                  <span>➕</span>
+                </button>
+
+                <button onclick="openCreateMarketplaceModal()" class="w-full flex items-center justify-between p-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 transition text-xs font-semibold">
+                  <span class="flex items-center space-x-2">
+                    <span>🛒</span>
+                    <span>নতুন পণ্য / বিজ্ঞাপন যোগ করুন</span>
+                  </span>
+                  <span>➕</span>
+                </button>
+
+                <button onclick="switchTab('users')" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 text-slate-700 hover:text-indigo-800 border border-slate-200 transition text-xs font-semibold">
+                  <span class="flex items-center space-x-2">
+                    <span>👥</span>
+                    <span>নিবন্ধিত ইউজার তালিকা দেখুন</span>
+                  </span>
+                  <span id="quickBadgeUsers" class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-bold">0</span>
                 </button>
               </div>
             </div>
@@ -321,17 +335,13 @@
               <span class="font-mono text-slate-600">lalmoniexpress-2c176</span>
             </div>
           </div>
-
         </div>
 
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 2: LOCAL NEWS MODERATION ("লালমনি বার্তা") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-news" class="tab-content hidden space-y-6">
         
-        <!-- Header & Action Row -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
@@ -341,7 +351,6 @@
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">local_news</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
           </div>
 
-          <!-- Buttons -->
           <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
             <button onclick="seedDefaultNewsToFirestore()" class="flex items-center justify-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl text-xs border border-slate-300 shadow-sm transition">
               <span>🔄</span>
@@ -354,7 +363,6 @@
           </div>
         </div>
 
-        <!-- Pending Moderation Alert Banner -->
         <div id="pendingNewsAlertBanner" class="hidden bg-amber-50 border border-amber-300 p-4 rounded-2xl flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <span class="text-2xl">⏳</span>
@@ -368,7 +376,6 @@
           </button>
         </div>
 
-        <!-- Filter Chips Bar -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
           <button onclick="filterNews('approved')" id="btnNewsFilter-approved" class="news-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm transition">
@@ -385,9 +392,7 @@
           </button>
         </div>
 
-        <!-- News Cards Container -->
         <div id="newsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-rose-600 rounded-full mb-2"></div>
             <p class="text-sm">লালমনি বার্তা ডেটা লোড হচ্ছে...</p>
@@ -396,39 +401,38 @@
 
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 3: COMMUNITY MODERATION ("জনমঞ্চ") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-community" class="tab-content hidden space-y-6">
         
-        <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
               <span>💬</span>
-              <span>"জনমঞ্চ" - কমিউনিটি পোস্ট মডারেশন</span>
+              <span>"জনমঞ্চ" - কমিউনিটি পোস্ট ও আলোচনা</span>
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">community_posts</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
           </div>
+
+          <button onclick="openCreateCommunityModal()" class="flex items-center space-x-2 bg-amber-600 hover:bg-amber-700 text-white font-medium px-4 py-2 rounded-xl text-sm shadow transition">
+            <span>✍️</span>
+            <span>নতুন জনমঞ্চ পোস্ট লিখুন</span>
+          </button>
         </div>
 
-        <!-- Filter Chips Bar -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
           <button onclick="filterCommunity('pending')" id="btnCommFilter-pending" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white shadow-sm transition">
             ⏳ পেন্ডিং পোস্ট (<span id="countCommFilterPending">0</span>)
           </button>
           <button onclick="filterCommunity('approved')" id="btnCommFilter-approved" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
-            🟢 অনুমোদিত (<span id="countCommFilterApproved">0</span>)
+            🟢 অনুমোদিত / লাইভ (<span id="countCommFilterApproved">0</span>)
           </button>
           <button onclick="filterCommunity('all')" id="btnCommFilter-all" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
             🌐 সকল পোস্ট (<span id="countCommFilterAll">0</span>)
           </button>
         </div>
 
-        <!-- Community Posts Container -->
         <div id="communityListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-amber-600 rounded-full mb-2"></div>
             <p class="text-sm">জনমঞ্চ পোস্ট লোড হচ্ছে...</p>
@@ -437,12 +441,9 @@
 
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 4: MARKETPLACE ("ডিজিটাল হাট-বাজার") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-marketplace" class="tab-content hidden space-y-6">
         
-        <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
@@ -452,13 +453,15 @@
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">items</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
           </div>
 
-          <!-- Search & Filter Controls -->
-          <div class="w-full sm:w-72">
-            <input type="text" id="marketSearchInput" oninput="renderMarketplaceCards()" placeholder="পণ্য, বিক্রেতা বা ফোন দিয়ে খুঁজুন..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <input type="text" id="marketSearchInput" oninput="renderMarketplaceCards()" placeholder="পণ্য, বিক্রেতা বা ফোন দিয়ে খুঁজুন..." class="w-full sm:w-64 text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="openCreateMarketplaceModal()" class="w-full sm:w-auto flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-xl text-sm shadow transition">
+              <span>➕</span>
+              <span>নতুন বিজ্ঞাপন পোস্ট</span>
+            </button>
           </div>
         </div>
 
-        <!-- Filter Chips Bar -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
           <button onclick="filterMarket('all')" id="btnMarketFilter-all" class="market-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm transition">
@@ -472,9 +475,7 @@
           </button>
         </div>
 
-        <!-- Marketplace Items Grid -->
         <div id="marketListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-blue-600 rounded-full mb-2"></div>
             <p class="text-sm">হাট-বাজার পণ্য লোড হচ্ছে...</p>
@@ -483,12 +484,53 @@
 
       </section>
 
-      <!-- ========================================================================= -->
-      <!-- TAB 5: DIRECTORY DATA ENTRY (8 CATEGORIES) -->
-      <!-- ========================================================================= -->
+      <!-- TAB 5: USERS LIST & USER ACTIVITY DETAILED DASHBOARD -->
+      <section id="tabContent-users" class="tab-content hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+              <span>👥</span>
+              <span>নিবন্ধিত ইউজার তালিকা ও অ্যাক্টিভিটি ড্যাশবোর্ড</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">users</code> (রিয়েলটাইম ইউজার পর্যবেক্ষণ)</p>
+          </div>
+
+          <div class="w-full sm:w-72">
+            <input type="text" id="userSearchInput" oninput="renderUserList()" placeholder="নাম, ইমেইল, ফোন বা ঠিকানা দিয়ে খুঁজুন..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-100/80 text-slate-700 font-bold border-b border-slate-200 uppercase text-[11px] tracking-wider">
+                  <th class="p-3.5 pl-5">ইউজার প্রোফাইল</th>
+                  <th class="p-3.5">যোগাযোগ</th>
+                  <th class="p-3.5">উপজেলা / এলাকা</th>
+                  <th class="p-3.5">রোল (Role)</th>
+                  <th class="p-3.5">স্ট্যাটাস</th>
+                  <th class="p-3.5 pr-5 text-right">মডারেশন অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody id="userListTableBody" class="divide-y divide-slate-100 text-slate-700">
+                <tr>
+                  <td colspan="6" class="py-12 text-center text-slate-400">
+                    <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-indigo-600 rounded-full mb-2"></div>
+                    <p class="text-sm">ইউজার লিস্ট লোড হচ্ছে...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 6: DIRECTORY DATA ENTRY (8 CATEGORIES) -->
       <section id="tabContent-directories" class="tab-content hidden space-y-6">
         
-        <!-- Directory Category Selector Tabs -->
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex items-center justify-between mb-3">
             <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
@@ -541,10 +583,7 @@
           </div>
         </div>
 
-        <!-- Form + Realtime Table Container Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          <!-- Entry Form (5 cols on lg) -->
           <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
               <h3 id="dirFormTitle" class="font-bold text-slate-900 text-base flex items-center space-x-2">
@@ -555,24 +594,18 @@
             </div>
 
             <form id="directoryEntryForm" onsubmit="handleDirectoryFormSubmit(event)" class="space-y-4 text-xs">
-              
-              <!-- Hidden ID for edit mode -->
               <input type="hidden" id="dirFormEditId" value="">
 
-              <!-- Field 1: Title / Name -->
               <div>
                 <label id="dirLabelName" class="block font-semibold text-slate-700 mb-1">সেবার নাম / প্রতিষ্ঠানের নাম *</label>
                 <input type="text" id="dirInputName" required placeholder="যেমন: হাতীবান্ধা থানা পুলিশ বা ডা. মোঃ রফিকুল ইসলাম" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Field 2: Category / Specialty / Subtitle -->
               <div id="dirGroupCategory">
                 <label id="dirLabelCategory" class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি বা ধরণ *</label>
-                <!-- Rendered dynamically as select or input depending on active subtab -->
                 <div id="dirCategoryFieldWrapper"></div>
               </div>
 
-              <!-- Field 3: Upazila Selection -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">উপজেলা নির্বাচন *</label>
                 <select id="dirSelectUpazila" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
@@ -585,25 +618,21 @@
                 </select>
               </div>
 
-              <!-- Field 4: Contact / Phone Number -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">যোগাযোগের মোবাইল নম্বর *</label>
                 <input type="tel" id="dirInputPhone" required placeholder="যেমন: 01712345678 বা 019..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Field 5: Details / Address / Chamber / Market -->
               <div>
                 <label id="dirLabelAddress" class="block font-semibold text-slate-700 mb-1">ঠিকানা / চেম্বার সময় / অবস্থান *</label>
                 <textarea id="dirInputAddress" rows="3" placeholder="বাজারের নাম, রোড, দোকান নম্বর বা চেম্বারের সময়সূচি..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
 
-              <!-- Extra field for Coaching subjects if applicable -->
               <div id="dirGroupExtra" class="hidden">
                 <label id="dirLabelExtra" class="block font-semibold text-slate-700 mb-1">পড়ানোর বিষয় ও শ্রেণি</label>
                 <input type="text" id="dirInputExtra" placeholder="যেমন: গণিত ও বিজ্ঞান (ক্লাস ৯-১০)" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Submit Buttons -->
               <div class="pt-2 flex items-center space-x-2">
                 <button type="submit" id="btnSubmitDirForm" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow transition duration-150 flex items-center justify-center space-x-2">
                   <span>💾</span>
@@ -617,7 +646,6 @@
             </form>
           </div>
 
-          <!-- Real-time Live Directory List (7 cols on lg) -->
           <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
               <div>
@@ -629,7 +657,6 @@
               </div>
             </div>
 
-            <!-- Scrollable list of entries -->
             <div id="directoryEntriesContainer" class="flex-1 overflow-y-auto max-h-[600px] space-y-3 custom-scrollbar pr-1">
               <div class="py-12 text-center text-slate-400 text-xs">
                 ডাটা লোড হচ্ছে...
@@ -641,9 +668,7 @@
 
       </section>
 
-      <!-- ========================================================================= -->
-      <!-- TAB 6: SETUP & GUIDE -->
-      <!-- ========================================================================= -->
+      <!-- TAB 7: SETUP & GUIDE -->
       <section id="tabContent-settings" class="tab-content hidden space-y-6">
         
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
@@ -657,7 +682,6 @@
             </div>
           </div>
 
-          <!-- Step 1 -->
           <div class="flex items-start space-x-4">
             <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">১</span>
             <div class="space-y-1">
@@ -670,7 +694,6 @@
             </div>
           </div>
 
-          <!-- Step 2 -->
           <div class="flex items-start space-x-4">
             <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">২</span>
             <div class="space-y-1">
@@ -685,7 +708,6 @@
             </div>
           </div>
 
-          <!-- Step 3 -->
           <div class="flex items-start space-x-4">
             <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">৩</span>
             <div class="space-y-1">
@@ -698,7 +720,6 @@
             </div>
           </div>
 
-          <!-- Current Active Config Box -->
           <div class="p-4 rounded-xl bg-slate-900 text-slate-200 text-xs font-mono">
             <div class="flex items-center justify-between text-slate-400 mb-2 font-sans font-semibold">
               <span>সক্রিয় ফায়ারবেস কনফিগারেশন:</span>
@@ -722,11 +743,9 @@
 
   </main>
 
-  <!-- ========================================================================= -->
   <!-- MODALS -->
-  <!-- ========================================================================= -->
 
-  <!-- Create Official News Modal -->
+  <!-- 1. Create Official News Modal -->
   <div id="modalCreateNews" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -773,7 +792,7 @@
         <div>
           <label class="block font-semibold text-slate-700 mb-1">সংবাদের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
           <div class="flex items-center gap-2 mb-1.5">
-            <input type="file" id="newsFormImageFile" accept="image/*" onchange="handleNewsImageFileUpload(this, 'newsFormImageUrl', 'newsFormImagePreview', 'newsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer">
+            <input type="file" id="newsFormImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'newsFormImageUrl', 'newsFormImagePreview', 'newsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer">
             <span id="newsImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
           </div>
           <input type="url" id="newsFormImageUrl" oninput="updateImagePreview('newsFormImageUrl', 'newsFormImagePreview')" placeholder="অথবা সরাসরি ইমেজ লিংক পেস্ট করুন (https://...)" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500">
@@ -800,7 +819,7 @@
     </div>
   </div>
 
-  <!-- Edit News Modal -->
+  <!-- 2. Edit News Modal -->
   <div id="modalEditNews" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -857,7 +876,7 @@
         <div>
           <label class="block font-semibold text-slate-700 mb-1">সংবাদের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
           <div class="flex items-center gap-2 mb-1.5">
-            <input type="file" id="editNewsImageFile" accept="image/*" onchange="handleNewsImageFileUpload(this, 'editNewsImageUrl', 'editNewsImagePreview', 'editNewsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            <input type="file" id="editNewsImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'editNewsImageUrl', 'editNewsImagePreview', 'editNewsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
             <span id="editNewsImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
           </div>
           <input type="url" id="editNewsImageUrl" oninput="updateImagePreview('editNewsImageUrl', 'editNewsImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -879,17 +898,386 @@
     </div>
   </div>
 
+  <!-- 3. Create Community Post Modal -->
+  <div id="modalCreateCommunity" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>💬</span>
+          <span>নতুন জনমঞ্চ পোস্ট প্রকাশ করুন</span>
+        </h3>
+        <button onclick="closeCreateCommunityModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="createCommunityForm" onsubmit="handleCreateCommunitySubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের শিরোনাম / বিষয় *</label>
+          <input type="text" id="commFormTitle" required placeholder="যেমন: এলাকা পরিষ্কার অভিযান বা জরুরি প্রশ্ন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি / ট্যাগ *</label>
+          <select id="commFormTag" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+            <option value="সাধারণ জিজ্ঞাসা">সাধারণ জিজ্ঞাসা</option>
+            <option value="সমস্যা ও সমাধান">সমস্যা ও সমাধান</option>
+            <option value="নাগরিক মন্তব্য">নাগরিক মন্তব্য</option>
+            <option value="রক্তদান">রক্তদান</option>
+            <option value="হারানো-প্রাপ্তি">হারানো-প্রাপ্তি</option>
+            <option value="এলাকার খবর">এলাকার খবর</option>
+            <option value="জরুরি সহায়তা">জরুরি সহায়তা</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
+          <div class="flex items-center gap-2 mb-1.5">
+            <input type="file" id="commFormImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'commFormImageUrl', 'commFormImagePreview', 'commImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer">
+            <span id="commImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
+          </div>
+          <input type="url" id="commFormImageUrl" oninput="updateImagePreview('commFormImageUrl', 'commFormImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <div id="commFormImagePreview" class="hidden mt-2 h-28 w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+            <img src="" class="w-full h-full object-cover" alt="Preview">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">বিস্তারিত বিবরণ *</label>
+          <textarea id="commFormDescription" rows="5" required placeholder="আপনার বক্তব্য বা আলোচনা বিশদভাবে লিখুন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeCreateCommunityModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitCommForm" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow">পোস্ট করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Edit Community Post Modal -->
+  <div id="modalEditCommunity" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>✏️</span>
+          <span>জনমঞ্চ পোস্ট সম্পাদনা (Edit Post)</span>
+        </h3>
+        <button onclick="closeEditCommunityModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="editCommunityForm" onsubmit="handleEditCommunitySubmit(event)" class="space-y-3.5 text-xs">
+        <input type="hidden" id="editCommId">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের শিরোনাম / বিষয় *</label>
+          <input type="text" id="editCommTitle" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ট্যাগ *</label>
+            <select id="editCommTag" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="সাধারণ জিজ্ঞাসা">সাধারণ জিজ্ঞাসা</option>
+              <option value="সমস্যা ও সমাধান">সমস্যা ও সমাধান</option>
+              <option value="নাগরিক মন্তব্য">নাগরিক মন্তব্য</option>
+              <option value="রক্তদান">রক্তদান</option>
+              <option value="হারানো-প্রাপ্তি">হারানো-প্রাপ্তি</option>
+              <option value="এলাকার খবর">এলাকার খবর</option>
+              <option value="জরুরি সহায়তা">জরুরি সহায়তা</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">স্ট্যাটাস *</label>
+            <select id="editCommStatus" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="approved">🟢 অনুমোদিত / লাইভ (Approved & Live)</option>
+              <option value="pending">⏳ পেন্ডিং (Pending)</option>
+              <option value="rejected">🔴 বাতিল (Rejected)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
+          <div class="flex items-center gap-2 mb-1.5">
+            <input type="file" id="editCommImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'editCommImageUrl', 'editCommImagePreview', 'editCommImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer">
+            <span id="editCommImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
+          </div>
+          <input type="url" id="editCommImageUrl" oninput="updateImagePreview('editCommImageUrl', 'editCommImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <div id="editCommImagePreview" class="hidden mt-2 h-28 w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+            <img src="" class="w-full h-full object-cover" alt="Preview">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">বিবরণ *</label>
+          <textarea id="editCommDescription" rows="5" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeEditCommunityModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitEditComm" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow">সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Create Marketplace Product Modal -->
+  <div id="modalCreateMarketplace" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>🛒</span>
+          <span>নতুন পণ্য / বিজ্ঞাপন প্রকাশ করুন</span>
+        </h3>
+        <button onclick="closeCreateMarketplaceModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="createMarketplaceForm" onsubmit="handleCreateMarketplaceSubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পণ্যের নাম / শিরোনাম *</label>
+          <input type="text" id="marketFormTitle" required placeholder="যেমন: নতুন মোটরবাইক বা টাটকা ধান..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">মূল্য (টাকা) *</label>
+            <input type="text" id="marketFormPrice" required placeholder="যেমন: ৫০০ বা আলোচনা সাপেক্ষে" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি *</label>
+            <select id="marketFormCategory" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="কৃষি ও ফসল">কৃষি ও ফসল</option>
+              <option value="গৃহপালিত পশু">গৃহপালিত পশু</option>
+              <option value="ইলেকট্রনিক্স">ইলেকট্রনিক্স</option>
+              <option value="জমি ও বাড়ি">জমি ও বাড়ি</option>
+              <option value="যানবাহন">যানবাহন</option>
+              <option value="পোশাক ও ফ্যাশন">পোশাক ও ফ্যাশন</option>
+              <option value="কম্পিউটার ও প্রযুক্তি">কম্পিউটার ও প্রযুক্তি</option>
+              <option value="মোবাইল ও গেজেট">মোবাইল ও গেজেট</option>
+              <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">উপজেলা *</label>
+            <select id="marketFormUpazila" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
+              <option value="আদিতমারী">আদিতমারী</option>
+              <option value="কালীগঞ্জ">কালীগঞ্জ</option>
+              <option value="হাতীবান্ধা">হাতীবান্ধা</option>
+              <option value="পাটগ্রাম">পাটগ্রাম</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">অবস্থান / বাজার *</label>
+            <input type="text" id="marketFormLocation" required placeholder="যেমন: হাতীবান্ধা বাজার" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">বিক্রেতার নাম *</label>
+            <input type="text" id="marketFormSellerName" required placeholder="বিক্রেতার নাম" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">মোবাইল নম্বর *</label>
+            <input type="tel" id="marketFormSellerPhone" required placeholder="01712..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পণ্যের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
+          <div class="flex items-center gap-2 mb-1.5">
+            <input type="file" id="marketFormImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'marketFormImageUrl', 'marketFormImagePreview', 'marketImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            <span id="marketImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
+          </div>
+          <input type="url" id="marketFormImageUrl" oninput="updateImagePreview('marketFormImageUrl', 'marketFormImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div id="marketFormImagePreview" class="hidden mt-2 h-28 w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+            <img src="" class="w-full h-full object-cover" alt="Preview">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পণ্যের বিস্তারিত বিবরণ *</label>
+          <textarea id="marketFormDescription" rows="4" required placeholder="পণ্যের কন্ডিশন, বয়স বা বিস্তারিত লিখুন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div class="flex items-center space-x-2 bg-blue-50 p-3 rounded-xl border border-blue-200 text-blue-800">
+          <input type="checkbox" id="marketFormIsFeatured" class="w-4 h-4 text-blue-600 rounded">
+          <label for="marketFormIsFeatured" class="text-xs font-semibold">ফিচার্ড বিশেষ অফার হিসেবে চিহ্নিত করুন</label>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeCreateMarketplaceModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitMarketForm" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow">পণ্য পোস্ট করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Edit Marketplace Product Modal -->
+  <div id="modalEditMarketplace" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>✏️</span>
+          <span>বিজ্ঞাপন সম্পাদনা (Edit Product)</span>
+        </h3>
+        <button onclick="closeEditMarketplaceModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="editMarketplaceForm" onsubmit="handleEditMarketplaceSubmit(event)" class="space-y-3.5 text-xs">
+        <input type="hidden" id="editMarketId">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পণ্যের নাম / শিরোনাম *</label>
+          <input type="text" id="editMarketTitle" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">মূল্য (টাকা) *</label>
+            <input type="text" id="editMarketPrice" required class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি *</label>
+            <select id="editMarketCategory" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="কৃষি ও ফসল">কৃষি ও ফসল</option>
+              <option value="গৃহপালিত পশু">গৃহপালিত পশু</option>
+              <option value="ইলেকট্রনিক্স">ইলেকট্রনিক্স</option>
+              <option value="জমি ও বাড়ি">জমি ও বাড়ি</option>
+              <option value="যানবাহন">যানবাহন</option>
+              <option value="পোশাক ও ফ্যাশন">পোশাক ও ফ্যাশন</option>
+              <option value="কম্পিউটার ও প্রযুক্তি">কম্পিউটার ও প্রযুক্তি</option>
+              <option value="মোবাইল ও গেজেট">মোবাইল ও গেজেট</option>
+              <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">স্ট্যাটাস *</label>
+            <select id="editMarketStatus" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="approved">🟢 অনুমোদিত / লাইভ (Approved & Live)</option>
+              <option value="pending">⏳ পেন্ডিং (Pending)</option>
+              <option value="rejected">🔴 বাতিল (Rejected)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">উপজেলা *</label>
+            <select id="editMarketUpazila" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
+              <option value="আদিতমারী">আদিতমারী</option>
+              <option value="কালীগঞ্জ">কালীগঞ্জ</option>
+              <option value="হাতীবান্ধা">হাতীবান্ধা</option>
+              <option value="পাটগ্রাম">পাটগ্রাম</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">বিক্রেতার নাম *</label>
+            <input type="text" id="editMarketSellerName" required class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">মোবাইল নম্বর *</label>
+            <input type="tel" id="editMarketSellerPhone" required class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">অবস্থান / ঠিকানা *</label>
+          <input type="text" id="editMarketLocation" required class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
+          <div class="flex items-center gap-2 mb-1.5">
+            <input type="file" id="editMarketImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'editMarketImageUrl', 'editMarketImagePreview', 'editMarketImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            <span id="editMarketImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
+          </div>
+          <input type="url" id="editMarketImageUrl" oninput="updateImagePreview('editMarketImageUrl', 'editMarketImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <div id="editMarketImagePreview" class="hidden mt-2 h-28 w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+            <img src="" class="w-full h-full object-cover" alt="Preview">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">বিবরণ *</label>
+          <textarea id="editMarketDescription" rows="4" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div class="flex items-center space-x-2 bg-blue-50 p-3 rounded-xl border border-blue-200 text-blue-800">
+          <input type="checkbox" id="editMarketIsFeatured" class="w-4 h-4 text-blue-600 rounded">
+          <label for="editMarketIsFeatured" class="text-xs font-semibold">ফিচার্ড বিশেষ অফার</label>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeEditMarketplaceModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitEditMarket" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow">সংরক্ষণ করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Detailed User Activity Modal -->
+  <div id="modalUserDetailActivity" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+          <img id="userDetailAvatar" src="https://ui-avatars.com/api/?name=User" class="w-10 h-10 rounded-full border border-slate-200" alt="Avatar">
+          <div>
+            <h3 id="userDetailName" class="text-base font-bold text-slate-900">ইউজার প্রোফাইল</h3>
+            <p id="userDetailSub" class="text-xs text-slate-500">UID: <code id="userDetailUid" class="bg-slate-100 font-mono px-1 rounded"></code></p>
+          </div>
+        </div>
+        <button onclick="closeUserDetailModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <div id="userProfileMetaBox" class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <!-- Populated via JS -->
+      </div>
+
+      <div class="border-b border-slate-200 flex items-center space-x-2 text-xs font-bold">
+        <button onclick="switchUserActivityTab('market')" id="userActTab-market" class="user-act-tab border-b-2 border-blue-600 text-blue-700 pb-2 px-3">
+          🛒 মেইন প্রোডাক্ট বিজ্ঞাপন (<span id="userActMarketCount">0</span>)
+        </button>
+        <button onclick="switchUserActivityTab('community')" id="userActTab-community" class="user-act-tab text-slate-500 hover:text-slate-800 pb-2 px-3">
+          💬 জনমঞ্চ পোস্ট (<span id="userActCommunityCount">0</span>)
+        </button>
+        <button onclick="switchUserActivityTab('news')" id="userActTab-news" class="user-act-tab text-slate-500 hover:text-slate-800 pb-2 px-3">
+          📰 সংবাদ পোস্ট (<span id="userActNewsCount">0</span>)
+        </button>
+      </div>
+
+      <div id="userActivityContainer" class="min-h-[250px] space-y-3">
+        <!-- Populated dynamically via JS -->
+      </div>
+
+      <div class="pt-2 flex items-center justify-end">
+        <button onclick="closeUserDetailModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold">বন্ধ করুন</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden transform transition duration-300 ease-in-out bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-xs">
     <span id="toastIcon">ℹ️</span>
     <span id="toastMessage">বিজ্ঞপ্তি বার্তা</span>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: FIREBASE ARCHITECTURE & ZERO-LATENCY ONSNAPSHOT LISTENERS -->
-  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // 1. Official Lalmoni Express Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyDA9alHFInImn_CcMebJtkA7Rya4HVKVuI",
       authDomain: "lalmoniexpress-2c176.firebaseapp.com",
@@ -899,37 +1287,36 @@
       appId: "1:432722675545:web:75490e13b5b0c8df032e48"
     };
 
-    // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Global State
     let currentUser = null;
     let isVerifiedAdmin = false;
     let activeTab = 'overview';
     let activeDirectorySubTab = 'emergency';
 
-    // Realtime Raw Data Stores
     let rawNews = [];
     let rawCommunity = [];
     let rawMarket = [];
+    let rawUsers = [];
     let rawDirectory = [];
 
-    // Filter states
+    let activeInspectUser = null;
+    let activeUserInspectSubTab = 'market';
+
     let currentNewsFilter = 'approved';
     let currentCommunityFilter = 'pending';
     let currentMarketFilter = 'all';
 
-    // Active Snapshot Listener Registrations (for clean unsubscription if needed)
     let unsubNews = null;
     let unsubCommunity = null;
     let unsubMarket = null;
+    let unsubUsers = null;
     let unsubDirectory = null;
 
-    // Toast helper
     function showToast(message, type = 'info') {
       const toast = document.getElementById('toastNotification');
       const toastMsg = document.getElementById('toastMessage');
@@ -951,7 +1338,6 @@
       }, 4000);
     }
 
-    // Copy Admin UID helper
     function copyAdminUid() {
       if (currentUser) {
         navigator.clipboard.writeText(currentUser.uid).then(() => {
@@ -960,9 +1346,6 @@
       }
     }
 
-    // =========================================================================
-    // AUTHENTICATION FLOW
-    // =========================================================================
     function handleGoogleSignIn() {
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
@@ -983,7 +1366,6 @@
       });
     }
 
-    // Auth State Observer
     auth.onAuthStateChanged(async (user) => {
       currentUser = user;
       const loggedOutSec = document.getElementById('loggedOutSection');
@@ -991,7 +1373,6 @@
       const authHeaderArea = document.getElementById('authHeaderArea');
 
       if (user) {
-        // Render user in header
         authHeaderArea.innerHTML = `
           <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/15 px-2.5 py-1 rounded-full">
             <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'Admin')}" class="w-6 h-6 rounded-full border border-white/30" alt="Avatar">
@@ -1003,7 +1384,6 @@
         loggedOutSec.classList.add('hidden');
         loggedInSec.classList.remove('hidden');
 
-        // Verify Admin Authority in Firestore
         document.getElementById('userUidBadge').textContent = user.uid;
         try {
           const adminDoc = await db.collection('admins').doc(user.uid).get();
@@ -1019,11 +1399,9 @@
           document.getElementById('adminNoticeBanner').classList.remove('hidden');
         }
 
-        // Attach Realtime Firestore onSnapshot Listeners
         attachRealtimeListeners();
 
       } else {
-        // Logged out
         authHeaderArea.innerHTML = `
           <button onclick="handleGoogleSignIn()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full transition shadow">
             লগইন
@@ -1032,18 +1410,13 @@
         loggedOutSec.classList.remove('hidden');
         loggedInSec.classList.add('hidden');
 
-        // Detach listeners
         detachRealtimeListeners();
       }
     });
 
-    // =========================================================================
-    // REAL-TIME FIRESTORE ONSNAPSHOT LISTENERS (ZERO-LATENCY)
-    // =========================================================================
     function attachRealtimeListeners() {
-      detachRealtimeListeners(); // ensure no duplicates
+      detachRealtimeListeners();
 
-      // 1. Listen to Local News ("local_news")
       unsubNews = db.collection('local_news')
         .onSnapshot((snapshot) => {
           rawNews = [];
@@ -1056,6 +1429,7 @@
               category: data.category || 'অন্যান্য',
               upazila: data.upazila || 'লালমনিরহাট সদর',
               imageUrl: data.imageUrl || data.image_url || '',
+              authorId: data.authorId || data.author_id || '',
               authorName: data.authorName || data.author_name || 'নাগরিক প্রতিবেদক',
               status: (data.status || 'pending').toLowerCase(),
               createdAt: data.createdAt || 0,
@@ -1065,17 +1439,16 @@
             });
           });
 
-          // Sort by createdAt descending
           rawNews.sort((a, b) => b.createdAt - a.createdAt);
 
           updateNewsStats();
           renderNewsCards();
+          if (activeInspectUser) refreshUserActivityModal();
         }, (error) => {
           console.error("News snapshot error:", error);
           showToast(`নিউজ সিঙ্ক এরর: ${error.message}`, 'error');
         });
 
-      // 2. Listen to Community Posts ("community_posts")
       unsubCommunity = db.collection('community_posts')
         .onSnapshot((snapshot) => {
           rawCommunity = [];
@@ -1083,7 +1456,7 @@
             const data = doc.data();
             rawCommunity.push({
               id: doc.id,
-              userId: data.userId || '',
+              userId: data.userId || data.user_id || '',
               authorName: data.authorName || 'নাগরিক',
               authorPhotoUrl: data.authorPhotoUrl || '',
               title: data.title || '',
@@ -1101,11 +1474,11 @@
 
           updateCommunityStats();
           renderCommunityCards();
+          if (activeInspectUser) refreshUserActivityModal();
         }, (error) => {
           console.error("Community snapshot error:", error);
         });
 
-      // 3. Listen to Marketplace ("items")
       unsubMarket = db.collection('items')
         .onSnapshot((snapshot) => {
           rawMarket = [];
@@ -1119,9 +1492,11 @@
               category: data.category || 'সাধারণ',
               subcategory: data.subcategory || '',
               location: data.location || 'লালমনিরহাট',
+              upazila: data.upazila || data.upazila_id || 'লালমনিরহাট সদর',
               imageUrl: data.imageUrl || data.image_url || '',
               sellerName: data.sellerName || data.seller_name || 'নাগরিক বিক্রেতা',
-              sellerPhone: data.sellerPhone || data.seller_phone || '',
+              sellerPhone: data.sellerPhone || data.phone_number || data.phone || '',
+              userId: data.userId || data.user_id || '',
               description: data.description || '',
               status: statusRaw,
               isFeatured: data.isFeatured || data.is_featured || false,
@@ -1133,11 +1508,38 @@
 
           updateMarketStats();
           renderMarketplaceCards();
+          if (activeInspectUser) refreshUserActivityModal();
         }, (error) => {
           console.error("Marketplace snapshot error:", error);
         });
 
-      // 4. Initial load of active directory subtab
+      unsubUsers = db.collection('users')
+        .onSnapshot((snapshot) => {
+          rawUsers = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            rawUsers.push({
+              id: doc.id,
+              name: data.name || data.displayName || 'নাগরিক',
+              phone: data.phoneNumber || data.phone || '',
+              email: data.email || '',
+              photoUrl: data.photoUrl || data.photoURL || '',
+              role: data.role || 'USER',
+              upazila: data.upazila || 'লালমনিরহাট',
+              district: data.district || 'লালমনিরহাট',
+              isBlocked: data.isBlocked || false,
+              createdAt: data.createdAt || 0
+            });
+          });
+
+          rawUsers.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+          updateUsersStats();
+          renderUserList();
+        }, (error) => {
+          console.error("Users snapshot error:", error);
+        });
+
       loadDirectorySubTab(activeDirectorySubTab);
     }
 
@@ -1145,19 +1547,16 @@
       if (unsubNews) { unsubNews(); unsubNews = null; }
       if (unsubCommunity) { unsubCommunity(); unsubCommunity = null; }
       if (unsubMarket) { unsubMarket(); unsubMarket = null; }
+      if (unsubUsers) { unsubUsers(); unsubUsers = null; }
       if (unsubDirectory) { unsubDirectory(); unsubDirectory = null; }
     }
 
-    // =========================================================================
-    // STATS UPDATERS
-    // =========================================================================
     function updateNewsStats() {
       const pendingCount = rawNews.filter(n => n.status === 'pending').length;
       const approvedCount = rawNews.filter(n => n.status === 'approved').length;
       const rejectedCount = rawNews.filter(n => n.status === 'rejected').length;
 
       document.getElementById('statCountPendingNews').textContent = pendingCount;
-      document.getElementById('quickBadgeNews').textContent = pendingCount;
       document.getElementById('countNewsFilterPending').textContent = pendingCount;
       document.getElementById('countNewsFilterApproved').textContent = approvedCount;
       document.getElementById('countNewsFilterRejected').textContent = rejectedCount;
@@ -1188,7 +1587,6 @@
       const approvedCount = rawCommunity.filter(c => c.status === 'approved').length;
 
       document.getElementById('statCountPendingCommunity').textContent = pendingCount;
-      document.getElementById('quickBadgeCommunity').textContent = pendingCount;
       document.getElementById('countCommFilterPending').textContent = pendingCount;
       document.getElementById('countCommFilterApproved').textContent = approvedCount;
       document.getElementById('countCommFilterAll').textContent = rawCommunity.length;
@@ -1220,13 +1618,18 @@
       }
     }
 
-    // =========================================================================
-    // TAB SWITCHING LOGIC
-    // =========================================================================
+    function updateUsersStats() {
+      const total = rawUsers.length;
+      document.getElementById('statCountUsersTotal').textContent = total;
+      document.getElementById('badgeUsersTotal').textContent = total;
+      if (document.getElementById('quickBadgeUsers')) {
+        document.getElementById('quickBadgeUsers').textContent = total;
+      }
+    }
+
     function switchTab(tabId) {
       activeTab = tabId;
 
-      // Update Tab Buttons
       document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active-tab', 'bg-blue-600', 'text-white', 'shadow');
         btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
@@ -1238,7 +1641,6 @@
         activeBtn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
       }
 
-      // Update Tab Contents
       document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.add('hidden');
       });
@@ -1249,9 +1651,52 @@
       }
     }
 
-    // =========================================================================
-    // LOCAL NEWS RENDERING & ACTIONS
-    // =========================================================================
+    async function handleImageFileUpload(fileInput, targetUrlInputId, previewContainerId, statusId) {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) statusEl.textContent = 'আপলোড হচ্ছে... ⏳';
+
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const response = await fetch('https://api.imgbb.com/1/upload?key=3254da4410165dd908d91b93d68c0b71', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        if (result && result.success && result.data && result.data.url) {
+          document.getElementById(targetUrlInputId).value = result.data.url;
+          updateImagePreview(targetUrlInputId, previewContainerId);
+          if (statusEl) statusEl.textContent = 'ছবি আপলোড সম্পন্ন ✅';
+          showToast('ছবি সফলভাবে আপলোড হয়েছে!', 'success');
+        } else {
+          throw new Error(result.error?.message || 'ইমেজ আপলোড ব্যর্থ');
+        }
+      } catch (err) {
+        console.error("ImgBB upload error:", err);
+        if (statusEl) statusEl.textContent = 'আপলোড ব্যর্থ ❌';
+        showToast(`ছবি আপলোড ব্যর্থ: ${err.message}`, 'error');
+      }
+    }
+
+    function updateImagePreview(urlInputId, previewContainerId) {
+      const url = document.getElementById(urlInputId).value.trim();
+      const container = document.getElementById(previewContainerId);
+      if (!container) return;
+
+      if (url) {
+        const img = container.querySelector('img');
+        if (img) img.src = url;
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
     function filterNews(filterType) {
       currentNewsFilter = filterType;
       document.querySelectorAll('.news-filter-btn').forEach(btn => {
@@ -1349,7 +1794,6 @@
               </div>
             </div>
 
-            <!-- Management Actions Bar -->
             <div class="p-4 pt-1 bg-slate-50/50 border-t border-slate-100 flex flex-wrap items-center gap-2">
               <button onclick="openEditNewsModal('${news.id}')" title="সম্পাদনা করুন" class="flex-1 bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 hover:border-blue-300 font-semibold py-1.5 px-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1 shadow-sm">
                 <span>✏️</span>
@@ -1404,7 +1848,6 @@
       }
     }
 
-    // Modal controls for news creation
     function openCreateNewsModal() {
       document.getElementById('modalCreateNews').classList.remove('hidden');
     }
@@ -1420,7 +1863,6 @@
       if (status) status.textContent = '';
     }
 
-    // Modal controls for news editing
     function openEditNewsModal(newsId) {
       const item = rawNews.find(n => n.id === newsId);
       if (!item) {
@@ -1481,58 +1923,10 @@
         showToast(`আপডেট ব্যর্থ: ${err.message}`, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'পরিবর্তন সংরক্ষণ করুন';
+        btn.textContent = 'সংরক্ষণ করুন';
       }
     }
 
-    // Direct Image Upload to ImgBB Client
-    async function handleNewsImageFileUpload(fileInput, targetUrlInputId, previewContainerId, statusId) {
-      const file = fileInput.files && fileInput.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById(statusId);
-      if (statusEl) statusEl.textContent = 'আপলোড হচ্ছে... ⏳';
-
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const response = await fetch('https://api.imgbb.com/1/upload?key=3254da4410165dd908d91b93d68c0b71', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-        if (result && result.success && result.data && result.data.url) {
-          document.getElementById(targetUrlInputId).value = result.data.url;
-          updateImagePreview(targetUrlInputId, previewContainerId);
-          if (statusEl) statusEl.textContent = 'ছবি আপলোড সম্পন্ন ✅';
-          showToast('ছবি সফলভাবে আপলোড হয়েছে!', 'success');
-        } else {
-          throw new Error(result.error?.message || 'ইমেজ আপলোড ব্যর্থ');
-        }
-      } catch (err) {
-        console.error("ImgBB upload error:", err);
-        if (statusEl) statusEl.textContent = 'আপলোড ব্যর্থ ❌';
-        showToast(`ছবি আপলোড ব্যর্থ: ${err.message}`, 'error');
-      }
-    }
-
-    function updateImagePreview(urlInputId, previewContainerId) {
-      const url = document.getElementById(urlInputId).value.trim();
-      const container = document.getElementById(previewContainerId);
-      if (!container) return;
-
-      if (url) {
-        const img = container.querySelector('img');
-        if (img) img.src = url;
-        container.classList.remove('hidden');
-      } else {
-        container.classList.add('hidden');
-      }
-    }
-
-    // Fixed News Creation Submission with timeout protection and schema compliance
     async function handleCreateNewsSubmit(e) {
       e.preventDefault();
       const title = document.getElementById('newsFormTitle').value.trim();
@@ -1546,7 +1940,6 @@
       btn.disabled = true;
       btn.innerHTML = `<span class="inline-block animate-spin mr-1">⏳</span> পোস্ট হচ্ছে...`;
 
-      // Active authenticated Firebase user check
       const activeAuthUser = (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser : currentUser;
       if (!activeAuthUser) {
         showToast('সংবাদ প্রকাশ করতে অনুগ্রহ করে প্রথমে গুগল দিয়ে লগইন করুন', 'warning');
@@ -1555,7 +1948,6 @@
         return;
       }
 
-      // Safe Firestore post with timeout safeguard
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('অনুরোধটির সময়সীমা শেষ হয়েছে (Timeout)')), 15000)
       );
@@ -1574,7 +1966,7 @@
           authorName: activeAuthUser.displayName || 'লালমনি বার্তা অফিসিয়াল',
           authorPhotoUrl: activeAuthUser.photoURL || '',
           isAdminOfficial: isOfficial,
-          status: 'approved', // Admin submissions are immediately approved and published
+          status: 'approved',
           createdAt: now,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           likes: [],
@@ -1597,7 +1989,6 @@
       }
     }
 
-    // Seed default 3 news items to Firestore if empty or requested
     async function seedDefaultNewsToFirestore() {
       if (!confirm('আপনি কি ডিফল্ট ৩টি সংবাদ লাইভ ফায়ারবেস ডাটাবেজে যুক্ত করতে চান?')) return;
       showToast('সংবাদ ডাটাবেজে যুক্ত হচ্ছে...', 'info');
@@ -1667,9 +2058,6 @@
       }
     }
 
-    // =========================================================================
-    // COMMUNITY POSTS RENDERING & ACTIONS
-    // =========================================================================
     function filterCommunity(filterType) {
       currentCommunityFilter = filterType;
       document.querySelectorAll('.comm-filter-btn').forEach(btn => {
@@ -1694,10 +2082,16 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm">
             <span class="text-4xl block mb-2">💬</span>
             <h4 class="text-slate-700 font-bold text-sm">কোনো জনমঞ্চ পোস্ট পাওয়া যায়নি</h4>
             <p class="text-slate-400 text-xs mt-1">নির্বাচিত ফিল্টারে এই মুহূর্তে কোনো পোস্ট নেই।</p>
+            <div class="mt-4">
+              <button onclick="openCreateCommunityModal()" class="inline-flex items-center space-x-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-2 rounded-xl text-xs shadow transition">
+                <span>✍️</span>
+                <span>নতুন জনমঞ্চ পোস্ট তৈরি করুন</span>
+              </button>
+            </div>
           </div>
         `;
         return;
@@ -1724,7 +2118,6 @@
         return `
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
             <div>
-              <!-- Author header -->
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-2.5">
                   <img src="${post.authorPhotoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.authorName || 'Citizen')}" class="w-8 h-8 rounded-full border border-slate-200" alt="Author">
@@ -1736,27 +2129,27 @@
                 ${statusBadges[post.status] || ''}
               </div>
 
-              <!-- Tag -->
               <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100 mb-2">
                 ${post.tag}
               </span>
 
-              <!-- Content -->
               ${post.title ? `<h4 class="font-bold text-slate-900 text-xs mb-1">${post.title}</h4>` : ''}
               <p class="text-xs text-slate-600 line-clamp-4 leading-relaxed mb-3">${post.description}</p>
               ${imageHtml}
             </div>
 
-            <!-- Action buttons -->
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
               <span class="text-[11px] text-slate-400">❤️ ${post.likes.length} • 💬 ${post.commentCount}</span>
               <div class="flex items-center space-x-1.5">
+                <button onclick="openEditCommunityModal('${post.id}')" title="সম্পাদনা" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 py-1 px-2 rounded-lg text-xs font-semibold transition">
+                  ✏️ এডিট
+                </button>
                 ${post.status !== 'approved' ? `
-                  <button onclick="updateCommunityStatus('${post.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded-lg text-xs transition">
+                  <button onclick="updateCommunityStatus('${post.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1 px-2.5 rounded-lg text-xs transition">
                     অনুমোদন
                   </button>
                 ` : ''}
-                <button onclick="deleteCommunityPost('${post.id}')" title="ডিলিট করুন" class="bg-rose-50 hover:bg-rose-100 text-rose-600 py-1.5 px-2.5 rounded-lg text-xs font-bold transition">
+                <button onclick="deleteCommunityPost('${post.id}')" title="ডিলিট করুন" class="bg-rose-50 hover:bg-rose-100 text-rose-600 py-1 px-2 rounded-lg text-xs font-bold transition">
                   🗑️
                 </button>
               </div>
@@ -1764,6 +2157,112 @@
           </div>
         `;
       }).join('');
+    }
+
+    function openCreateCommunityModal() {
+      document.getElementById('modalCreateCommunity').classList.remove('hidden');
+    }
+    function closeCreateCommunityModal() {
+      document.getElementById('modalCreateCommunity').classList.add('hidden');
+      document.getElementById('createCommunityForm').reset();
+      const preview = document.getElementById('commFormImagePreview');
+      if (preview) preview.classList.add('hidden');
+    }
+
+    async function handleCreateCommunitySubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('commFormTitle').value.trim();
+      const tag = document.getElementById('commFormTag').value;
+      const imageUrl = document.getElementById('commFormImageUrl').value.trim();
+      const description = document.getElementById('commFormDescription').value.trim();
+
+      const btn = document.getElementById('btnSubmitCommForm');
+      btn.disabled = true;
+      btn.textContent = 'পোস্ট হচ্ছে...';
+
+      const activeAuthUser = (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser : currentUser;
+
+      try {
+        const newDocRef = db.collection('community_posts').doc();
+        const now = Date.now();
+        await newDocRef.set({
+          id: newDocRef.id,
+          userId: activeAuthUser ? activeAuthUser.uid : 'admin_official',
+          authorName: activeAuthUser ? activeAuthUser.displayName || 'লালমনি এক্সপ্রেস অ্যাডমিন' : 'লালমনি এক্সপ্রেস অ্যাডমিন',
+          authorPhotoUrl: activeAuthUser ? activeAuthUser.photoURL || '' : '',
+          title: title,
+          tag: tag,
+          description: description,
+          imageUrl: imageUrl,
+          status: 'approved',
+          createdAt: now,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          likes: [],
+          commentCount: 0
+        });
+
+        showToast('জনমঞ্চ পোস্ট সফলভাবে লাইভ প্রকাশিত হয়েছে!', 'success');
+        closeCreateCommunityModal();
+      } catch (err) {
+        console.error("Error creating community post:", err);
+        showToast(`পোস্ট প্রকাশ ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'পোস্ট করুন';
+      }
+    }
+
+    function openEditCommunityModal(postId) {
+      const item = rawCommunity.find(c => c.id === postId);
+      if (!item) return;
+
+      document.getElementById('editCommId').value = item.id;
+      document.getElementById('editCommTitle').value = item.title || '';
+      document.getElementById('editCommTag').value = item.tag || 'সাধারণ জিজ্ঞাসা';
+      document.getElementById('editCommStatus').value = item.status || 'approved';
+      document.getElementById('editCommImageUrl').value = item.imageUrl || '';
+      document.getElementById('editCommDescription').value = item.description || '';
+
+      updateImagePreview('editCommImageUrl', 'editCommImagePreview');
+
+      document.getElementById('modalEditCommunity').classList.remove('hidden');
+    }
+
+    function closeEditCommunityModal() {
+      document.getElementById('modalEditCommunity').classList.add('hidden');
+      document.getElementById('editCommunityForm').reset();
+    }
+
+    async function handleEditCommunitySubmit(e) {
+      e.preventDefault();
+      const commId = document.getElementById('editCommId').value;
+      const title = document.getElementById('editCommTitle').value.trim();
+      const tag = document.getElementById('editCommTag').value;
+      const status = document.getElementById('editCommStatus').value;
+      const imageUrl = document.getElementById('editCommImageUrl').value.trim();
+      const description = document.getElementById('editCommDescription').value.trim();
+
+      const btn = document.getElementById('btnSubmitEditComm');
+      btn.disabled = true;
+
+      try {
+        await db.collection('community_posts').doc(commId).update({
+          title: title,
+          tag: tag,
+          status: status,
+          imageUrl: imageUrl,
+          description: description,
+          updatedAt: Date.now()
+        });
+
+        showToast('জনমঞ্চ পোস্টটি সফলভাবে আপডেট করা হয়েছে!', 'success');
+        closeEditCommunityModal();
+      } catch (err) {
+        console.error("Error editing community post:", err);
+        showToast(`আপডেট ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     async function updateCommunityStatus(postId, newStatus) {
@@ -1789,9 +2288,6 @@
       }
     }
 
-    // =========================================================================
-    // MARKETPLACE (ডিজিটাল হাট-বাজার) RENDERING & ACTIONS
-    // =========================================================================
     function filterMarket(filterType) {
       currentMarketFilter = filterType;
       document.querySelectorAll('.market-filter-btn').forEach(btn => {
@@ -1830,7 +2326,13 @@
           <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200">
             <span class="text-4xl block mb-2">🛒</span>
             <h4 class="text-slate-700 font-bold text-sm">কোনো পণ্য পাওয়া যায়নি</h4>
-            <p class="text-slate-400 text-xs mt-1">ফিল্টারে কোনো আইটেম মিলেনি।</p>
+            <p class="text-slate-400 text-xs mt-1">ফিল্টারে কোনো আইটেম মilenি।</p>
+            <div class="mt-4">
+              <button onclick="openCreateMarketplaceModal()" class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl text-xs shadow transition">
+                <span>➕</span>
+                <span>নতুন পণ্য বা বিজ্ঞাপন যোগ করুন</span>
+              </button>
+            </div>
           </div>
         `;
         return;
@@ -1874,13 +2376,17 @@
               </div>
             </div>
 
-            <div class="p-3 pt-0 flex items-center gap-1.5">
+            <div class="p-3 pt-0 flex flex-wrap items-center gap-1.5">
+              <button onclick="openEditMarketplaceModal('${item.id}')" title="সম্পাদনা" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 py-1.5 px-2 rounded-lg text-xs font-semibold transition flex-1 flex items-center justify-center space-x-1">
+                <span>✏️</span>
+                <span>এডিট</span>
+              </button>
               ${item.status !== 'approved' ? `
                 <button onclick="updateMarketStatus('${item.id}', 'approved')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-2 rounded-lg text-xs transition">
                   অনুমোদন
                 </button>
               ` : `
-                <button onclick="toggleMarketFeatured('${item.id}', ${!item.isFeatured})" class="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 px-2 rounded-lg text-xs transition">
+                <button onclick="toggleMarketFeatured('${item.id}', ${!item.isFeatured})" class="bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold py-1.5 px-2 rounded-lg text-[11px] transition">
                   ${item.isFeatured ? 'আনফিচার্ড' : '⭐ ফিচার্ড'}
                 </button>
               `}
@@ -1891,6 +2397,156 @@
           </div>
         `;
       }).join('');
+    }
+
+    function openCreateMarketplaceModal() {
+      document.getElementById('modalCreateMarketplace').classList.remove('hidden');
+    }
+    function closeCreateMarketplaceModal() {
+      document.getElementById('modalCreateMarketplace').classList.add('hidden');
+      document.getElementById('createMarketplaceForm').reset();
+      const preview = document.getElementById('marketFormImagePreview');
+      if (preview) preview.classList.add('hidden');
+    }
+
+    async function handleCreateMarketplaceSubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('marketFormTitle').value.trim();
+      const price = document.getElementById('marketFormPrice').value.trim();
+      const category = document.getElementById('marketFormCategory').value;
+      const upazila = document.getElementById('marketFormUpazila').value;
+      const location = document.getElementById('marketFormLocation').value.trim();
+      const sellerName = document.getElementById('marketFormSellerName').value.trim();
+      const sellerPhone = document.getElementById('marketFormSellerPhone').value.trim();
+      const imageUrl = document.getElementById('marketFormImageUrl').value.trim();
+      const description = document.getElementById('marketFormDescription').value.trim();
+      const isFeatured = document.getElementById('marketFormIsFeatured').checked;
+
+      const btn = document.getElementById('btnSubmitMarketForm');
+      btn.disabled = true;
+      btn.textContent = 'পোস্ট হচ্ছে...';
+
+      const activeAuthUser = (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser : currentUser;
+
+      try {
+        const newDocRef = db.collection('items').doc();
+        const now = Date.now();
+        await newDocRef.set({
+          id: newDocRef.id,
+          title: title,
+          price: price,
+          category: category,
+          category_id: category,
+          subcategory: '',
+          subcategory_id: '',
+          location: location,
+          upazila_id: upazila,
+          union_id: '',
+          seller_name: sellerName,
+          sellerName: sellerName,
+          phone_number: sellerPhone,
+          phone: sellerPhone,
+          sellerPhone: sellerPhone,
+          whatsapp_number: sellerPhone,
+          user_id: activeAuthUser ? activeAuthUser.uid : 'admin_market',
+          userId: activeAuthUser ? activeAuthUser.uid : 'admin_market',
+          description: description,
+          image_url: imageUrl,
+          imageUrl: imageUrl,
+          status: 'approved',
+          is_featured: isFeatured,
+          isFeatured: isFeatured,
+          created_at: now,
+          createdAt: now,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showToast('পণ্যটি সফলভাবে ডিজিটাল হাট-বাজারে লাইভ যুক্ত হয়েছে!', 'success');
+        closeCreateMarketplaceModal();
+      } catch (err) {
+        console.error("Error posting marketplace product:", err);
+        showToast(`পোস্ট ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'পণ্য পোস্ট করুন';
+      }
+    }
+
+    function openEditMarketplaceModal(itemId) {
+      const item = rawMarket.find(m => m.id === itemId);
+      if (!item) return;
+
+      document.getElementById('editMarketId').value = item.id;
+      document.getElementById('editMarketTitle').value = item.title || '';
+      document.getElementById('editMarketPrice').value = item.price || '';
+      document.getElementById('editMarketCategory').value = item.category || 'কৃষি ও ফসল';
+      document.getElementById('editMarketStatus').value = item.status || 'approved';
+      document.getElementById('editMarketUpazila').value = item.upazila || 'লালমনিরহাট সদর';
+      document.getElementById('editMarketSellerName').value = item.sellerName || '';
+      document.getElementById('editMarketSellerPhone').value = item.sellerPhone || '';
+      document.getElementById('editMarketLocation').value = item.location || '';
+      document.getElementById('editMarketImageUrl').value = item.imageUrl || '';
+      document.getElementById('editMarketDescription').value = item.description || '';
+      document.getElementById('editMarketIsFeatured').checked = item.isFeatured || false;
+
+      updateImagePreview('editMarketImageUrl', 'editMarketImagePreview');
+
+      document.getElementById('modalEditMarketplace').classList.remove('hidden');
+    }
+
+    function closeEditMarketplaceModal() {
+      document.getElementById('modalEditMarketplace').classList.add('hidden');
+      document.getElementById('editMarketplaceForm').reset();
+    }
+
+    async function handleEditMarketplaceSubmit(e) {
+      e.preventDefault();
+      const itemId = document.getElementById('editMarketId').value;
+      const title = document.getElementById('editMarketTitle').value.trim();
+      const price = document.getElementById('editMarketPrice').value.trim();
+      const category = document.getElementById('editMarketCategory').value;
+      const status = document.getElementById('editMarketStatus').value;
+      const upazila = document.getElementById('editMarketUpazila').value;
+      const sellerName = document.getElementById('editMarketSellerName').value.trim();
+      const sellerPhone = document.getElementById('editMarketSellerPhone').value.trim();
+      const location = document.getElementById('editMarketLocation').value.trim();
+      const imageUrl = document.getElementById('editMarketImageUrl').value.trim();
+      const description = document.getElementById('editMarketDescription').value.trim();
+      const isFeatured = document.getElementById('editMarketIsFeatured').checked;
+
+      const btn = document.getElementById('btnSubmitEditMarket');
+      btn.disabled = true;
+
+      try {
+        await db.collection('items').doc(itemId).update({
+          title: title,
+          price: price,
+          category: category,
+          category_id: category,
+          status: status,
+          upazila_id: upazila,
+          seller_name: sellerName,
+          sellerName: sellerName,
+          phone_number: sellerPhone,
+          phone: sellerPhone,
+          sellerPhone: sellerPhone,
+          location: location,
+          image_url: imageUrl,
+          imageUrl: imageUrl,
+          description: description,
+          is_featured: isFeatured,
+          isFeatured: isFeatured,
+          updatedAt: Date.now()
+        });
+
+        showToast('পণ্যের তথ্য সফলভাবে আপডেট হয়েছে!', 'success');
+        closeEditMarketplaceModal();
+      } catch (err) {
+        console.error("Error editing market item:", err);
+        showToast(`আপডেট ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+      }
     }
 
     async function updateMarketStatus(itemId, newStatus) {
@@ -1927,9 +2583,258 @@
       }
     }
 
-    // =========================================================================
-    // 8 DIRECTORY CATEGORIES MANAGEMENT (PARITY WITH KOTLIN DATA MODELS)
-    // =========================================================================
+    function renderUserList() {
+      const tbody = document.getElementById('userListTableBody');
+      const searchTerm = (document.getElementById('userSearchInput').value || '').trim().toLowerCase();
+
+      let filtered = rawUsers;
+      if (searchTerm) {
+        filtered = filtered.filter(u => 
+          (u.name && u.name.toLowerCase().includes(searchTerm)) ||
+          (u.phone && u.phone.includes(searchTerm)) ||
+          (u.email && u.email.toLowerCase().includes(searchTerm)) ||
+          (u.upazila && u.upazila.toLowerCase().includes(searchTerm)) ||
+          (u.role && u.role.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-12 text-center text-slate-400">
+              <span class="text-3xl block mb-2">👥</span>
+              <p class="text-xs">কোনো নিবন্ধিত ইউজার পাওয়া যায়নি।</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(user => {
+        const avatar = user.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}`;
+        const isUserAdmin = user.role === 'ADMIN';
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-3.5 pl-5">
+              <div class="flex items-center space-x-3">
+                <img src="${avatar}" class="w-9 h-9 rounded-full border border-slate-200 object-cover" alt="User">
+                <div>
+                  <h5 class="font-bold text-slate-900 text-xs">${user.name}</h5>
+                  <p class="text-[10px] text-slate-400 font-mono">UID: ${user.id.substring(0, 10)}...</p>
+                </div>
+              </div>
+            </td>
+
+            <td class="p-3.5">
+              <p class="font-semibold text-slate-800 text-xs">${user.phone || 'ফোন নম্বর নেই'}</p>
+              <p class="text-[11px] text-slate-400">${user.email || 'ইমেইল নেই'}</p>
+            </td>
+
+            <td class="p-3.5 font-medium text-slate-700 text-xs">
+              📍 ${user.upazila || 'লালমনিরহাট'}
+            </td>
+
+            <td class="p-3.5">
+              ${isUserAdmin ? `
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                  ⚡ ADMIN
+                </span>
+              ` : `
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                  👤 USER
+                </span>
+              `}
+            </td>
+
+            <td class="p-3.5">
+              ${user.isBlocked ? `
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                  🚫 অবরুদ্ধ (Blocked)
+                </span>
+              ` : `
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  🟢 সক্রিয় (Active)
+                </span>
+              `}
+            </td>
+
+            <td class="p-3.5 pr-5 text-right">
+              <div class="flex items-center justify-end space-x-1.5">
+                <button onclick="inspectUserActivity('${user.id}')" title="ইউজারের সকল পোস্ট ও বিজ্ঞাপন দেখুন" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1.5 px-3 rounded-lg text-xs transition shadow-sm flex items-center space-x-1">
+                  <span>🔍</span>
+                  <span>অ্যাক্টিভিটি</span>
+                </button>
+
+                <button onclick="toggleUserBlock('${user.id}', ${!user.isBlocked})" title="${user.isBlocked ? 'আনব্লক করুন' : 'ব্লক করুন'}" class="p-1.5 rounded-lg border text-xs font-bold transition ${user.isBlocked ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100'}">
+                  ${user.isBlocked ? '🔓' : '🚫'}
+                </button>
+
+                <button onclick="deleteUserRecord('${user.id}')" title="ইউজার মুছুন" class="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold transition">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function toggleUserBlock(userId, blockState) {
+      try {
+        await db.collection('users').doc(userId).update({
+          isBlocked: blockState
+        });
+        showToast(`ইউজার অ্যাকাউন্ট ${blockState ? 'ব্লক' : 'আনব্লক'} করা হয়েছে।`, 'success');
+      } catch (err) {
+        showToast(`স্ট্যাটাস পরিবর্তন ব্যর্থ: ${err.message}`, 'error');
+      }
+    }
+
+    async function deleteUserRecord(userId) {
+      if (!confirm('আপনি কি নিশ্চিতভাবে এই ইউজারের রেকর্ডটি মুছে ফেলতে চান?')) return;
+      try {
+        await db.collection('users').doc(userId).delete();
+        showToast('ইউজারের প্রোফাইল সফলভাবে মুছে ফেলা হয়েছে।', 'info');
+      } catch (err) {
+        showToast(`ডিলিট ব্যর্থ: ${err.message}`, 'error');
+      }
+    }
+
+    function inspectUserActivity(userId) {
+      const user = rawUsers.find(u => u.id === userId);
+      if (!user) {
+        showToast('ইউজার পাওয়া যায়নি।', 'error');
+        return;
+      }
+
+      activeInspectUser = user;
+      activeUserInspectSubTab = 'market';
+
+      document.getElementById('userDetailAvatar').src = user.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}`;
+      document.getElementById('userDetailName').textContent = user.name || 'নাগরিক';
+      document.getElementById('userDetailSub').innerHTML = `রোল: <strong>${user.role}</strong> • উপজেলা: <strong>${user.upazila}</strong>`;
+      document.getElementById('userDetailUid').textContent = user.id;
+
+      document.getElementById('userProfileMetaBox').innerHTML = `
+        <div>
+          <span class="text-slate-400 block text-[10px]">ফোন নম্বর:</span>
+          <span class="font-bold text-slate-800">${user.phone || 'নেই'}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">ইমেইল ঠিকানা:</span>
+          <span class="font-bold text-slate-800 truncate block">${user.email || 'নেই'}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">জেলা / অবস্থান:</span>
+          <span class="font-bold text-slate-800">${user.district || 'লালমনিরহাট'} (${user.upazila || ''})</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[10px]">একাউন্ট স্ট্যাটাস:</span>
+          <span class="font-bold ${user.isBlocked ? 'text-rose-600' : 'text-emerald-600'}">${user.isBlocked ? '🚫 ব্লকড' : '🟢 সক্রিয়'}</span>
+        </div>
+      `;
+
+      refreshUserActivityModal();
+      document.getElementById('modalUserDetailActivity').classList.remove('hidden');
+    }
+
+    function closeUserDetailModal() {
+      document.getElementById('modalUserDetailActivity').classList.add('hidden');
+      activeInspectUser = null;
+    }
+
+    function switchUserActivityTab(tabKey) {
+      activeUserInspectSubTab = tabKey;
+
+      document.querySelectorAll('.user-act-tab').forEach(btn => {
+        btn.classList.remove('border-b-2', 'border-blue-600', 'text-blue-700');
+        btn.classList.add('text-slate-500');
+      });
+
+      const activeBtn = document.getElementById(`userActTab-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('border-b-2', 'border-blue-600', 'text-blue-700');
+        activeBtn.classList.remove('text-slate-500');
+      }
+
+      refreshUserActivityModal();
+    }
+
+    function refreshUserActivityModal() {
+      if (!activeInspectUser) return;
+      const u = activeInspectUser;
+
+      const userMarket = rawMarket.filter(m => (m.userId && m.userId === u.id) || (m.sellerPhone && u.phone && m.sellerPhone.includes(u.phone)));
+      const userComm = rawCommunity.filter(c => (c.userId && c.userId === u.id) || (c.authorName && u.name && c.authorName === u.name));
+      const userNews = rawNews.filter(n => (n.authorId && n.authorId === u.id) || (n.authorName && u.name && n.authorName === u.name));
+
+      document.getElementById('userActMarketCount').textContent = userMarket.length;
+      document.getElementById('userActCommunityCount').textContent = userComm.length;
+      document.getElementById('userActNewsCount').textContent = userNews.length;
+
+      const container = document.getElementById('userActivityContainer');
+
+      if (activeUserInspectSubTab === 'market') {
+        if (userMarket.length === 0) {
+          container.innerHTML = `<div class="py-12 text-center text-slate-400 text-xs">এই ইউজারের কোনো পণ্য বা হাট-বাজার বিজ্ঞাপন নেই।</div>`;
+          return;
+        }
+        container.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">` + userMarket.map(item => `
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-3">
+              <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200'}" class="w-12 h-12 rounded-lg object-cover" alt="Image">
+              <div>
+                <h5 class="font-bold text-slate-800 line-clamp-1">${item.title}</h5>
+                <p class="text-emerald-600 font-bold">৳ ${item.price} • <span class="text-slate-500 font-normal">${item.category}</span></p>
+                <span class="text-[10px] text-slate-400 font-semibold">স্ট্যাটাস: ${item.status}</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button onclick="openEditMarketplaceModal('${item.id}')" title="এডিট" class="p-1.5 rounded bg-blue-100 text-blue-800 font-bold text-xs">✏️</button>
+              <button onclick="deleteMarketItem('${item.id}')" title="ডিলিট" class="p-1.5 rounded bg-rose-100 text-rose-800 font-bold text-xs">🗑️</button>
+            </div>
+          </div>
+        `).join('') + `</div>`;
+      } else if (activeUserInspectSubTab === 'community') {
+        if (userComm.length === 0) {
+          container.innerHTML = `<div class="py-12 text-center text-slate-400 text-xs">এই ইউজারের কোনো জনমঞ্চ আলোচনা পোস্ট নেই।</div>`;
+          return;
+        }
+        container.innerHTML = `<div class="space-y-3">` + userComm.map(post => `
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-start justify-between text-xs gap-3">
+            <div class="flex-1">
+              <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">${post.tag}</span>
+              <h5 class="font-bold text-slate-900 mt-1">${post.title || 'শিরোনাম নেই'}</h5>
+              <p class="text-slate-600 line-clamp-2 mt-0.5">${post.description}</p>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button onclick="openEditCommunityModal('${post.id}')" title="এডিট" class="p-1.5 rounded bg-amber-100 text-amber-800 font-bold text-xs">✏️</button>
+              <button onclick="deleteCommunityPost('${post.id}')" title="ডিলিট" class="p-1.5 rounded bg-rose-100 text-rose-800 font-bold text-xs">🗑️</button>
+            </div>
+          </div>
+        `).join('') + `</div>`;
+      } else if (activeUserInspectSubTab === 'news') {
+        if (userNews.length === 0) {
+          container.innerHTML = `<div class="py-12 text-center text-slate-400 text-xs">এই ইউজারের কোনো সংবাদ পোস্ট নেই।</div>`;
+          return;
+        }
+        container.innerHTML = `<div class="space-y-3">` + userNews.map(news => `
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-start justify-between text-xs gap-3">
+            <div class="flex-1">
+              <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded text-[10px] font-bold">${news.category} (${news.upazila})</span>
+              <h5 class="font-bold text-slate-900 mt-1">${news.title}</h5>
+              <p class="text-slate-600 line-clamp-2 mt-0.5">${news.description}</p>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button onclick="openEditNewsModal('${news.id}')" title="এডিট" class="p-1.5 rounded bg-blue-100 text-blue-800 font-bold text-xs">✏️</button>
+              <button onclick="deleteNews('${news.id}')" title="ডিলিট" class="p-1.5 rounded bg-rose-100 text-rose-800 font-bold text-xs">🗑️</button>
+            </div>
+          </div>
+        `).join('') + `</div>`;
+      }
+    }
+
     const DIRECTORY_CONFIGS = {
       emergency: {
         title: "জরুরী নাম্বার (Emergency Numbers)",
@@ -2010,7 +2915,6 @@
     function switchDirectorySubTab(subTabKey) {
       activeDirectorySubTab = subTabKey;
 
-      // Update button styling
       document.querySelectorAll('.dir-subtab-btn').forEach(btn => {
         btn.classList.remove('active-dir-subtab', 'bg-blue-600', 'text-white', 'border-blue-600');
         btn.classList.add('border-slate-200');
@@ -2029,7 +2933,6 @@
       const config = DIRECTORY_CONFIGS[subTabKey];
       if (!config) return;
 
-      // Update Form Titles & Labels
       document.getElementById('dirFormTitle').innerHTML = `<span>➕</span> <span>${config.title} এন্ট্রি</span>`;
       document.getElementById('dirFormCollectionBadge').textContent = config.collection;
       document.getElementById('dirLabelName').textContent = config.nameLabel;
@@ -2037,7 +2940,6 @@
       document.getElementById('dirLabelAddress').textContent = config.addressLabel;
       document.getElementById('dirListTitle').textContent = `${config.title} তালিকা`;
 
-      // Category / Specialty Field Render
       const categoryWrapper = document.getElementById('dirCategoryFieldWrapper');
       if (config.hasCategorySelect) {
         categoryWrapper.innerHTML = `
@@ -2051,7 +2953,6 @@
         document.getElementById('dirGroupCategory').classList.add('hidden');
       }
 
-      // Extra field (for coaching)
       const extraGroup = document.getElementById('dirGroupExtra');
       if (config.hasExtra) {
         extraGroup.classList.remove('hidden');
@@ -2059,10 +2960,8 @@
         extraGroup.classList.add('hidden');
       }
 
-      // Reset form
       resetDirectoryForm();
 
-      // Detach previous directory listener and attach to current collection
       if (unsubDirectory) {
         unsubDirectory();
         unsubDirectory = null;
@@ -2085,12 +2984,8 @@
             });
           });
 
-          // Sort by name or createdAt
           rawDirectory.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-          // Update total directory stats
           document.getElementById('statCountDirectoryTotal').textContent = rawDirectory.length;
-
           renderDirectoryList();
         }, error => {
           console.error("Directory listener error:", error);
@@ -2150,7 +3045,6 @@
       }).join('');
     }
 
-    // Form Submit (Create & Update) with 100% Kotlin Parity
     async function handleDirectoryFormSubmit(e) {
       e.preventDefault();
       const config = DIRECTORY_CONFIGS[activeDirectorySubTab];
@@ -2172,7 +3066,6 @@
         const docId = docRef.id;
         const now = Date.now();
 
-        // Construct document matching Kotlin Model specification exactly
         let docData = {
           id: docId,
           createdAt: now
@@ -2319,8 +3212,6 @@
 
       document.getElementById('btnSubmitDirFormText').textContent = 'আপডেট করুন';
       document.getElementById('dirFormTitle').innerHTML = `<span>✏️</span> <span>এন্ট্রি সম্পাদনা</span>`;
-
-      // Scroll to form smoothly
       document.getElementById('directoryEntryForm').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -2349,7 +3240,6 @@
       }
     }
 
-    // Initialize UI on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
       switchTab('overview');
       switchDirectorySubTab('emergency');
