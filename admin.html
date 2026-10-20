@@ -145,8 +145,7 @@
           <div class="flex-1">
             <h3 class="text-sm font-bold text-amber-900">অ্যাডমিন অনুমতি সম্পর্কিত তথ্য</h3>
             <p class="text-xs text-amber-700 mt-1">
-              আপনার Google একাউন্ট দিয়ে সফলভাবে লগইন হয়েছে। তবে Firestore সিকিউরিটি রুলস অনুযায়ী ডাটা এন্ট্রি ও ডিলিট করার জন্য আপনার UID-টি 
-              <code class="bg-amber-100 text-amber-900 px-1 rounded font-mono font-bold">admins</code> কালেকশনে নিবন্ধিত থাকতে হবে।
+              আপনার Google একাউন্ট দিয়ে সফলভাবে লগইন হয়েছে। তবে Firestore সিকিউরিটি রুলস অনুযায়ী ডাটা এন্ট্রি ও ডিলিট করার জন্য আপনার ইমেইল বা UID অনুমোদিত তালিকায় থাকতে হবে।
             </p>
             <div class="mt-2 flex items-center space-x-2">
               <span class="text-xs text-amber-900 font-semibold">আপনার UID:</span>
@@ -195,14 +194,9 @@
         </nav>
       </div>
 
-      <!-- ========================================================================= -->
       <!-- TAB 1: OVERVIEW & STATS -->
-      <!-- ========================================================================= -->
       <section id="tabContent-overview" class="tab-content space-y-6">
-        
-        <!-- Stats Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <!-- Pending News -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং সংবাদ</p>
@@ -214,7 +208,6 @@
             </div>
           </div>
 
-          <!-- Pending Community Posts -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">পেন্ডিং জনমঞ্চ পোস্ট</p>
@@ -226,7 +219,6 @@
             </div>
           </div>
 
-          <!-- Active Marketplace Items -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট হাট-বাজার পণ্য</p>
@@ -238,7 +230,6 @@
             </div>
           </div>
 
-          <!-- Total Directory Entries -->
           <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
             <div>
               <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">মোট ডিরেক্টরি ডাটা</p>
@@ -251,10 +242,7 @@
           </div>
         </div>
 
-        <!-- Quick Action & Architecture Cards -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- Sync & Realtime Status Box -->
           <div class="lg:col-span-2 bg-gradient-to-br from-slate-900 to-blue-950 text-white rounded-2xl p-6 shadow-md">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-3">
@@ -283,7 +271,6 @@
             </div>
           </div>
 
-          <!-- Quick Navigation Panel -->
           <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
               <h3 class="text-base font-bold text-slate-900 mb-2">দ্রুত মডারেশন জাম্প</h3>
@@ -321,17 +308,11 @@
               <span class="font-mono text-slate-600">lalmoniexpress-2c176</span>
             </div>
           </div>
-
         </div>
-
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 2: LOCAL NEWS MODERATION ("লালমনি বার্তা") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-news" class="tab-content hidden space-y-6">
-        
-        <!-- Header & Action Row -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
@@ -341,7 +322,6 @@
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">local_news</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
           </div>
 
-          <!-- Buttons -->
           <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
             <button onclick="seedDefaultNewsToFirestore()" class="flex items-center justify-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3.5 py-2 rounded-xl text-xs border border-slate-300 shadow-sm transition">
               <span>🔄</span>
@@ -354,7 +334,6 @@
           </div>
         </div>
 
-        <!-- Pending Moderation Alert Banner -->
         <div id="pendingNewsAlertBanner" class="hidden bg-amber-50 border border-amber-300 p-4 rounded-2xl flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <span class="text-2xl">⏳</span>
@@ -387,62 +366,58 @@
 
         <!-- News Cards Container -->
         <div id="newsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-rose-600 rounded-full mb-2"></div>
             <p class="text-sm">লালমনি বার্তা ডেটা লোড হচ্ছে...</p>
           </div>
         </div>
-
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 3: COMMUNITY MODERATION ("জনমঞ্চ") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-community" class="tab-content hidden space-y-6">
-        
-        <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
               <span>💬</span>
-              <span>"জনমঞ্চ" - কমিউনিটি পোস্ট মডারেশন</span>
+              <span>"জনমঞ্চ" - কমিউনিটি পোস্ট ও মতামত প্রকাশ</span>
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">community_posts</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
+          </div>
+
+          <!-- Add Community Post Action Button -->
+          <div class="w-full sm:w-auto">
+            <button onclick="openCreateCommunityModal()" class="w-full sm:w-auto flex items-center justify-center space-x-2 bg-amber-600 hover:bg-amber-700 text-white font-medium px-4 py-2 rounded-xl text-sm shadow transition">
+              <span>✍️</span>
+              <span>+ নতুন জনমঞ্চ পোস্ট প্রকাশ করুন</span>
+            </button>
           </div>
         </div>
 
         <!-- Filter Chips Bar -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
-          <button onclick="filterCommunity('pending')" id="btnCommFilter-pending" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white shadow-sm transition">
-            ⏳ পেন্ডিং পোস্ট (<span id="countCommFilterPending">0</span>)
+          <button onclick="filterCommunity('all')" id="btnCommFilter-all" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white shadow-sm transition">
+            🌐 সকল পোস্ট (<span id="countCommFilterAll">0</span>)
           </button>
           <button onclick="filterCommunity('approved')" id="btnCommFilter-approved" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
-            🟢 অনুমোদিত (<span id="countCommFilterApproved">0</span>)
+            🟢 অনুমোদিত / লাইভ (<span id="countCommFilterApproved">0</span>)
           </button>
-          <button onclick="filterCommunity('all')" id="btnCommFilter-all" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
-            🌐 সকল পোস্ট (<span id="countCommFilterAll">0</span>)
+          <button onclick="filterCommunity('pending')" id="btnCommFilter-pending" class="comm-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">
+            ⏳ পেন্ডিং যাচাই (<span id="countCommFilterPending">0</span>)
           </button>
         </div>
 
         <!-- Community Posts Container -->
         <div id="communityListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-amber-600 rounded-full mb-2"></div>
             <p class="text-sm">জনমঞ্চ পোস্ট লোড হচ্ছে...</p>
           </div>
         </div>
-
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 4: MARKETPLACE ("ডিজিটাল হাট-বাজার") -->
-      <!-- ========================================================================= -->
       <section id="tabContent-marketplace" class="tab-content hidden space-y-6">
-        
-        <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h2 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
@@ -452,13 +427,11 @@
             <p class="text-xs text-slate-500 mt-0.5">কালেকশন: <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">items</code> (রিয়েলটাইম লাইভ সিঙ্ক)</p>
           </div>
 
-          <!-- Search & Filter Controls -->
           <div class="w-full sm:w-72">
             <input type="text" id="marketSearchInput" oninput="renderMarketplaceCards()" placeholder="পণ্য, বিক্রেতা বা ফোন দিয়ে খুঁজুন..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
           </div>
         </div>
 
-        <!-- Filter Chips Bar -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-xs font-semibold text-slate-500 mr-1">ফিল্টার:</span>
           <button onclick="filterMarket('all')" id="btnMarketFilter-all" class="market-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm transition">
@@ -472,23 +445,16 @@
           </button>
         </div>
 
-        <!-- Marketplace Items Grid -->
         <div id="marketListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          <!-- Dynamically populated via Firestore onSnapshot -->
           <div class="col-span-full py-12 text-center text-slate-400">
             <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-blue-600 rounded-full mb-2"></div>
             <p class="text-sm">হাট-বাজার পণ্য লোড হচ্ছে...</p>
           </div>
         </div>
-
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 5: DIRECTORY DATA ENTRY (8 CATEGORIES) -->
-      <!-- ========================================================================= -->
       <section id="tabContent-directories" class="tab-content hidden space-y-6">
-        
-        <!-- Directory Category Selector Tabs -->
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex items-center justify-between mb-3">
             <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
@@ -541,10 +507,7 @@
           </div>
         </div>
 
-        <!-- Form + Realtime Table Container Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          <!-- Entry Form (5 cols on lg) -->
           <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
               <h3 id="dirFormTitle" class="font-bold text-slate-900 text-base flex items-center space-x-2">
@@ -555,24 +518,18 @@
             </div>
 
             <form id="directoryEntryForm" onsubmit="handleDirectoryFormSubmit(event)" class="space-y-4 text-xs">
-              
-              <!-- Hidden ID for edit mode -->
               <input type="hidden" id="dirFormEditId" value="">
 
-              <!-- Field 1: Title / Name -->
               <div>
                 <label id="dirLabelName" class="block font-semibold text-slate-700 mb-1">সেবার নাম / প্রতিষ্ঠানের নাম *</label>
                 <input type="text" id="dirInputName" required placeholder="যেমন: হাতীবান্ধা থানা পুলিশ বা ডা. মোঃ রফিকুল ইসলাম" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Field 2: Category / Specialty / Subtitle -->
               <div id="dirGroupCategory">
                 <label id="dirLabelCategory" class="block font-semibold text-slate-700 mb-1">ক্যাটাগরি বা ধরণ *</label>
-                <!-- Rendered dynamically as select or input depending on active subtab -->
                 <div id="dirCategoryFieldWrapper"></div>
               </div>
 
-              <!-- Field 3: Upazila Selection -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">উপজেলা নির্বাচন *</label>
                 <select id="dirSelectUpazila" required class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
@@ -585,25 +542,21 @@
                 </select>
               </div>
 
-              <!-- Field 4: Contact / Phone Number -->
               <div>
                 <label class="block font-semibold text-slate-700 mb-1">যোগাযোগের মোবাইল নম্বর *</label>
                 <input type="tel" id="dirInputPhone" required placeholder="যেমন: 01712345678 বা 019..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Field 5: Details / Address / Chamber / Market -->
               <div>
                 <label id="dirLabelAddress" class="block font-semibold text-slate-700 mb-1">ঠিকানা / চেম্বার সময় / অবস্থান *</label>
                 <textarea id="dirInputAddress" rows="3" placeholder="বাজারের নাম, রোড, দোকান নম্বর বা চেম্বারের সময়সূচি..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
               </div>
 
-              <!-- Extra field for Coaching subjects if applicable -->
               <div id="dirGroupExtra" class="hidden">
                 <label id="dirLabelExtra" class="block font-semibold text-slate-700 mb-1">পড়ানোর বিষয় ও শ্রেণি</label>
                 <input type="text" id="dirInputExtra" placeholder="যেমন: গণিত ও বিজ্ঞান (ক্লাস ৯-১০)" class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
               </div>
 
-              <!-- Submit Buttons -->
               <div class="pt-2 flex items-center space-x-2">
                 <button type="submit" id="btnSubmitDirForm" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow transition duration-150 flex items-center justify-center space-x-2">
                   <span>💾</span>
@@ -613,11 +566,9 @@
                   রিসেট
                 </button>
               </div>
-
             </form>
           </div>
 
-          <!-- Real-time Live Directory List (7 cols on lg) -->
           <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
               <div>
@@ -629,23 +580,17 @@
               </div>
             </div>
 
-            <!-- Scrollable list of entries -->
             <div id="directoryEntriesContainer" class="flex-1 overflow-y-auto max-h-[600px] space-y-3 custom-scrollbar pr-1">
               <div class="py-12 text-center text-slate-400 text-xs">
                 ডাটা লোড হচ্ছে...
               </div>
             </div>
           </div>
-
         </div>
-
       </section>
 
-      <!-- ========================================================================= -->
       <!-- TAB 6: SETUP & GUIDE -->
-      <!-- ========================================================================= -->
       <section id="tabContent-settings" class="tab-content hidden space-y-6">
-        
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex items-center space-x-3 pb-4 border-b border-slate-100">
             <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
@@ -657,48 +602,27 @@
             </div>
           </div>
 
-          <!-- Step 1 -->
           <div class="flex items-start space-x-4">
             <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">১</span>
             <div class="space-y-1">
               <h4 class="text-sm font-bold text-slate-900">Google Sign-In ও Authorized Domains সক্রিয়করণ</h4>
               <p class="text-xs text-slate-600 leading-relaxed">
                 ১. <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 underline font-semibold">Firebase Console</a>-এ গিয়ে প্রজেক্ট <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono">lalmoniexpress-2c176</code> নির্বাচন করুন।<br>
-                ২. বামদিকের মেনু থেকে <strong>Build &gt; Authentication &gt; Sign-in method</strong>-এ যান এবং <strong>Google</strong> প্রোভাইডার সক্রিয় (Enabled) রাখুন।<br>
-                ৩. একই পেজে নিচে <strong>Authorized domains</strong> সেকশনে আপনার ডোমেইন যোগ করুন (যেমন: <code class="bg-slate-100 px-1 rounded font-mono">localhost</code>, <code class="bg-slate-100 px-1 rounded font-mono">127.0.0.1</code>, বা আপনার হোস্টিং লিংক)।
+                ২. <strong>Authentication &gt; Settings &gt; Authorized domains</strong> এ আপনার ডোমেইন নিশ্চিত করুন (<code class="bg-slate-100 px-1 rounded font-mono">localhost</code> বা হোস্টিং লিংক)।
               </p>
             </div>
           </div>
 
-          <!-- Step 2 -->
           <div class="flex items-start space-x-4">
             <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">২</span>
             <div class="space-y-1">
-              <h4 class="text-sm font-bold text-slate-900">অ্যাডমিন পারমিশন সেটআপ (admins/{uid})</h4>
+              <h4 class="text-sm font-bold text-slate-900">অ্যাডমিন রুলস সমতা</h4>
               <p class="text-xs text-slate-600 leading-relaxed">
-                এই ড্যাশবোর্ডে লগইন করার পর উপরে আপনার <strong>UID</strong> দেখতে পাবেন।<br>
-                ১. ফায়ারবেস কনসোলে <strong>Firestore Database</strong> ট্যাবে যান।<br>
-                ২. <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono font-bold">admins</code> নামে একটি কালেকশন তৈরি করুন (যদি না থাকে)।<br>
-                ৩. Document ID হিসেবে আপনার <strong>UID</strong> দিন এবং একটি ফিল্ড যোগ করুন: <code class="bg-slate-100 px-1 rounded font-mono">active: true</code> (Boolean)।<br>
-                এর ফলে আপনার একাউন্টটি অ্যান্ড্রয়েড মোবাইল অ্যাপ এবং ওয়েব ড্যাশবোর্ড উভয়ের জন্য ভেরিফাইড অ্যাডমিন হয়ে যাবে।
+                আপনার Firestore Security Rules এ ইমেইল <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono font-bold">sirazulvai2263@gmail.com</code> থাকলে আপনি স্বয়ংক্রিয়ভাবে পূর্ণ অ্যাডমিন পাওয়ার পাবেন।
               </p>
             </div>
           </div>
 
-          <!-- Step 3 -->
-          <div class="flex items-start space-x-4">
-            <span class="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">৩</span>
-            <div class="space-y-1">
-              <h4 class="text-sm font-bold text-slate-900">যেভাবে ড্যাশবোর্ডটি চালাবেন (How to Run)</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                এই <code class="bg-slate-100 text-blue-700 px-1 rounded font-mono font-bold">admin.html</code> ফাইলটি সম্পূর্ণ সার্ভারলেস ও সিঙ্গেল-ফাইল।<br>
-                • <strong>লোকালি:</strong> ফাইলটি আপনার কম্পিউটারে যেকোনো ব্রাউজারে (Chrome, Edge, Firefox) ডাবল-ক্লিক করলেই সরাসরি চলবে।<br>
-                • <strong>হোস্টিংয়ে:</strong> আপনি চাইলে এটি Firebase Hosting, GitHub Pages, বা যেকোনো সাধারণ ওয়েব হোস্টিংয়ে সরাসরি আপলোড করে ২৪ ঘণ্টা লাইভ ব্যবহার করতে পারেন।
-              </p>
-            </div>
-          </div>
-
-          <!-- Current Active Config Box -->
           <div class="p-4 rounded-xl bg-slate-900 text-slate-200 text-xs font-mono">
             <div class="flex items-center justify-between text-slate-400 mb-2 font-sans font-semibold">
               <span>সক্রিয় ফায়ারবেস কনফিগারেশন:</span>
@@ -713,20 +637,17 @@
   appId: "1:432722675545:web:75490e13b5b0c8df032e48"
 };</pre>
           </div>
-
         </div>
-
       </section>
 
     </div>
-
   </main>
 
   <!-- ========================================================================= -->
   <!-- MODALS -->
   <!-- ========================================================================= -->
 
-  <!-- Create Official News Modal -->
+  <!-- 1. Create Official News Modal -->
   <div id="modalCreateNews" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -773,7 +694,7 @@
         <div>
           <label class="block font-semibold text-slate-700 mb-1">সংবাদের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
           <div class="flex items-center gap-2 mb-1.5">
-            <input type="file" id="newsFormImageFile" accept="image/*" onchange="handleNewsImageFileUpload(this, 'newsFormImageUrl', 'newsFormImagePreview', 'newsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer">
+            <input type="file" id="newsFormImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'newsFormImageUrl', 'newsFormImagePreview', 'newsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100 cursor-pointer">
             <span id="newsImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
           </div>
           <input type="url" id="newsFormImageUrl" oninput="updateImagePreview('newsFormImageUrl', 'newsFormImagePreview')" placeholder="অথবা সরাসরি ইমেজ লিংক পেস্ট করুন (https://...)" class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-500">
@@ -800,7 +721,7 @@
     </div>
   </div>
 
-  <!-- Edit News Modal -->
+  <!-- 2. Edit News Modal -->
   <div id="modalEditNews" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -857,7 +778,7 @@
         <div>
           <label class="block font-semibold text-slate-700 mb-1">সংবাদের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
           <div class="flex items-center gap-2 mb-1.5">
-            <input type="file" id="editNewsImageFile" accept="image/*" onchange="handleNewsImageFileUpload(this, 'editNewsImageUrl', 'editNewsImagePreview', 'editNewsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+            <input type="file" id="editNewsImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'editNewsImageUrl', 'editNewsImagePreview', 'editNewsImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
             <span id="editNewsImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
           </div>
           <input type="url" id="editNewsImageUrl" oninput="updateImagePreview('editNewsImageUrl', 'editNewsImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -879,6 +800,78 @@
     </div>
   </div>
 
+  <!-- 3. Create Community Post Modal (জনমঞ্চ পোস্ট মডাল) -->
+  <div id="modalCreateCommunityPost" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+          <span>💬</span>
+          <span>জনমঞ্চে নতুন পোস্ট প্রকাশ করুন</span>
+        </h3>
+        <button onclick="closeCreateCommunityModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="createCommunityForm" onsubmit="handleCreateCommunitySubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের বিষয় বা শিরোনাম (ঐচ্ছিক)</label>
+          <input type="text" id="commFormTitle" placeholder="সংক্ষিপ্ত বিষয়..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">উপজেলা নির্বাচন *</label>
+            <select id="commFormUpazila" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="পুরো লালমনিরহাট">পুরো লালমনিরহাট</option>
+              <option value="লালমনিরহাট সদর">লালমনিরহাট সদর</option>
+              <option value="আদিতমারী">আদিতমারী</option>
+              <option value="কালীগঞ্জ">কালীগঞ্জ</option>
+              <option value="হাতীবান্ধা">হাতীবান্ধা</option>
+              <option value="পাটগ্রাম">পাটগ্রাম</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ট্যাগ / ক্যাটাগরি *</label>
+            <select id="commFormTag" required class="w-full text-xs px-3 py-2 rounded-xl border border-slate-300 bg-white">
+              <option value="সাধারণ মতামত">সাধারণ মতামত</option>
+              <option value="নাগরিক জিজ্ঞাসা">নাগরিক জিজ্ঞাসা</option>
+              <option value="এলাকার সমস্যা">এলাকার সমস্যা</option>
+              <option value="জরুরি ঘোষণা">জরুরি ঘোষণা</option>
+              <option value="সামাজিক বার্তা">সামাজিক বার্তা</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের ছবি (ঐচ্ছিক - ছবি আপলোড বা লিংক)</label>
+          <div class="flex items-center gap-2 mb-1.5">
+            <input type="file" id="commFormImageFile" accept="image/*" onchange="handleImageFileUpload(this, 'commFormImageUrl', 'commFormImagePreview', 'commImageUploadStatus')" class="text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer">
+            <span id="commImageUploadStatus" class="text-[11px] text-slate-500 font-medium"></span>
+          </div>
+          <input type="url" id="commFormImageUrl" oninput="updateImagePreview('commFormImageUrl', 'commFormImagePreview')" placeholder="https://..." class="w-full text-xs px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500">
+          <div id="commFormImagePreview" class="hidden mt-2 h-28 w-full bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+            <img src="" class="w-full h-full object-cover" alt="Preview">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">পোস্টের বিবরণ / আপনার বার্তা *</label>
+          <textarea id="commFormDescription" rows="4" required placeholder="জনমঞ্চে কী শেয়ার করতে চান লিখুন..." class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="flex items-center space-x-2 bg-amber-50 p-2.5 rounded-xl border border-amber-200 text-amber-800">
+          <span>⚡</span>
+          <span class="text-[11px] font-semibold">অ্যাডমিন হিসেবে পোস্ট করায় এটি সরাসরি অ্যাপে প্রকাশিত ও লাইভ হবে।</span>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeCreateCommunityModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold">বাতিল</button>
+          <button type="submit" id="btnSubmitCommForm" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow">সরাসরি পোস্ট করুন</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden transform transition duration-300 ease-in-out bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-xs">
     <span id="toastIcon">ℹ️</span>
@@ -886,10 +879,9 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: FIREBASE ARCHITECTURE & ZERO-LATENCY ONSNAPSHOT LISTENERS -->
+  <!-- JAVASCRIPT: LOGIC & SYNC LISTENERS -->
   <!-- ========================================================================= -->
   <script>
-    // 1. Official Lalmoni Express Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyDA9alHFInImn_CcMebJtkA7Rya4HVKVuI",
       authDomain: "lalmoniexpress-2c176.firebaseapp.com",
@@ -899,37 +891,31 @@
       appId: "1:432722675545:web:75490e13b5b0c8df032e48"
     };
 
-    // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Global State
     let currentUser = null;
     let isVerifiedAdmin = false;
     let activeTab = 'overview';
     let activeDirectorySubTab = 'emergency';
 
-    // Realtime Raw Data Stores
     let rawNews = [];
     let rawCommunity = [];
     let rawMarket = [];
     let rawDirectory = [];
 
-    // Filter states
     let currentNewsFilter = 'approved';
-    let currentCommunityFilter = 'pending';
+    let currentCommunityFilter = 'all';
     let currentMarketFilter = 'all';
 
-    // Active Snapshot Listener Registrations (for clean unsubscription if needed)
     let unsubNews = null;
     let unsubCommunity = null;
     let unsubMarket = null;
     let unsubDirectory = null;
 
-    // Toast helper
     function showToast(message, type = 'info') {
       const toast = document.getElementById('toastNotification');
       const toastMsg = document.getElementById('toastMessage');
@@ -951,7 +937,6 @@
       }, 4000);
     }
 
-    // Copy Admin UID helper
     function copyAdminUid() {
       if (currentUser) {
         navigator.clipboard.writeText(currentUser.uid).then(() => {
@@ -983,7 +968,6 @@
       });
     }
 
-    // Auth State Observer
     auth.onAuthStateChanged(async (user) => {
       currentUser = user;
       const loggedOutSec = document.getElementById('loggedOutSection');
@@ -991,7 +975,6 @@
       const authHeaderArea = document.getElementById('authHeaderArea');
 
       if (user) {
-        // Render user in header
         authHeaderArea.innerHTML = `
           <div class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/15 px-2.5 py-1 rounded-full">
             <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'Admin')}" class="w-6 h-6 rounded-full border border-white/30" alt="Avatar">
@@ -1003,27 +986,30 @@
         loggedOutSec.classList.add('hidden');
         loggedInSec.classList.remove('hidden');
 
-        // Verify Admin Authority in Firestore
         document.getElementById('userUidBadge').textContent = user.uid;
-        try {
-          const adminDoc = await db.collection('admins').doc(user.uid).get();
-          if (adminDoc.exists && adminDoc.data().active !== false) {
-            isVerifiedAdmin = true;
-            document.getElementById('adminNoticeBanner').classList.add('hidden');
-          } else {
-            isVerifiedAdmin = false;
+        
+        // Admin status check (Email or Firestore)
+        if (user.email === 'sirazulvai2263@gmail.com') {
+          isVerifiedAdmin = true;
+          document.getElementById('adminNoticeBanner').classList.add('hidden');
+        } else {
+          try {
+            const adminDoc = await db.collection('admins').doc(user.uid).get();
+            if (adminDoc.exists && adminDoc.data().active !== false) {
+              isVerifiedAdmin = true;
+              document.getElementById('adminNoticeBanner').classList.add('hidden');
+            } else {
+              isVerifiedAdmin = false;
+              document.getElementById('adminNoticeBanner').classList.remove('hidden');
+            }
+          } catch (e) {
+            console.warn("Notice: admin check:", e);
             document.getElementById('adminNoticeBanner').classList.remove('hidden');
           }
-        } catch (e) {
-          console.warn("Notice: admin collection check:", e);
-          document.getElementById('adminNoticeBanner').classList.remove('hidden');
         }
 
-        // Attach Realtime Firestore onSnapshot Listeners
         attachRealtimeListeners();
-
       } else {
-        // Logged out
         authHeaderArea.innerHTML = `
           <button onclick="handleGoogleSignIn()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full transition shadow">
             লগইন
@@ -1032,18 +1018,17 @@
         loggedOutSec.classList.remove('hidden');
         loggedInSec.classList.add('hidden');
 
-        // Detach listeners
         detachRealtimeListeners();
       }
     });
 
     // =========================================================================
-    // REAL-TIME FIRESTORE ONSNAPSHOT LISTENERS (ZERO-LATENCY)
+    // REAL-TIME FIRESTORE LISTENERS
     // =========================================================================
     function attachRealtimeListeners() {
-      detachRealtimeListeners(); // ensure no duplicates
+      detachRealtimeListeners();
 
-      // 1. Listen to Local News ("local_news")
+      // 1. Local News
       unsubNews = db.collection('local_news')
         .onSnapshot((snapshot) => {
           rawNews = [];
@@ -1065,9 +1050,7 @@
             });
           });
 
-          // Sort by createdAt descending
-          rawNews.sort((a, b) => b.createdAt - a.createdAt);
-
+          rawNews.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
           updateNewsStats();
           renderNewsCards();
         }, (error) => {
@@ -1075,7 +1058,7 @@
           showToast(`নিউজ সিঙ্ক এরর: ${error.message}`, 'error');
         });
 
-      // 2. Listen to Community Posts ("community_posts")
+      // 2. Community Posts
       unsubCommunity = db.collection('community_posts')
         .onSnapshot((snapshot) => {
           rawCommunity = [];
@@ -1083,13 +1066,14 @@
             const data = doc.data();
             rawCommunity.push({
               id: doc.id,
-              userId: data.userId || '',
+              userId: data.userId || data.authorId || '',
               authorName: data.authorName || 'নাগরিক',
               authorPhotoUrl: data.authorPhotoUrl || '',
               title: data.title || '',
               tag: data.tag || 'সাধারণ জিজ্ঞাসা',
-              description: data.description || '',
-              imageUrl: data.imageUrl || '',
+              upazila: data.upazila || 'পুরো লালমনিরহাট',
+              description: data.description || data.content || data.text || '',
+              imageUrl: data.imageUrl || data.image_url || '',
               status: (data.status || 'pending').toLowerCase(),
               createdAt: data.createdAt || 0,
               likes: data.likes || [],
@@ -1097,15 +1081,14 @@
             });
           });
 
-          rawCommunity.sort((a, b) => b.createdAt - a.createdAt);
-
+          rawCommunity.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
           updateCommunityStats();
           renderCommunityCards();
         }, (error) => {
           console.error("Community snapshot error:", error);
         });
 
-      // 3. Listen to Marketplace ("items")
+      // 3. Marketplace
       unsubMarket = db.collection('items')
         .onSnapshot((snapshot) => {
           rawMarket = [];
@@ -1130,14 +1113,12 @@
           });
 
           rawMarket.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
           updateMarketStats();
           renderMarketplaceCards();
         }, (error) => {
           console.error("Marketplace snapshot error:", error);
         });
 
-      // 4. Initial load of active directory subtab
       loadDirectorySubTab(activeDirectorySubTab);
     }
 
@@ -1221,12 +1202,11 @@
     }
 
     // =========================================================================
-    // TAB SWITCHING LOGIC
+    // TAB SWITCHING
     // =========================================================================
     function switchTab(tabId) {
       activeTab = tabId;
 
-      // Update Tab Buttons
       document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active-tab', 'bg-blue-600', 'text-white', 'shadow');
         btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
@@ -1238,7 +1218,6 @@
         activeBtn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
       }
 
-      // Update Tab Contents
       document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.add('hidden');
       });
@@ -1250,7 +1229,7 @@
     }
 
     // =========================================================================
-    // LOCAL NEWS RENDERING & ACTIONS
+    // LOCAL NEWS LOGIC
     // =========================================================================
     function filterNews(filterType) {
       currentNewsFilter = filterType;
@@ -1349,7 +1328,6 @@
               </div>
             </div>
 
-            <!-- Management Actions Bar -->
             <div class="p-4 pt-1 bg-slate-50/50 border-t border-slate-100 flex flex-wrap items-center gap-2">
               <button onclick="openEditNewsModal('${news.id}')" title="সম্পাদনা করুন" class="flex-1 bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 hover:border-blue-300 font-semibold py-1.5 px-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1 shadow-sm">
                 <span>✏️</span>
@@ -1404,7 +1382,6 @@
       }
     }
 
-    // Modal controls for news creation
     function openCreateNewsModal() {
       document.getElementById('modalCreateNews').classList.remove('hidden');
     }
@@ -1420,7 +1397,6 @@
       if (status) status.textContent = '';
     }
 
-    // Modal controls for news editing
     function openEditNewsModal(newsId) {
       const item = rawNews.find(n => n.id === newsId);
       if (!item) {
@@ -1463,16 +1439,23 @@
       btn.disabled = true;
       btn.textContent = 'সংরক্ষণ হচ্ছে...';
 
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('অনুরোধটির সময়সীমা শেষ হয়েছে (Timeout)')), 15000)
+      );
+
       try {
-        await db.collection('local_news').doc(newsId).update({
-          title: title,
-          upazila: upazila,
-          category: category,
-          status: status,
-          imageUrl: imageUrl,
-          description: description,
-          updatedAt: Date.now()
-        });
+        await Promise.race([
+          db.collection('local_news').doc(newsId).update({
+            title: title,
+            upazila: upazila,
+            category: category,
+            status: status,
+            imageUrl: imageUrl,
+            description: description,
+            updatedAt: Date.now()
+          }),
+          timeoutPromise
+        ]);
 
         showToast('সংবাদটি সফলভাবে আপডেট করা হয়েছে!', 'success');
         closeEditNewsModal();
@@ -1481,58 +1464,10 @@
         showToast(`আপডেট ব্যর্থ: ${err.message}`, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'পরিবর্তন সংরক্ষণ করুন';
+        btn.textContent = 'সংরক্ষণ করুন';
       }
     }
 
-    // Direct Image Upload to ImgBB Client
-    async function handleNewsImageFileUpload(fileInput, targetUrlInputId, previewContainerId, statusId) {
-      const file = fileInput.files && fileInput.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById(statusId);
-      if (statusEl) statusEl.textContent = 'আপলোড হচ্ছে... ⏳';
-
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const response = await fetch('https://api.imgbb.com/1/upload?key=3254da4410165dd908d91b93d68c0b71', {
-          method: 'POST',
-          body: formData
-        });
-
-        const result = await response.json();
-        if (result && result.success && result.data && result.data.url) {
-          document.getElementById(targetUrlInputId).value = result.data.url;
-          updateImagePreview(targetUrlInputId, previewContainerId);
-          if (statusEl) statusEl.textContent = 'ছবি আপলোড সম্পন্ন ✅';
-          showToast('ছবি সফলভাবে আপলোড হয়েছে!', 'success');
-        } else {
-          throw new Error(result.error?.message || 'ইমেজ আপলোড ব্যর্থ');
-        }
-      } catch (err) {
-        console.error("ImgBB upload error:", err);
-        if (statusEl) statusEl.textContent = 'আপলোড ব্যর্থ ❌';
-        showToast(`ছবি আপলোড ব্যর্থ: ${err.message}`, 'error');
-      }
-    }
-
-    function updateImagePreview(urlInputId, previewContainerId) {
-      const url = document.getElementById(urlInputId).value.trim();
-      const container = document.getElementById(previewContainerId);
-      if (!container) return;
-
-      if (url) {
-        const img = container.querySelector('img');
-        if (img) img.src = url;
-        container.classList.remove('hidden');
-      } else {
-        container.classList.add('hidden');
-      }
-    }
-
-    // Fixed News Creation Submission with timeout protection and schema compliance
     async function handleCreateNewsSubmit(e) {
       e.preventDefault();
       const title = document.getElementById('newsFormTitle').value.trim();
@@ -1544,18 +1479,16 @@
 
       const btn = document.getElementById('btnSubmitNewsForm');
       btn.disabled = true;
-      btn.innerHTML = `<span class="inline-block animate-spin mr-1">⏳</span> পোস্ট হচ্ছে...`;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1">⏳</span> প্রকাশ হচ্ছে...`;
 
-      // Active authenticated Firebase user check
-      const activeAuthUser = (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser : currentUser;
+      const activeAuthUser = auth.currentUser || currentUser;
       if (!activeAuthUser) {
         showToast('সংবাদ প্রকাশ করতে অনুগ্রহ করে প্রথমে গুগল দিয়ে লগইন করুন', 'warning');
         btn.disabled = false;
-        btn.innerHTML = '<span>প্রকাশ করুন</span>';
+        btn.innerHTML = 'প্রকাশ করুন';
         return;
       }
 
-      // Safe Firestore post with timeout safeguard
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('অনুরোধটির সময়সীমা শেষ হয়েছে (Timeout)')), 15000)
       );
@@ -1574,7 +1507,7 @@
           authorName: activeAuthUser.displayName || 'লালমনি বার্তা অফিসিয়াল',
           authorPhotoUrl: activeAuthUser.photoURL || '',
           isAdminOfficial: isOfficial,
-          status: 'approved', // Admin submissions are immediately approved and published
+          status: 'approved',
           createdAt: now,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           likes: [],
@@ -1589,15 +1522,14 @@
         showToast('অফিসিয়াল সংবাদ সফলভাবে প্রকাশিত ও লাইভ হয়েছে!', 'success');
         closeCreateNewsModal();
       } catch (err) {
-        console.error("Error creating official news:", err);
+        console.error("Error creating news:", err);
         showToast(`সংবাদ প্রকাশ ব্যর্থ: ${err.message}`, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span>প্রকাশ করুন</span>';
+        btn.innerHTML = 'প্রকাশ করুন';
       }
     }
 
-    // Seed default 3 news items to Firestore if empty or requested
     async function seedDefaultNewsToFirestore() {
       if (!confirm('আপনি কি ডিফল্ট ৩টি সংবাদ লাইভ ফায়ারবেস ডাটাবেজে যুক্ত করতে চান?')) return;
       showToast('সংবাদ ডাটাবেজে যুক্ত হচ্ছে...', 'info');
@@ -1662,14 +1594,92 @@
         await batch.commit();
         showToast('৩টি সংবাদ সফলভাবে ডাটাবেজে যুক্ত করা হয়েছে!', 'success');
       } catch (err) {
-        console.error("Error seeding default news:", err);
+        console.error("Error seeding news:", err);
         showToast(`সিঙ্ক ব্যর্থ: ${err.message}`, 'error');
       }
     }
 
     // =========================================================================
-    // COMMUNITY POSTS RENDERING & ACTIONS
+    // COMMUNITY POSTS ("জনমঞ্চ") LOGIC & MODALS
     // =========================================================================
+    function openCreateCommunityModal() {
+      document.getElementById('modalCreateCommunityPost').classList.remove('hidden');
+    }
+    function closeCreateCommunityModal() {
+      document.getElementById('modalCreateCommunityPost').classList.add('hidden');
+      document.getElementById('createCommunityForm').reset();
+      const preview = document.getElementById('commFormImagePreview');
+      if (preview) {
+        preview.classList.add('hidden');
+        preview.querySelector('img').src = '';
+      }
+      const status = document.getElementById('commImageUploadStatus');
+      if (status) status.textContent = '';
+    }
+
+    async function handleCreateCommunitySubmit(e) {
+      e.preventDefault();
+      const title = document.getElementById('commFormTitle').value.trim();
+      const upazila = document.getElementById('commFormUpazila').value;
+      const tag = document.getElementById('commFormTag').value;
+      const imageUrl = document.getElementById('commFormImageUrl').value.trim();
+      const description = document.getElementById('commFormDescription').value.trim();
+
+      const btn = document.getElementById('btnSubmitCommForm');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1">⏳</span> পোস্ট হচ্ছে...`;
+
+      const activeAuthUser = auth.currentUser || currentUser;
+      if (!activeAuthUser) {
+        showToast('পোস্ট প্রকাশ করতে অনুগ্রহ করে প্রথমে গুগল দিয়ে লগইন করুন', 'warning');
+        btn.disabled = false;
+        btn.innerHTML = 'সরাসরি পোস্ট করুন';
+        return;
+      }
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('অনুরোধটির সময়সীমা শেষ হয়েছে (Timeout)')), 15000)
+      );
+
+      try {
+        const newDocRef = db.collection('community_posts').doc();
+        const now = Date.now();
+        const postData = {
+          id: newDocRef.id,
+          title: title,
+          content: description,
+          description: description,
+          text: description,
+          tag: tag,
+          upazila: upazila,
+          imageUrl: imageUrl,
+          userId: activeAuthUser.uid,
+          authorId: activeAuthUser.uid,
+          authorName: activeAuthUser.displayName || 'অ্যাডমিন',
+          authorPhotoUrl: activeAuthUser.photoURL || '',
+          status: 'approved',
+          createdAt: now,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          likes: [],
+          commentCount: 0
+        };
+
+        await Promise.race([
+          newDocRef.set(postData),
+          timeoutPromise
+        ]);
+
+        showToast('জনমঞ্চে আপনার পোস্ট সফলভাবে প্রকাশিত হয়েছে!', 'success');
+        closeCreateCommunityModal();
+      } catch (err) {
+        console.error("Error creating community post:", err);
+        showToast(`পোস্ট ব্যর্থ: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'সরাসরি পোস্ট করুন';
+      }
+    }
+
     function filterCommunity(filterType) {
       currentCommunityFilter = filterType;
       document.querySelectorAll('.comm-filter-btn').forEach(btn => {
@@ -1724,7 +1734,6 @@
         return `
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between hover:shadow-md transition">
             <div>
-              <!-- Author header -->
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center space-x-2.5">
                   <img src="${post.authorPhotoUrl || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(post.authorName || 'Citizen')}" class="w-8 h-8 rounded-full border border-slate-200" alt="Author">
@@ -1736,20 +1745,22 @@
                 ${statusBadges[post.status] || ''}
               </div>
 
-              <!-- Tag -->
-              <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100 mb-2">
-                ${post.tag}
-              </span>
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                  ${post.tag}
+                </span>
+                <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600">
+                  📍 ${post.upazila}
+                </span>
+              </div>
 
-              <!-- Content -->
               ${post.title ? `<h4 class="font-bold text-slate-900 text-xs mb-1">${post.title}</h4>` : ''}
               <p class="text-xs text-slate-600 line-clamp-4 leading-relaxed mb-3">${post.description}</p>
               ${imageHtml}
             </div>
 
-            <!-- Action buttons -->
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-              <span class="text-[11px] text-slate-400">❤️ ${post.likes.length} • 💬 ${post.commentCount}</span>
+              <span class="text-[11px] text-slate-400">❤️ ${post.likes ? post.likes.length : 0} • 💬 ${post.commentCount || 0}</span>
               <div class="flex items-center space-x-1.5">
                 ${post.status !== 'approved' ? `
                   <button onclick="updateCommunityStatus('${post.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded-lg text-xs transition">
@@ -1790,7 +1801,7 @@
     }
 
     // =========================================================================
-    // MARKETPLACE (ডিজিটাল হাট-বাজার) RENDERING & ACTIONS
+    // MARKETPLACE LOGIC
     // =========================================================================
     function filterMarket(filterType) {
       currentMarketFilter = filterType;
@@ -1928,7 +1939,7 @@
     }
 
     // =========================================================================
-    // 8 DIRECTORY CATEGORIES MANAGEMENT (PARITY WITH KOTLIN DATA MODELS)
+    // 8 DIRECTORY CATEGORIES LOGIC
     // =========================================================================
     const DIRECTORY_CONFIGS = {
       emergency: {
@@ -2010,7 +2021,6 @@
     function switchDirectorySubTab(subTabKey) {
       activeDirectorySubTab = subTabKey;
 
-      // Update button styling
       document.querySelectorAll('.dir-subtab-btn').forEach(btn => {
         btn.classList.remove('active-dir-subtab', 'bg-blue-600', 'text-white', 'border-blue-600');
         btn.classList.add('border-slate-200');
@@ -2029,7 +2039,6 @@
       const config = DIRECTORY_CONFIGS[subTabKey];
       if (!config) return;
 
-      // Update Form Titles & Labels
       document.getElementById('dirFormTitle').innerHTML = `<span>➕</span> <span>${config.title} এন্ট্রি</span>`;
       document.getElementById('dirFormCollectionBadge').textContent = config.collection;
       document.getElementById('dirLabelName').textContent = config.nameLabel;
@@ -2037,7 +2046,6 @@
       document.getElementById('dirLabelAddress').textContent = config.addressLabel;
       document.getElementById('dirListTitle').textContent = `${config.title} তালিকা`;
 
-      // Category / Specialty Field Render
       const categoryWrapper = document.getElementById('dirCategoryFieldWrapper');
       if (config.hasCategorySelect) {
         categoryWrapper.innerHTML = `
@@ -2051,7 +2059,6 @@
         document.getElementById('dirGroupCategory').classList.add('hidden');
       }
 
-      // Extra field (for coaching)
       const extraGroup = document.getElementById('dirGroupExtra');
       if (config.hasExtra) {
         extraGroup.classList.remove('hidden');
@@ -2059,10 +2066,8 @@
         extraGroup.classList.add('hidden');
       }
 
-      // Reset form
       resetDirectoryForm();
 
-      // Detach previous directory listener and attach to current collection
       if (unsubDirectory) {
         unsubDirectory();
         unsubDirectory = null;
@@ -2085,12 +2090,8 @@
             });
           });
 
-          // Sort by name or createdAt
           rawDirectory.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-          // Update total directory stats
           document.getElementById('statCountDirectoryTotal').textContent = rawDirectory.length;
-
           renderDirectoryList();
         }, error => {
           console.error("Directory listener error:", error);
@@ -2150,7 +2151,6 @@
       }).join('');
     }
 
-    // Form Submit (Create & Update) with 100% Kotlin Parity
     async function handleDirectoryFormSubmit(e) {
       e.preventDefault();
       const config = DIRECTORY_CONFIGS[activeDirectorySubTab];
@@ -2172,7 +2172,6 @@
         const docId = docRef.id;
         const now = Date.now();
 
-        // Construct document matching Kotlin Model specification exactly
         let docData = {
           id: docId,
           createdAt: now
@@ -2319,8 +2318,6 @@
 
       document.getElementById('btnSubmitDirFormText').textContent = 'আপডেট করুন';
       document.getElementById('dirFormTitle').innerHTML = `<span>✏️</span> <span>এন্ট্রি সম্পাদনা</span>`;
-
-      // Scroll to form smoothly
       document.getElementById('directoryEntryForm').scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -2349,7 +2346,55 @@
       }
     }
 
-    // Initialize UI on DOM Ready
+    // =========================================================================
+    // UNIVERSAL IMAGE UPLOAD (ImgBB API)
+    // =========================================================================
+    async function handleImageFileUpload(fileInput, targetUrlInputId, previewContainerId, statusId) {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) statusEl.textContent = 'আপলোড হচ্ছে... ⏳';
+
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const response = await fetch('https://api.imgbb.com/1/upload?key=3254da4410165dd908d91b93d68c0b71', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        if (result && result.success && result.data && result.data.url) {
+          document.getElementById(targetUrlInputId).value = result.data.url;
+          updateImagePreview(targetUrlInputId, previewContainerId);
+          if (statusEl) statusEl.textContent = 'ছবি আপলোড সম্পন্ন ✅';
+          showToast('ছবি সফলভাবে আপলোড হয়েছে!', 'success');
+        } else {
+          throw new Error(result.error?.message || 'ইমেজ আপলোড ব্যর্থ');
+        }
+      } catch (err) {
+        console.error("ImgBB upload error:", err);
+        if (statusEl) statusEl.textContent = 'আপলোড ব্যর্থ ❌';
+        showToast(`ছবি আপলোড ব্যর্থ: ${err.message}`, 'error');
+      }
+    }
+
+    function updateImagePreview(urlInputId, previewContainerId) {
+      const url = document.getElementById(urlInputId).value.trim();
+      const container = document.getElementById(previewContainerId);
+      if (!container) return;
+
+      if (url) {
+        const img = container.querySelector('img');
+        if (img) img.src = url;
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       switchTab('overview');
       switchDirectorySubTab('emergency');
